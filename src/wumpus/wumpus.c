@@ -1,55 +1,73 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include<stdbool.h>
+#include "wumpus.h"
 
-#define NBACTION 6
+//taille de l'étage
+#define STAIRSIZE 5
 
-#define A_QUITTER 0
-#define A_AVANCER 1
-#define A_TOURNERDROITE 2
-#define A_TOURNERGAUCHE 3
-#define	A_TIRER 4
-#define A_DESCENDRE 5
+//définition des directions;
+#define NORTH 0
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
 
-/*déclaration du type T_FONC_ACTION*/
-typedef void T_FONC_ACTION();
+char arrows[4] = {'8', '6', '2', '4'};
 
-
-typedef struct {
-	char* command;
-    T_FONC_ACTION* action;
-} Action;
-
-/*Déclaration des fonctions prototypes*/
-T_FONC_ACTION quit;
-T_FONC_ACTION move;
-T_FONC_ACTION turn_right;
-T_FONC_ACTION turn_left;
-T_FONC_ACTION shot;
-T_FONC_ACTION down;
+/*le point d'origine se trouve en haut à gauche de la map*/
+typedef struct 
+{
+	char map[STAIRSIZE][STAIRSIZE];
+	bool wumpusAlive;
+	bool tresureFounded;
+} stairs;
 
 //lorsque le joueur veux quitter la partie
-void quit()
+void quit(player* p)
 {
     printf("terminer la partie et afficher le score\n");
 }
 
 //lorsque le personnage avance
-void move()
+void move(player* p)
 {
-    printf("avancer d'une case dans la direction pointée.\n");
+		switch(p->direction)
+	{
+		case NORTH :
+			if(p->posY > 0){
+				p->posY--;
+			}
+			break;
+		
+		case EAST :
+			if(p->posX < STAIRSIZE - 1){
+				p->posX++;
+			}
+			break;
+			
+		case SOUTH :
+			if(p->posY < STAIRSIZE - 1){
+				p->posY++;
+			}
+			break;
+			
+		case WEST :
+			if(p->posX > 0){
+				p->posX--;
+			}
+			break;
+	}
+/*    printf("avancer d'une case dans la direction pointée.\n");*/
 }
 
 //lorsque le personnage tourne à droite
-void turn_right()
+void turn_right(player* p)
 {
+	p->direction = (p->direction+1)%4;
 	printf("Le personnage change de direction dans le sens horaire.\n");
 }
 
 //lorsque le personnage tourne à gauche
-void turn_left()
+void turn_left(player* p)
 {
+	p->direction = (p->direction+3)%4;//tourne 3 fois dans le sens horaire
 	printf("Le personnage change de direction dans le sens anti-horaire.\n");
 }
 
@@ -103,13 +121,13 @@ Action* initialisation()
     
     //Action tourner à droite
     Action* tRightAction = (Action*)malloc(sizeof(Action));
-    tRightAction->command = "turn_right";
+    tRightAction->command = "turnright";
     tRightAction->action = turn_right;
     actions[A_TOURNERDROITE] = *tRightAction;
     
     //Action tourner à gauche
     Action* tLeftAction = (Action*)malloc(sizeof(Action));
-    tLeftAction->command = "turn_left";
+    tLeftAction->command = "turnleft";
     tLeftAction->action = turn_left;
     actions[A_TOURNERGAUCHE] = *tLeftAction;
     
@@ -128,9 +146,109 @@ Action* initialisation()
     return actions;
 }
 
+/***********************************************************/
+
+void playerInitialisation(player* p)
+{
+	p->posX = 0;
+	p->posY = (STAIRSIZE - 1);
+	p->direction = NORTH;
+	p->arrow = true;
+}
+
+//fonction temporaire
+void getDirection(int d, char* direction)
+{
+	switch(d)
+	{
+		case NORTH :
+			strcpy(direction, "du Nord");
+			break;
+		
+		case EAST :
+			strcpy(direction, "de l'Est");
+			break;
+			
+		case SOUTH :
+			strcpy(direction, "du Sud");
+			break;
+			
+		case WEST :
+			strcpy(direction, "de l'Ouest");
+			break;
+	}
+}
+
+void printPlayerStatus(player* p)
+{
+	char direction[11];
+	getDirection(p->direction, direction);
+	printf("le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n", 
+			p->posX, p->posY, direction, p->arrow ? "possède encore" : "ne possède plus");
+}
+
+void stairInitialisation(stairs *s)
+{
+	//mettre un trou, un wumpus, un trésor sur une case distincte.
+	s->wumpusAlive = true;
+	s->tresureFounded = false;
+	int i = 0, j = 0;
+	for(i ; i < STAIRSIZE ; ++i)
+	{
+		j = 0;
+		for(j; j < STAIRSIZE; ++j)
+		{
+			s->map[i][j] = ' ';
+		}
+	}
+	s->map[STAIRSIZE - 1][0] = 'E'; //echelle
+}
+
+//affiche l'étage sans les informations sur la position des éléments(trésor, wumpus, trou)
+/*
+	(0,0)___________
+		 |0|1|2|3|4|
+		 |5|6|7|8|9|
+		 |10|11|12|13|14|
+		 |15|16|17|18|19|
+		 |20|21|22|23|24|
+		 ___________(4,4)
+*/
+void serveurPrintStairs(stairs* s, player* p)
+{
+	printf("___________\n");
+	int i = 0, j = 0;
+	int k = 0;
+	for(i ; i < STAIRSIZE ; ++i)
+	{
+		j = 0;
+		printf("|");
+		for(j; j < STAIRSIZE; ++j)
+		{		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
+				printf("%c|", (j == p->posX && i == p->posY) ? arrows[p->direction] : s->map[i][j]);
+		}
+		printf("\n");
+	}
+	printf("___________\n");
+}
+
+
+void clientPrintStairs(stairs* s, player* p)
+{//TODO: faire un prétraitement pour afficher la map avec le résultat des senseurs.
+	
+}
+
 int main(int argc, char* argv[])
 {
 
+	player* p = (player *) malloc(sizeof(player));
+	playerInitialisation(p);
+	printPlayerStatus(p);
+		
+	stairs *s = (stairs *)malloc(sizeof(stairs));
+	stairInitialisation(s);
+	serveurPrintStairs(s, p);
+	
 	Action* playerActions = initialisation();
 	Action* theAction;
 	
@@ -138,18 +256,27 @@ int main(int argc, char* argv[])
 
     do
     {
+/*    	printf("plop 1\n");*/
         fgets(temp, sizeof(temp), stdin);	//récupère la ligne entrée sur stdin('\n' y compris)
+/*        printf("plop 2\n");*/
         sscanf (temp, "%[a-zA-Z]s", command);	//filtrage de la chaine pour ne récupérer que les chaines de caractères (et enlever '\n')
+/*        printf("plop 3\n");*/
         theAction = findActionFromCommand(playerActions, command);
+/*        printf("plop 4\n");*/
         if(theAction == NULL)
         {
         	printf("la commande : %s, n'existe pas\n", command);
         }
         else
         {
-			theAction->action();
+/*        	printf("plop 5\n");*/
+			theAction->action(p);
+/*			printf("plop 6\n");*/
+			serveurPrintStairs(s, p);
+/*			printf("plop 7\n");*/
         }
-        
+        temp[0] = '\0';
+        command[0] = '\0';
     }
     while(strcmp(command, "quit"));
 
