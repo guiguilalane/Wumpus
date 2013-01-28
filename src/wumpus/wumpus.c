@@ -218,7 +218,6 @@ void serveurPrintStairs(stairs* s, player* p)
 {
 	printf("___________\n");
 	int i = 0, j = 0;
-	int k = 0;
 	for(i ; i < STAIRSIZE ; ++i)
 	{
 		j = 0;
@@ -252,28 +251,21 @@ int main(int argc, char* argv[])
 	Action* playerActions = initialisation();
 	Action* theAction;
 	
-    char command[10], temp[10];
+    char command[15], temp[15];
 
     do
     {
-/*    	printf("plop 1\n");*/
         fgets(temp, sizeof(temp), stdin);	//récupère la ligne entrée sur stdin('\n' y compris)
-/*        printf("plop 2\n");*/
         sscanf (temp, "%[a-zA-Z]s", command);	//filtrage de la chaine pour ne récupérer que les chaines de caractères (et enlever '\n')
-/*        printf("plop 3\n");*/
         theAction = findActionFromCommand(playerActions, command);
-/*        printf("plop 4\n");*/
         if(theAction == NULL)
         {
         	printf("la commande : %s, n'existe pas\n", command);
         }
         else
         {
-/*        	printf("plop 5\n");*/
 			theAction->action(p);
-/*			printf("plop 6\n");*/
 			serveurPrintStairs(s, p);
-/*			printf("plop 7\n");*/
         }
         temp[0] = '\0';
         command[0] = '\0';
