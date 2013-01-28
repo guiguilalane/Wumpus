@@ -146,8 +146,7 @@ Action* initialisation()
     return actions;
 }
 
-/***********************************************************/
-
+//initialise le joueur à chaque début de niveau
 void playerInitialisation(player* p)
 {
 	p->posX = 0;
@@ -155,6 +154,86 @@ void playerInitialisation(player* p)
 	p->direction = NORTH;
 	p->arrow = true;
 }
+
+//initialise l'étage
+void stairInitialisation(stairs *s)
+{	
+			/*définition des coordonnées des objets*/
+			
+	//contiendra les coordonnées de l'échelles, du trou, du wumpus et du trésor.
+	int objects[4][2] = {
+							{STAIRSIZE - 1, 0},//echelle
+							{-1, -1},//trou
+							{-1, -1},//wumpus
+							{-1, -1}//trésor
+						};
+	int x, y;
+	srand(time(NULL));
+	int k = 1;
+	int i = 0, j = 0;
+	bool used = false;
+	while(k <= 3)
+	{
+		//définition aléatoire des coordonnées du prochain objet à placer
+		x = (rand()%STAIRSIZE);
+		y = (rand()%STAIRSIZE);
+		used = false;
+		i = 0;
+		//verification que les coordonnées ne sont pas déjà utilisée
+		while(!used && i < 4)
+		{
+			used = used || ((objects[i][0] == x) && (objects[i][1] == y));
+			++i;
+		}
+		if(!used)
+		{//si non utiliser on stock les coordonnées dans une variables objects
+			objects[k][0] = x;
+			objects[k][1] = y;
+			++k;
+		}
+	}
+
+		/*mise en place des objets sur la map*/
+
+	s->wumpusAlive = true;
+	s->tresureFounded = false;
+	for(i = 0 ; i < STAIRSIZE ; ++i)
+	{
+		j = 0;
+		for(j; j < STAIRSIZE; ++j)
+		{
+			
+			s->map[i][j] = ' ';
+		}
+	}
+	
+	//lecture de la variables objects et placement des objects
+	for(k = 0; k < 4 ; ++k)
+	{
+		x = objects[k][0];
+		y = objects[k][1];
+		switch(k)
+		{
+			case 0:
+				s->map[x][y] = 'E';//echelle
+				break;
+			
+			case 1:
+				s->map[x][y] = 'H';//trou(hole)
+				break;
+			
+			case 2:
+				s->map[x][y] = 'W';//wumpus
+				break;
+			
+			case 3:
+				s->map[x][y] = 'T';//tresor
+				break;
+		}
+	}
+}
+
+/***************************************TO FINISH***************************************/
 
 //fonction temporaire
 void getDirection(int d, char* direction)
@@ -179,29 +258,13 @@ void getDirection(int d, char* direction)
 	}
 }
 
+
 void printPlayerStatus(player* p)
 {
 	char direction[11];
 	getDirection(p->direction, direction);
 	printf("le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n", 
 			p->posX, p->posY, direction, p->arrow ? "possède encore" : "ne possède plus");
-}
-
-void stairInitialisation(stairs *s)
-{
-	//mettre un trou, un wumpus, un trésor sur une case distincte.
-	s->wumpusAlive = true;
-	s->tresureFounded = false;
-	int i = 0, j = 0;
-	for(i ; i < STAIRSIZE ; ++i)
-	{
-		j = 0;
-		for(j; j < STAIRSIZE; ++j)
-		{
-			s->map[i][j] = ' ';
-		}
-	}
-	s->map[STAIRSIZE - 1][0] = 'E'; //echelle
 }
 
 //affiche l'étage sans les informations sur la position des éléments(trésor, wumpus, trou)
@@ -267,6 +330,7 @@ int main(int argc, char* argv[])
 			theAction->action(p);
 			serveurPrintStairs(s, p);
         }
+        //INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
         temp[0] = '\0';
         command[0] = '\0';
     }

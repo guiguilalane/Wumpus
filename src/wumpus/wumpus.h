@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<stdbool.h>
+#include <stdbool.h>
+#include <time.h>
+
 #define NBACTION 6
 
 #define A_QUITTER 0
@@ -39,3 +41,5 @@ T_FONC_ACTION down;
 
 Action* findActionFromCommand(Action* action, char* command);
 Action* initialisation();
+void playerInitialisation(player* p);
+void stairInitialisation(stairs *s)
