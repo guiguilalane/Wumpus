@@ -1,24 +1,5 @@
 #include "wumpus.h"
 
-//taille de l'étage
-#define STAIRSIZE 5
-
-//définition des directions;
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
-
-char arrows[4] = {'8', '6', '2', '4'};
-
-/*le point d'origine se trouve en haut à gauche de la map*/
-typedef struct 
-{
-	char map[STAIRSIZE][STAIRSIZE];
-	bool wumpusAlive;
-	bool tresureFounded;
-} stairs;
-
 //lorsque le joueur veux quitter la partie
 void quit(player* p)
 {

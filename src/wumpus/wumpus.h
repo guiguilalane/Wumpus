@@ -13,6 +13,25 @@
 #define	A_TIRER 4
 #define A_DESCENDRE 5
 
+//taille de l'étage
+#define STAIRSIZE 5
+
+//définition des directions;
+#define NORTH 0
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
+
+char arrows[4] = {'8', '6', '2', '4'};
+
+/*le point d'origine se trouve en haut à gauche de la map*/
+typedef struct 
+{
+	char map[STAIRSIZE][STAIRSIZE];
+	bool wumpusAlive;
+	bool tresureFounded;
+} stairs;
+
 //Définition du joueur
 typedef struct
 {
@@ -42,4 +61,4 @@ T_FONC_ACTION down;
 Action* findActionFromCommand(Action* action, char* command);
 Action* initialisation();
 void playerInitialisation(player* p);
-void stairInitialisation(stairs *s)
+void stairInitialisation(stairs *s);
