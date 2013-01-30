@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #define TAILLE_MAX_NOM 256
-#define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
+//#define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
