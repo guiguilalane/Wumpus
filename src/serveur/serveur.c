@@ -302,7 +302,7 @@ void clientPrintStairs(stairs* s, player* p)
 	
 }
 
-void renvoi (int sock)  {
+void traitementCommande (int sock)  {
 
 	char buffer[TAILLE_MAX_NOM];
 	int longueur;
@@ -408,11 +408,11 @@ int main(int argc, char* argv[])
 	//initialisation du jeu
 	p = (player *) malloc(sizeof(player));
 	playerInitialisation(p);
-	printPlayerStatus(p);
+/*	printPlayerStatus(p);*/
 		
 	s = (stairs *)malloc(sizeof(stairs));
 	stairInitialisation(s);
-	serveurPrintStairs(s, p);
+/*	serveurPrintStairs(s, p);*/
 	
 	/*associe la chaine de caractère entrée par l'utilisateur
 	  à la fonction qui correspond*/
@@ -434,7 +434,7 @@ int main(int argc, char* argv[])
 		
 		/*traitement du message*/
 		printf("reception d'un message.\n.");
-		renvoi(nouv_socket_descriptor);
+		traitementCommande(nouv_socket_descriptor);
 		
 		close(nouv_socket_descriptor);
     }

@@ -21,3 +21,6 @@
 wumpus
 
 *exemple*
+
+src/client/client
+src/serveur/serveur
