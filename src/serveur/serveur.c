@@ -2,9 +2,10 @@
 
 #include <linux/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netdb.h>
 #define TAILLE_MAX_NOM 256
-//#define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
+#define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -88,7 +89,7 @@ param action : ensemble des actions disponibles dans le jeu
 return l'action désignée par command*/
 Action* findActionFromCommand(Action* action, char* command)
 {
-    Action* a;
+    Action* a = NULL;
     int i = 0;
     bool find = false;
     
@@ -304,36 +305,54 @@ void clientPrintStairs(stairs* s, player* p)
 
 void traitementCommande (int sock)  {
 
-	char buffer[TAILLE_MAX_NOM];
-	int longueur;
-	printf("plop 2\n");
+		//attente de la reception d'un message pour en connaitre la longueur.
+		int len = 0;
+		while(!len && ioctl(sock, FIONREAD, &len) >= 0)
+		{
+			usleep(500);
+		}
+		//initialisation de la taille de la commande en fonction de la longueur reçu par la socket
+		char command[len];
+		
+		//pour le moment notifie le client que ça commande à bien été reçue
+		/*TODO: retourner le traitement de la nouvelle position*/
+		char* result = (char*) malloc(strlen("commande reçu"));
+		sprintf(result, "commande reçu");
+		
+		int longueur;	
+		if((longueur = read(sock, command, len)) <= 0)
+		{
+			return;
+		}
 	
-	if((longueur = read(sock, buffer, sizeof(buffer))) <= 0)
-	{
-		return;
-	}
-	printf("plop 3\n");
-	
-	//récupère la commande envoyé par l'utilisateur
-	printf("message lu : %s \n", buffer);
-	
-	//faire le traitement en fonction de la commande
-	Action* theAction = findActionFromCommand(playerActions, buffer);
-        if(theAction == NULL)
-        {
-        	printf("la commande : %s, n'existe pas\n", buffer);
-        }
-        else
-        {
-			theAction->action(p);
-			serveurPrintStairs(s, p);
-        }
-        //INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
-        buffer[0] = '\0';
+		//récupère la commande envoyé par l'utilisateur
+		printf("message lu : %s\n", command);
+		
+		/*il arrive que malgrès la connaissance de la longueur de la commande retournée par la socket il y ai des soucis de longueur.
+			Pour palier à ce probleme on créer une nouvelle variable qui ne contient que les 'len' premiers caractères.*/
+		char realCommand[len];
+		strncpy(realCommand, command, len);
+		realCommand[len] = '\0';
+		
+		//faire le traitement en fonction de la commande
+		Action* theAction = findActionFromCommand(playerActions, realCommand);
+		
+		    if(theAction == NULL)
+		    {
+		    	result = (char*) realloc(result, strlen("la commande : , n'existe pas\n") + strlen(realCommand) + 1);
+		    	sprintf(result, "la commande : %s, n'existe pas\n", realCommand);
+		    }
+		    else
+		    {
+				theAction->action(p);
+				serveurPrintStairs(s, p);
+		    }
+		    //INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
+	/*        buffer[0] = '\0';*/
 
-	//écrit le nouvel état de l'étage
-/*	write(sock, buffer, strlen(buffer)+1);*/
-	printf("message envoye. \n");
+		//écrit le nouvel état de l'étage
+		write(sock, result, strlen(result)+1);
+		printf("message envoye. \n");
 	return;
 }
 
