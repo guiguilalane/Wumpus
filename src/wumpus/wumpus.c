@@ -65,6 +65,9 @@ void down()
 }
 
 //recherche l'action qui correspond à la commande
+/*
+param action : ensemble des actions disponibles dans le jeu
+return l'action désignée par command*/
 Action* findActionFromCommand(Action* action, char* command)
 {
     Action* a;
@@ -142,7 +145,7 @@ void stairInitialisation(stairs *s)
 			/*définition des coordonnées des objets*/
 			
 	//contiendra les coordonnées de l'échelles, du trou, du wumpus et du trésor.
-	int objects[4][2] = {
+	int objects[4][2] = { //{ y,  x}
 							{STAIRSIZE - 1, 0},//echelle
 							{-1, -1},//trou
 							{-1, -1},//wumpus
@@ -150,9 +153,9 @@ void stairInitialisation(stairs *s)
 						};
 	int x, y;
 	srand(time(NULL));
-	int k = 1;
+	int k = 1; //represente tours après tours : trou, wumpus, trésor
 	int i = 0, j = 0;
-	bool used = false;
+	bool used = false;//coordonnées déja utilisées ou non
 	while(k <= 3)
 	{
 		//définition aléatoire des coordonnées du prochain objet à placer
@@ -255,7 +258,7 @@ void printPlayerStatus(player* p)
 		 |5|6|7|8|9|
 		 |10|11|12|13|14|
 		 |15|16|17|18|19|
-		 |20|21|22|23|24|
+	(4,0)|20|21|22|23|24|
 		 ___________(4,4)
 */
 void serveurPrintStairs(stairs* s, player* p)
@@ -292,7 +295,9 @@ int main(int argc, char* argv[])
 	stairInitialisation(s);
 	serveurPrintStairs(s, p);
 	
-	Action* playerActions = initialisation();
+	/*associe la chaine de caractère entrée par l'utilisateur
+	  à la fonction qui correspond*/
+	Action* playerActions = initialisation();//retourne le tableau de toutes les actions
 	Action* theAction;
 	
     char command[15], temp[15];
