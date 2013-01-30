@@ -306,11 +306,13 @@ void traitementCommande (int sock)  {
 
 	char buffer[TAILLE_MAX_NOM];
 	int longueur;
+	printf("plop 2\n");
 	
 	if((longueur = read(sock, buffer, sizeof(buffer))) <= 0)
 	{
 		return;
 	}
+	printf("plop 3\n");
 	
 	//récupère la commande envoyé par l'utilisateur
 	printf("message lu : %s \n", buffer);
@@ -435,6 +437,7 @@ int main(int argc, char* argv[])
 		/*traitement du message*/
 		printf("reception d'un message.\n.");
 		traitementCommande(nouv_socket_descriptor);
+		printf("plop 1\n");
 		
 		close(nouv_socket_descriptor);
     }
