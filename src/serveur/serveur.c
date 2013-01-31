@@ -303,8 +303,10 @@ void clientPrintStairs(stairs* s, player* p)
 	
 }
 
-void traitementCommande (int sock)  {
+void jeu1joueur (int sock)  {
 
+	while(1)
+	{
 		//attente de la reception d'un message pour en connaitre la longueur.
 		int len = 0;
 		while(!len && ioctl(sock, FIONREAD, &len) >= 0)
@@ -317,7 +319,7 @@ void traitementCommande (int sock)  {
 		//pour le moment notifie le client que ça commande à bien été reçue
 		/*TODO: retourner le traitement de la nouvelle position*/
 		char* result = (char*) malloc(strlen("commande reçu"));
-		sprintf(result, "commande reçu");
+		sprintf(result, "commande reçu\n");
 		
 		int longueur;	
 		if((longueur = read(sock, command, len)) <= 0)
@@ -353,6 +355,7 @@ void traitementCommande (int sock)  {
 		//écrit le nouvel état de l'étage
 		write(sock, result, strlen(result)+1);
 		printf("message envoye. \n");
+	}
 	return;
 }
 
@@ -455,7 +458,7 @@ int main(int argc, char* argv[])
 		
 		/*traitement du message*/
 		printf("reception d'un message.\n.");
-		traitementCommande(nouv_socket_descriptor);
+		jeu1joueur(nouv_socket_descriptor);
 		printf("plop 1\n");
 		
 		close(nouv_socket_descriptor);
