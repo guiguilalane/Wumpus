@@ -35,6 +35,7 @@ typedef struct
 //Définition du joueur
 typedef struct
 {
+	char* pseudo;
 	int posX;
 	int posY;
 	int direction;
