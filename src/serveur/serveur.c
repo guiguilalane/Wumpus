@@ -12,8 +12,8 @@ typedef struct sockaddr_in sockaddr_in;
 typedef struct hostent hostent;
 typedef struct servent servent;
 
-// Joueur
-player* p;
+/*// Joueur*/
+/*player* p;*/
 // Etage
 stairs *s;
 // Actions disponibles
@@ -154,6 +154,7 @@ Action* initialisationActions()
 void playerInitialisation(player* p)
 {
 	p->pseudo = "";
+	p->score = 0;
 	p->posX = 0;
 	p->posY = (STAIRSIZE - 1);
 	p->direction = NORTH;
@@ -262,6 +263,33 @@ void getDirection(int d, char* direction)
 	}
 }
 
+//Senseur de détection de l'objet
+bool sensor(player* p, char o)
+{
+	//Coordonnées de la case sur laquelle on test la présence du wumpus
+	int testX = p->posX-1;
+	int testY = p->posY-1;
+/*	printf("première coordonnées : (%d, %d)\n", testX, testY);*/
+	//Coordonnées de la dernière case à tester
+	int xFin = p->posX+1;
+	int yFin = p->posY+1;
+/*	printf("derniere coordonnées : (%d, %d)\n", xFin, yFin);*/
+	bool find = false;
+	while(!find && testY <= yFin)//lorsque la 3ième ligne à été testée on sort de la boucle
+	{
+		if(testX < STAIRSIZE && testX >= 0 && testY < STAIRSIZE && testY >= 0)
+		{
+			find = (s->map[testY][testX] == o);
+		}
+/*		printf("(%d, %d)\n", testX, testY);*/
+		testX++;
+		if(testX > xFin){
+			testX = xFin - 2;
+			testY++;
+		}
+	}
+	return find;
+}
 
 void printPlayerStatus(player* p)
 {
@@ -269,19 +297,32 @@ void printPlayerStatus(player* p)
 	getDirection(p->direction, direction);
 	printf("Le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n",
 		   p->posX, p->posY, direction, p->arrow ? "possède encore" : "ne possède plus");
+	if(sensor(p, 'W'))
+	{
+		printf("Pouark! Ça pue!!\n");
+	}
+	if(sensor(p, 'T'))
+	{
+		printf("Ça sonne comme des pièces d'or à mes oreilles.\n");
+	}
+	if(sensor(p, 'H'))
+	{
+		printf("PFFFFF! Tien un courant d'air!\n");
+	}
+	
 }
 
 // Affiche l'étage sans les informations sur la position des éléments (trésor, wumpus, trou)
 /*
  (0,0)___________
- |0|1|2|3|4|
- |5|6|7|8|9|
- |10|11|12|13|14|
- |15|16|17|18|19|
- (4,0)|20|21|22|23|24|
- ___________(4,4)
+	  |0|1|2|3|4|
+	  |5|6|7|8|9|
+	  |10|11|12|13|14|
+	  |15|16|17|18|19|
+ (4,0)|20|21|22|23|24|(4,4)
+	  ___________
  */
-void serveurPrintStairs(stairs* s, player* p)
+void serveurPrintStairs(player* p)
 {
 	printf("___________\n");
 	int i = 0, j = 0;
@@ -299,12 +340,25 @@ void serveurPrintStairs(stairs* s, player* p)
 }
 
 
-void clientPrintStairs(stairs* s, player* p)
-{//TODO: faire un prétraitement pour afficher la map avec le résultat des senseurs.
+void clientPrintStairs(player* p)
+{
+	printf("___________\n");
+	int i = 0, j = 0;
+	for(i ; i < STAIRSIZE ; ++i)
+	{
+		j = 0;
+		printf("|");
+		for(j; j < STAIRSIZE; ++j)
+		{		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
+			printf("%c|", (j == p->posX && i == p->posY) ? 'P' : s->map[i][j]);
+		}
+		printf("\n");
+	}
+	printf("___________\n");
 	
 }
 
-void jeu1joueur (int sock)  {
+void jeu1joueur (int sock, player* p)  {
 	
 	while(1)
 	{
@@ -350,7 +404,12 @@ void jeu1joueur (int sock)  {
 		else
 		{
 			theAction->action(p);
-			serveurPrintStairs(s, p);
+			if(strcmp(realCommand, "quit")==0)
+			{
+				break;
+			}
+			serveurPrintStairs(p);
+			printPlayerStatus(p);
 		}
 		//INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
 		/*        buffer[0] = '\0';*/
@@ -433,7 +492,7 @@ int main(int argc, char* argv[])
 	// Fin initialisation socket
 	
 	// Initialisation du jeu
-	p = (player *) malloc(sizeof(player));
+	player* p = (player *) malloc(sizeof(player));
 	playerInitialisation(p);
 	/* printPlayerStatus(p);*/
 	
@@ -484,8 +543,11 @@ int main(int argc, char* argv[])
 		p->pseudo = realCommand;
 		write(nouv_socket_descriptor, p->pseudo, strlen(p->pseudo)+1);
 		
+		serveurPrintStairs(p);
+		printPlayerStatus(p);
+		
 		/* Traitement du message */
-		jeu1joueur(nouv_socket_descriptor);
+		jeu1joueur(nouv_socket_descriptor, p);
 		
 		close(nouv_socket_descriptor);
     }

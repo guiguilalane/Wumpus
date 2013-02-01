@@ -36,6 +36,7 @@ typedef struct
 typedef struct
 {
 	char* pseudo;
+	int score;
 	int posX;
 	int posY;
 	int direction;
