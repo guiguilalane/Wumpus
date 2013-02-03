@@ -291,23 +291,28 @@ bool sensor(player* p, char o)
 	return find;
 }
 
-void printPlayerStatus(player* p)
+//Peut provoquer un bufferOverflow si la taille de la map excède 999*999
+void printPlayerStatus(player* p, char* temp)
 {
 	char direction[11];
 	getDirection(p->direction, direction);
-	printf("Le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n",
+	
+	char* t = (char*) malloc(strlen("Le joueur est à la position : (xxx, xxx)\nregarde en direction  et  sa flèche.\n") + 11 + strlen("ne possède plus"));
+	
+	sprintf(t, "Le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n",
 		   p->posX, p->posY, direction, p->arrow ? "possède encore" : "ne possède plus");
+	strcat(temp, t);
 	if(sensor(p, 'W'))
 	{
-		printf("Pouark! Ça pue!!\n");
+		strcat(temp, "Pouark! Ça pue!!\n");
 	}
 	if(sensor(p, 'T'))
 	{
-		printf("Ça sonne comme des pièces d'or à mes oreilles.\n");
+		strcat(temp, "Ça sonne comme des pièces d'or à mes oreilles.\n");
 	}
 	if(sensor(p, 'H'))
 	{
-		printf("PFFFFF! Tien un courant d'air!\n");
+		strcat(temp, "PFFFFF! Tiens un courant d'air!\n");
 	}
 	
 }
@@ -340,22 +345,35 @@ void serveurPrintStairs(player* p)
 }
 
 
-void clientPrintStairs(player* p)
+char* clientPrintStairs(player* p, char* temp)
 {
-	printf("___________\n");
+	strcat(temp, "___________\n");
+/*	printf("___________\n");*/
 	int i = 0, j = 0;
 	for(i ; i < STAIRSIZE ; ++i)
 	{
 		j = 0;
-		printf("|");
+		strcat(temp, "|");
+/*		printf("|");*/
 		for(j; j < STAIRSIZE; ++j)
 		{		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
-			printf("%c|", (j == p->posX && i == p->posY) ? 'P' : s->map[i][j]);
+			if((j == p->posX && i == p->posY))
+			{
+				strcat(temp, "P|");
+			}
+			else
+			{
+				strcat(temp, s->map[i][j]=='E' ? "E|" : " |");
+			}
+/*			printf("%c|", (j == p->posX && i == p->posY) ? 'P' : ' ');*/
 		}
-		printf("\n");
+		strcat(temp, "\n");
+/*		printf("\n");*/
 	}
-	printf("___________\n");
-	
+	strcat(temp, "___________\n");
+/*	printf("___________\n");*/
+/*	printf("%s", temp);*/
+	return temp;
 }
 
 void jeu1joueur (int sock, player* p)  {
@@ -408,8 +426,12 @@ void jeu1joueur (int sock, player* p)  {
 			{
 				break;
 			}
+			char temp[277] = "\0";
+			clientPrintStairs(p, temp);
+			printPlayerStatus(p, temp);
+			result = (char*) realloc(result, strlen(temp));
+			sprintf(result, "%s", temp);
 			serveurPrintStairs(p);
-			printPlayerStatus(p);
 		}
 		//INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
 		/*        buffer[0] = '\0';*/
@@ -541,10 +563,16 @@ int main(int argc, char* argv[])
 		strncpy(realCommand, command, len);
 		realCommand[len] = '\0';
 		p->pseudo = realCommand;
-		write(nouv_socket_descriptor, p->pseudo, strlen(p->pseudo)+1);
 		
+		char temp[277] = "\0";
+		clientPrintStairs(p, temp);
+		printPlayerStatus(p, temp);
 		serveurPrintStairs(p);
-		printPlayerStatus(p);
+		
+		
+		write(nouv_socket_descriptor, temp, strlen(temp)+1);
+		
+		
 		
 		/* Traitement du message */
 		jeu1joueur(nouv_socket_descriptor, p);

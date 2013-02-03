@@ -1,4 +1,4 @@
-	G- serveur renvoi la carte (echelle + position du joueur + résultat des senseurs) 
+	G- serveur renvoi la carte (echelle + position du joueur + résultat des senseurs) (check!)
 	- n client sur la même carte (multi-thread)
 		- Lorsque le trésor est trouvé ou le Wumpus mort --> On modifie la carte (variable global)
 		- Semaphore: a chaque commande regarder si on peut acceder àla case (un mutex par case)
