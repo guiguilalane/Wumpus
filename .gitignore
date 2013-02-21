@@ -19,7 +19,10 @@
 # Others
 *~
 wumpus
+
+# Qt
 .pro.user
+.pro
 
 *exemple*
 
