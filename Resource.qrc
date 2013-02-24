@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/Pictures">
+        <file>Pictures/arrow_down.png</file>
+        <file>Pictures/arrow_redo.png</file>
+        <file>Pictures/arrow_undo.png</file>
+        <file>Pictures/arrow_up.png</file>
+        <file>Pictures/gnome-logout.png</file>
+        <file>Pictures/gnome-session-logout.png</file>
+        <file>Pictures/arrow.png</file>
+    </qresource>
+</RCC>
