@@ -14,3 +14,19 @@
 		changement d'étage
 		
 	- Affichage des scores quand l'un des joueurs quit la partie -> Comment est-ce qu'on va gérer le fait qu'un joueur quitte la partie (est-ce que ca arrete pour tout le monde ? si non: est-ce qu'un joueur qui se connecte peut rejoindre la partie en cours ou non)
+
+Forme de la structure:
+int x; // position x du personnage
+int y; // position y du personnage
+int xt; // position x du tresor
+int yt; // position y du trésor
+// Besoin de la position du trésor car une fois trouver je souhaite l'afficher sur la carte
+bool treasureFind; // Quand le personnage trouve le trésor
+bool fallInHole; // Quand le personnage tombe dans le trou
+bool wumpusFind; // Quand le personnage tombe sur la case du Wumpus
+bool wumpusKill; // Quand le Wumpus est tué par la flèche
+int score; // Le score du personnage
+bool besideWumpus; // Quand le personnage est à coté du Wumpus
+bool besideHole; // Quand le personnage est à coté du trou
+bool besideTreasure; // Quand le personnage est à coté du trésor
+// J'en oubli peut être mais c'est ce que j'ai pour le moment ;)
