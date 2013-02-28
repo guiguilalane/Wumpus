@@ -41,6 +41,10 @@ typedef struct
 	int posY;
 	int direction;
 	bool arrow;
+    bool deadByWumpus;
+    bool fallInHole;
+    bool findTresure;
+    bool shotTheWumpus;
 } player;
 
 /*déclaration du type T_FONC_ACTION*/
@@ -64,3 +68,4 @@ Action* findActionFromCommand(Action* action, char* command);
 Action* initialisationActions();
 void playerInitialisation(player* p);
 void stairInitialisation(stairs *s);
+bool sensor(player* p, stairs* s, char o);
