@@ -566,8 +566,8 @@ void * jeuNjoueur (void * arguments)
 		}
 		
 		// Ecrit le nouvel état de l'étage
-//		write(nouv_socket_descriptor, result, strlen(result)+1);
-        write(nouv_socket_descriptor, toSend, sizeof(toClient));
+		write(nouv_socket_descriptor, result, strlen(result)+1);
+/*        write(nouv_socket_descriptor, toSend, sizeof(toClient));*/
 
 		printf("Message envoye. \n");
 	}
@@ -723,6 +723,7 @@ int main(int argc, char* argv[])
 			if(jeuxTmp != NULL)
 			{
                 //TODO: faire une copie mémoire
+                jeux = (jeu*) memmove(jeux, jeuxTmp, sizeof(jeux) + sizeof(jeu*));
 				jeux = jeuxTmp;
 			}
 			else
@@ -781,7 +782,7 @@ int main(int argc, char* argv[])
 		realCommand[len] = '\0';
 		p->pseudo = realCommand;
 		
-        char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!";
+        char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!\n";
 //		clientPrintStairs(p, jeux[lastGame].s, temp);
 //		printPlayerStatus(p, jeux[lastGame].s, temp);
 		serveurPrintStairs(p, jeux[lastGame].s);
@@ -793,7 +794,8 @@ int main(int argc, char* argv[])
         tresurPos[1] = -1;
         initSending(&tc, p, jeux[lastGame].s, tresurPos);
 
-        write(nouv_socket_descriptor, &tc, sizeof(toClient));
+/*        write(nouv_socket_descriptor, &tc, sizeof(toClient));*/
+		write(nouv_socket_descriptor, temp, strlen(temp));
 		
 		if(pthread_create(&nouveau_client, NULL,
 								jeuNjoueur,

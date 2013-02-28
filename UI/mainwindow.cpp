@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _scene->addItem(_characterItem);
     ui->view->setScene(_scene);
 
-//    mapLoader(QString("../Wumpus.tmx"));
+    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
@@ -37,8 +37,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::mapLoader(QString file)
 {
-    MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-    _mapItem->setPixmap(renderer.createRendu()->pixmap()/*.scaled(600,600)*/);
+    Map* m = GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap();
+    MapRenderer renderer(m);
+    _mapItem->setPixmap(renderer.createRendu()->pixmap().scaled(600,600));
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
