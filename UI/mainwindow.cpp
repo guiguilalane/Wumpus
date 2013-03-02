@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     cont_ = new Controleur();
+    connect(cont_,SIGNAL(infoRecu()),this,SLOT(updateInfo()));
 
     ui->setupUi(this);
 
@@ -18,13 +19,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
 
     // Initialization of the scene and its components.
-    _scene = new QGraphicsScene;
-    _mapItem = new QGraphicsPixmapItem;
-    _characterItem = new QGraphicsPixmapItem;
+    // TODO : A voir pour que la redimensionnement soit automatique
+    scene_ = new QGraphicsScene(0,0,395,331,this);
+    mapItem_ = new QGraphicsPixmapItem;
+    characterItem_ = new QGraphicsPixmapItem;
 
-    _scene->addItem(_mapItem);
-    _scene->addItem(_characterItem);
-    ui->view->setScene(_scene);
+    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+    // A revoir position qui ne marche pas
+    characterItem_->setPos(0,4*32);
+
+    scene_->addItem(mapItem_);
+    scene_->addItem(characterItem_);
+    ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
 
 //    mapLoader(QString("../Wumpus.tmx"));
 }
@@ -38,7 +44,15 @@ MainWindow::~MainWindow()
 void MainWindow::mapLoader(QString file)
 {
     MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-    _mapItem->setPixmap(renderer.createRendu()->pixmap()/*.scaled(600,600)*/);
+    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
+}
+
+void MainWindow::loadCharacter()
+{
+    // En fonction de l'orientation du personnage changer l'icone
+    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+    // Mettre pos
+    //characterItem_->setPos(0,4);
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
@@ -95,6 +109,16 @@ void MainWindow::on_quit_clicked()
     ui->shoot->setEnabled(false);
     ui->down->setEnabled(false);
     ui->quit->setEnabled(false);
+}
+
+void MainWindow::updateInfo()
+{
+    std::cout << "info reçu" << std::endl;
+//    loadCharacter();
+    // Changer le personnage et son emplacement
+    // Afficher la carte si elle est trouvée
+    // Lancer pop-up avec carte trouvée, tomber trou, wumpus tué, wumpus nous a tué
+    // En fonction emplacement personnage désactivé les boutons
 }
 
 // TODO Afficher la carte

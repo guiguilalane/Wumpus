@@ -23,6 +23,7 @@ public:
     ~MainWindow();
 
     void mapLoader(QString file);
+    void loadCharacter();
 
 private slots:
     void acceptPseudo(QString *pseudo);
@@ -41,11 +42,13 @@ private slots:
 
     void on_quit_clicked();
 
+    void updateInfo();
+
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene * _scene;
-    QGraphicsPixmapItem * _mapItem;
-    QGraphicsPixmapItem * _characterItem;
+    QGraphicsScene * scene_;
+    QGraphicsPixmapItem * mapItem_;
+    QGraphicsPixmapItem * characterItem_;
     Controleur * cont_;
 
     Pseudo * pseudoDialog_;

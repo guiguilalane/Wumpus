@@ -67,7 +67,6 @@ void Client::envoiCommand(char *command)
     /* Mise en attente du programme pour simuler un délai de transmission */
     /*sleep(3);*/
     std::printf("Commande envoyée au serveur. \n");
-    receptionInfo();
 }
 
 void Client::receptionInfo()
@@ -82,5 +81,19 @@ void Client::receptionInfo()
 
 void Client::connexion()
 {
-    // A voir ce qu'il faut mettre dedans
+    // TODO A voir ce qu'il faut mettre dedans car là on concerve le jeu sur lequel on est
+    /* Création de la socket */
+    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
+        exit(1);
+    }
+
+    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
+    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
+        perror("Erreur : impossible de se connecter au serveur");
+        exit(1);
+    }
+    connect_ = true;
+    printf("Connexion établie avec le serveur \n");
+    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }
