@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene_->addItem(characterItem_);
     ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
 
-//    mapLoader(QString("../Wumpus.tmx"));
+    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()

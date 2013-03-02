@@ -14,6 +14,23 @@ int vardebug;
 
 typedef struct
 {
+    bool coherent;//indique si les données (reçues/envoyées) sont coherentes
+    int playerPosX;
+    int playerPosY;
+    int tresurePosX;
+    int tresurPosY;
+    bool tresureFinf;
+    bool fallInHole;
+    bool wumpusFind;
+    bool wumpusKill;
+    int score;
+    bool besideWumpus;
+    bool besideHole;
+    bool besideTresure;
+} toClient;
+
+typedef struct
+{
 	void* sock;
 	player* p;
 	int gameNumber;
@@ -181,6 +198,10 @@ void playerInitialisation(player* p)
 	p->posY = (STAIRSIZE - 1);
 	p->direction = NORTH;
 	p->arrow = true;
+    p->deadByWumpus = false;
+    p->fallInHole = false;
+    p->findTresure = false;
+    p->shotTheWumpus = false;
 }
 
 // Initialise l'étage
@@ -260,7 +281,69 @@ void stairInitialisation(stairs *s)
 	}
 }
 
+//Senseur de détection de l'objet
+bool sensor(player* p, stairs* s, char o)
+{
+    //Coordonnées de la case sur laquelle on test la présence du wumpus
+    int testX = p->posX-1;
+    int testY = p->posY-1;
+/*	printf("première coordonnées : (%d, %d)\n", testX, testY);*/
+    //Coordonnées de la dernière case à tester
+    int xFin = p->posX+1;
+    int yFin = p->posY+1;
+/*	printf("derniere coordonnées : (%d, %d)\n", xFin, yFin);*/
+    bool find = false;
+    while(!find && testY <= yFin)//lorsque la 3ième ligne à été testée on sort de la boucle
+    {
+        if(testX < STAIRSIZE && testX >= 0 && testY < STAIRSIZE && testY >= 0)
+        {
+            find = (s->map[testY][testX] == o);
+        }
+/*		printf("(%d, %d)\n", testX, testY);*/
+        testX++;
+        if(testX > xFin){
+            testX = xFin - 2;
+            testY++;
+        }
+    }
+    return find;
+}
+
+void toClientInitialisation(toClient *toSend)
+{
+    toSend->coherent = false;
+    toSend->playerPosX = -1;
+    toSend->playerPosY = -1;
+    toSend->tresurePosX = -1;
+    toSend->tresurPosY = -1;
+    toSend->besideHole = false;
+    toSend->besideTresure = false;
+    toSend->besideWumpus = false;
+    toSend->score = -1;
+    toSend->tresureFinf = false;
+    toSend->fallInHole = false;
+    toSend->wumpusFind = false;
+    toSend->wumpusKill = false;
+}
+
 /***************************************TO FINISH***************************************/
+
+void initSending(toClient* c, player* p, stairs* s, int tresurePos[2])
+{
+    c->coherent = true;
+    c->playerPosX = p->posX;
+    c->playerPosY = p->posY;
+    c->tresurePosX = tresurePos[0];
+    c->tresurPosY = tresurePos[1];
+    c->besideHole = sensor(p, s, 'H');
+    c->besideTresure = sensor(p, s, 'T');
+    c->besideWumpus = sensor(p, s, 'W');
+    c->score = p->score;
+    c->tresureFinf= p->deadByWumpus;
+    c->fallInHole = p->fallInHole;
+    c->wumpusFind = p->findTresure;
+    c->wumpusKill = p->shotTheWumpus;
+}
 
 // Fonction temporaire
 void getDirection(int d, char* direction)
@@ -283,34 +366,6 @@ void getDirection(int d, char* direction)
 			strcpy(direction, "de l'Ouest");
 			break;
 	}
-}
-
-//Senseur de détection de l'objet
-bool sensor(player* p, stairs* s, char o)
-{
-	//Coordonnées de la case sur laquelle on test la présence du wumpus
-	int testX = p->posX-1;
-	int testY = p->posY-1;
-/*	printf("première coordonnées : (%d, %d)\n", testX, testY);*/
-	//Coordonnées de la dernière case à tester
-	int xFin = p->posX+1;
-	int yFin = p->posY+1;
-/*	printf("derniere coordonnées : (%d, %d)\n", xFin, yFin);*/
-	bool find = false;
-	while(!find && testY <= yFin)//lorsque la 3ième ligne à été testée on sort de la boucle
-	{
-		if(testX < STAIRSIZE && testX >= 0 && testY < STAIRSIZE && testY >= 0)
-		{
-			find = (s->map[testY][testX] == o);
-		}
-/*		printf("(%d, %d)\n", testX, testY);*/
-		testX++;
-		if(testX > xFin){
-			testX = xFin - 2;
-			testY++;
-		}
-	}
-	return find;
 }
 
 //Peut provoquer un bufferOverflow si la taille de la map excède 999*999
@@ -417,14 +472,25 @@ void * jeuNjoueur (void * arguments)
 	int *tmp = args->sock;
 	int nouv_socket_descriptor = tmp;
 	int gameNum = args->gameNumber;
-	
+
+    //initilalisation de la structur
+    toClient *toSend = (toClient*) malloc(sizeof(toClient));
+
 	player* p = args->p;
 	stairs* s = jeux[gameNum].s;
+
+    //TODO: valeur à changer quand le joueur trouve le trésor
+    int tresurPos[2];
+    tresurPos[0] = -1;//tresurePosX
+    tresurPos[1] = -1;//tresurePosY
 	
 	
 	
 	while(1)
 	{
+        //sera envoyé tel quel si erreur si la commande
+        toClientInitialisation(toSend);
+
 		printf("Reception d'une commande\n.");
 		// Attente de la reception d'un message pour en connaitre la longueur.
 		int len = 0;
@@ -494,14 +560,18 @@ void * jeuNjoueur (void * arguments)
 			result = (char*) realloc(result, strlen(temp));
 			sprintf(result, "%s", temp);
 			serveurPrintStairs(p, s);
+
+            initSending(toSend, p, s, tresurPos);
+
 		}
-		//INFO: Si il y a un bug, permet de ne pas faire plusieurs tours de boucle(mais affichera un message)
-		/*        buffer[0] = '\0';*/
 		
 		// Ecrit le nouvel état de l'étage
 		write(nouv_socket_descriptor, result, strlen(result)+1);
+/*        write(nouv_socket_descriptor, toSend, sizeof(toClient));*/
+
 		printf("Message envoye. \n");
 	}
+    free(toSend);
 	close(nouv_socket_descriptor);
 	return;
 }
@@ -642,14 +712,18 @@ int main(int argc, char* argv[])
 /*		player* p1 = (player *) malloc(sizeof(player));*/
 /*		playerInitialisation(p1);*/
 		
-		nbPlayer++;
 		printf("deboggage 6: %d\n", vardebug++);
 		if(nbPlayer%NBPLAYERSPERGAME==0)
 		{
-			lastGame++;
-			jeuxTmp = realloc(jeux, sizeof(jeux) + sizeof(jeu*));
+            if(nbPlayer > 0)
+            {
+                lastGame++;
+            }
+            jeuxTmp = realloc(jeux, sizeof(jeux) + sizeof(jeu*));
 			if(jeuxTmp != NULL)
 			{
+                //TODO: faire une copie mémoire
+                jeux = (jeu*) memmove(jeux, jeuxTmp, sizeof(jeux) + sizeof(jeu*));
 				jeux = jeuxTmp;
 			}
 			else
@@ -662,14 +736,15 @@ int main(int argc, char* argv[])
 			stairInitialisation(jeux[lastGame].s);
 			jeux[lastGame].nbPlayerInGame = 0;
 		}
+        nbPlayer++;
 		printf("deboggage 7: %d\n", vardebug++);
 /*		jeux[lastGame].p[(nbPlayer%NBPLAYERSPERGAME)-1] = p;*/
 		printf("youhou : %d \n", jeux[lastGame].nbPlayerInGame);
 		printf("deboggage 8: %d\n", vardebug++);
 		
-		//TODO erreur
-		printf("azertyuiop : %d \n", jeux[lastGame].p[0]);
-		printf("azertyuiop : %d \n", jeux[lastGame].p[jeux[lastGame].nbPlayerInGame]);
+        //TODO: erreur
+        printf("azertyuiop : %d \n", jeux[lastGame].p[0]);
+        printf("azertyuiop : %d \n", jeux[lastGame].p[jeux[lastGame].nbPlayerInGame]);
 		jeux[lastGame].p[jeux[lastGame].nbPlayerInGame] = p;
 /*		jeux[lastGame].p[jeux[lastGame].nbPlayerInGame+1] = p1;*/
 		printf("deboggage 9: %d\n", vardebug++);
@@ -707,13 +782,20 @@ int main(int argc, char* argv[])
 		realCommand[len] = '\0';
 		p->pseudo = realCommand;
 		
-		char temp[277] = "\0";
-		clientPrintStairs(p, jeux[lastGame].s, temp);
-		printPlayerStatus(p, jeux[lastGame].s, temp);
+        char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!\n";
+//		clientPrintStairs(p, jeux[lastGame].s, temp);
+//		printPlayerStatus(p, jeux[lastGame].s, temp);
 		serveurPrintStairs(p, jeux[lastGame].s);
-		
-		
-		write(nouv_socket_descriptor, temp, strlen(temp)+1);
+
+        toClient tc;
+        toClientInitialisation(&tc);
+        int tresurPos[2];
+        tresurPos[0] = -1;
+        tresurPos[1] = -1;
+        initSending(&tc, p, jeux[lastGame].s, tresurPos);
+
+/*        write(nouv_socket_descriptor, &tc, sizeof(toClient));*/
+		write(nouv_socket_descriptor, temp, strlen(temp));
 		
 		if(pthread_create(&nouveau_client, NULL,
 								jeuNjoueur,
