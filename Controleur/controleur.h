@@ -16,7 +16,7 @@ public:
     void connexion();
 
 signals:
-    void infoRecu();
+    void infoRecu(fromServer * s);
 
 private:
     Client * client;

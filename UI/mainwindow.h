@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsPixmapItem>
+#include <QMessageBox>
 
 #include "pseudo.h"
 #include "../Controleur/controleur.h"
@@ -23,7 +24,7 @@ public:
     ~MainWindow();
 
     void mapLoader(QString file);
-    void loadCharacter();
+    void loadCharacter(fromServer *s);
 
 private slots:
     void acceptPseudo(QString *pseudo);
@@ -42,13 +43,14 @@ private slots:
 
     void on_quit_clicked();
 
-    void updateInfo();
+    void updateInfo(fromServer * s);
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene * scene_;
     QGraphicsPixmapItem * mapItem_;
     QGraphicsPixmapItem * characterItem_;
+    QGraphicsPixmapItem * treasureItem_;
     Controleur * cont_;
 
     Pseudo * pseudoDialog_;

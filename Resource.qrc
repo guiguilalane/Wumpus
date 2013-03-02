@@ -9,10 +9,11 @@
         <file>Pictures/arrow.png</file>
         <file>Pictures/derriere.png</file>
         <file>Pictures/face.png</file>
-        <file>Pictures/hole.png</file>
         <file>Pictures/left.png</file>
         <file>Pictures/right.png</file>
         <file>Pictures/treasure.png</file>
         <file>Pictures/wumpusColor.jpg</file>
+        <file>Pictures/wumpusColor.png</file>
+        <file>Pictures/hole.jpg</file>
     </qresource>
 </RCC>

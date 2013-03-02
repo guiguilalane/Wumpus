@@ -21,7 +21,7 @@ void Controleur::envoiCommand(char *command)
 {
     client->envoiCommand(command);
     client->receptionInfo();
-    emit infoRecu();
+    emit infoRecu(client->server);
 }
 
 void Controleur::connexion()
