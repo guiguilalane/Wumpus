@@ -31,7 +31,7 @@ typedef struct
 {
 	void* sock;
 	player* p;
-	int gameNumber;
+//    int gameNumber;
 } arg_struct;
 
 //typedef struct{
@@ -42,7 +42,7 @@ typedef struct
 	
 //} jeu;
 
-jeu* jeux;
+//jeu* jeux;
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -59,6 +59,11 @@ Action* playerActions;
 // Lorsque le joueur veux quitter la partie
 void quit(player* p)
 {
+    jeu* j = removePlayer(p);
+    if(NULL == j->joueur)
+    {
+        removeGame(j);
+    }
     printf("Terminer la partie et afficher le score\n");
 }
 
@@ -188,8 +193,14 @@ Action* initialisationActions()
 }
 
 // Initialise le joueur à chaque début de niveau
-void playerInitialisation(player* p)
+player* playerInitialisation()
 {
+    player* p = (player *) malloc(sizeof(player));
+    if(p == NULL)
+    {
+        perror("Erreur d'allocation mémoire lors de la création d'un nouveau joueur");
+        return NULL;
+    }
 	p->pseudo = "";
 	p->score = 0;
 	p->posX = 0;
@@ -200,6 +211,11 @@ void playerInitialisation(player* p)
     p->fallInHole = false;
     p->findTresure = false;
     p->shotTheWumpus = false;
+
+    p->nextPlayer = NULL;
+    p->previousPlayer = NULL;
+
+    return p;
 }
 
 // Initialise l'étage
@@ -247,7 +263,7 @@ stairs *stairInitialisation()
 	for(i = 0 ; i < STAIRSIZE ; ++i)
 	{
 		j = 0;
-		for(j; j < STAIRSIZE; ++j)
+        for(; j < STAIRSIZE; ++j)
 		{
 			s->map[i][j] = ' ';
 		}
@@ -407,11 +423,11 @@ void serveurPrintStairs(player* p, stairs *s)
 {
 	printf("___________\n");
 	int i = 0, j = 0;
-	for(i ; i < STAIRSIZE ; ++i)
+    for(; i < STAIRSIZE ; ++i)
 	{
 		j = 0;
 		printf("|");
-		for(j; j < STAIRSIZE; ++j)
+        for(; j < STAIRSIZE; ++j)
 		{		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
 			printf("%c|", (j == p->posX && i == p->posY) ? arrows[p->direction] : s->map[i][j]);
 		}
@@ -426,12 +442,12 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
 	strcat(temp, "___________\n");
 /*	printf("___________\n");*/
 	int i = 0, j = 0;
-	for(i ; i < STAIRSIZE ; ++i)
+    for(; i < STAIRSIZE ; ++i)
 	{
 		j = 0;
 		strcat(temp, "|");
 /*		printf("|");*/
-		for(j; j < STAIRSIZE; ++j)
+        for(; j < STAIRSIZE; ++j)
 		{		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
 			if((j == p->posX && i == p->posY))
 			{
@@ -457,7 +473,7 @@ bool isEmpty(player** tabP)
 {
 	int i = 0;
 	bool res = true;
-	for(i; i < NBPLAYERSPERGAME; ++i)
+    for(; i < NBPLAYERSPERGAME; ++i)
 	{
 /*		printf("%d\n", tabP[i]);*/
 		res = res && (tabP[i]==NULL);
@@ -470,22 +486,22 @@ void * jeuNjoueur (void * arguments)
 	arg_struct *args = arguments;
 	int *tmp = args->sock;
 	int nouv_socket_descriptor = tmp;
-	int gameNum = args->gameNumber;
+//	int gameNum = args->gameNumber;
 
     //initilalisation de la structur
     toClient *toSend = (toClient*) malloc(sizeof(toClient));
 
-	player* p = args->p;
-	stairs* s = jeux[gameNum].s;
+    player* p = args->p;
+    stairs* s = p->game->etage;
 
     //TODO: valeur à changer quand le joueur trouve le trésor
     int tresurPos[2];
     tresurPos[0] = -1;//tresurePosX
     tresurPos[1] = -1;//tresurePosY
 	
+    bool sortie = false;
 	
-	
-	while(1)
+    while(!sortie)
 	{
         //sera envoyé tel quel si erreur si la commande
         toClientInitialisation(toSend);
@@ -534,34 +550,20 @@ void * jeuNjoueur (void * arguments)
 			theAction->action(p);
 			if(strcmp(realCommand, "quit")==0)
 			{
-				
-/*				&p = NULL;*/
-				jeux[gameNum].p[0] = NULL;
-				printf("bonjour : %d\n", jeux[gameNum].p);
-				printf("bonjour : %d\n", &p);
-				printf("bonjour : %d\n", p);
-				printf("bonjour : %d\n", *p);
-				free(p);
-				p = NULL;
-				printf("bonjour : %d\n", jeux[gameNum].p[jeux[gameNum].nbPlayerInGame-1]);
-				jeux[gameNum].nbPlayerInGame--;
-				printf("youhou 2 : %d\n", jeux[gameNum].nbPlayerInGame);
-/*				printf("bonjour : %s\n", sizeof(jeux[gameNum].p[1]));*/
-				if(isEmpty(jeux[gameNum].p))
-				{//supprimer le jeu
-					printf("le tableau est vide\n");
-				}
-				break;
+                sortie = true;
 			}
-			char temp[277] = "\0";
-			clientPrintStairs(p, s, temp);
-			printPlayerStatus(p, s, temp);
-			result = (char*) realloc(result, strlen(temp));
-			sprintf(result, "%s", temp);
-			serveurPrintStairs(p, s);
+            else
+            {
+                char temp[277] = "\0";
+                clientPrintStairs(p, s, temp);
+                printPlayerStatus(p, s, temp);
+                result = (char*) realloc(result, strlen(temp));
+                sprintf(result, "%s", temp);
+                serveurPrintStairs(p, s);
 
-            initSending(toSend, p, s, tresurPos);
+                initSending(toSend, p, s, tresurPos);
 
+            }
 		}
 		
 		// Ecrit le nouvel état de l'étage
@@ -577,36 +579,17 @@ void * jeuNjoueur (void * arguments)
 
 int main(int argc, char* argv[])
 {
-	vardebug = 0;
+//	vardebug = 0;
 	int port = 5000;
 	if(argc == 2)
 	{
 		port = atoi(argv[1]);
 	}
 	
-	//initialisation du nombre d'étage à 1
-	jeux = (jeu*) malloc(sizeof(jeu));
-	int lastGame = 0;
-	int nbPlayer = 0;
-	jeu* jeuxTmp = NULL;
-	
-	//initialisation du premier étage
-	jeux[lastGame].s = (stairs *)malloc(sizeof(stairs));
-	if(jeux[lastGame].s == NULL)
-	{
-		perror("Erreur d'allocation mémoire lors de l'initialisation de l'étage");
-		return -1;
-	}
-	stairInitialisation(jeux[lastGame].s);
-	
-	//on veut NBPLAYERSPERGAME par jeux
-	jeux[lastGame].p = (player**) calloc(NBPLAYERSPERGAME, sizeof(player*));
-	if(jeux[lastGame].p == NULL)
-	{
-		perror("Erreur d'allocation mémoire lors de l'initialisation d'un joueur");
-		return -1;
-	}
-	
+    manager = (gameManager*) malloc(sizeof(gameManager));
+    manager->firstCreatedGame = NULL;
+    manager->lastCreatedGame = NULL;
+
 	int socket_descriptor, 		/* Descripteur de socket */
 	nouv_socket_descriptor;	/* Descripteur du nouveau socket */
 	
@@ -676,19 +659,13 @@ int main(int argc, char* argv[])
 	
 	// Fin initialisation socket
 	
-/*	// Initialisation du joueur*/
-/*	player* p = (player *) malloc(sizeof(player));*/
-/*	playerInitialisation(p);*/
-	
 	/* Associe la chaine de caractère entrée par l'utilisateur
 	 à la fonction qui correspond */
 	playerActions = initialisationActions();// Retourne le tableau de toutes les actions
 	
     while(1)
     {
-    	printf("deboggage 1: %d\n", vardebug++);
 		longueur_adresse_courante = sizeof(adresse_client_courant);
-		printf("deboggage 2: %d\n", vardebug++);
 		/* adresse_client_courant = sera renseignée par accept via les infos du connect */
 		if((nouv_socket_descriptor =
 			accept(socket_descriptor,
@@ -699,63 +676,16 @@ int main(int argc, char* argv[])
 			perror("Erreur : impossible d'accepter la connexion avec le client.");
 			exit(1);
 		}
-		printf("deboggage 3: %d\n", vardebug++);
 		
 		// Initialisation du joueur
-		player* p = (player *) malloc(sizeof(player));
-		printf("deboggage 4: %d\n", vardebug++);
-		playerInitialisation(p);
-		printf("deboggage 5: %d\n", vardebug++);
+        player *p = playerInitialisation();
 		
-		//asup
-/*		player* p1 = (player *) malloc(sizeof(player));*/
-/*		playerInitialisation(p1);*/
-		
-		printf("deboggage 6: %d\n", vardebug++);
-		if(nbPlayer%NBPLAYERSPERGAME==0)
-		{
-            if(nbPlayer > 0)
-            {
-                lastGame++;
-            }
-            jeuxTmp = realloc(jeux, sizeof(jeux) + sizeof(jeu*));
-			if(jeuxTmp != NULL)
-			{
-                //TODO: faire une copie mémoire
-                jeux = (jeu*) memmove(jeux, jeuxTmp, sizeof(jeux) + sizeof(jeu*));
-				jeux = jeuxTmp;
-			}
-			else
-			{
-				perror("Erreur d'allocation de mémoire lors de l'ajout d'un nouveau jeu.");
-				return -1;
-			}
-			//initialisation du nouvel étage
-			jeux[lastGame].s = (stairs *)malloc(sizeof(stairs));
-			stairInitialisation(jeux[lastGame].s);
-			jeux[lastGame].nbPlayerInGame = 0;
-		}
-        nbPlayer++;
-		printf("deboggage 7: %d\n", vardebug++);
-/*		jeux[lastGame].p[(nbPlayer%NBPLAYERSPERGAME)-1] = p;*/
-		printf("youhou : %d \n", jeux[lastGame].nbPlayerInGame);
-		printf("deboggage 8: %d\n", vardebug++);
-		
-        //TODO: erreur
-        printf("azertyuiop : %d \n", jeux[lastGame].p[0]);
-        printf("azertyuiop : %d \n", jeux[lastGame].p[jeux[lastGame].nbPlayerInGame]);
-		jeux[lastGame].p[jeux[lastGame].nbPlayerInGame] = p;
-/*		jeux[lastGame].p[jeux[lastGame].nbPlayerInGame+1] = p1;*/
-		printf("deboggage 9: %d\n", vardebug++);
-		jeux[lastGame].nbPlayerInGame++;
-		printf("deboggage 10: %d\n", vardebug++);
-/*		jeux[lastGame].p[(nbPlayer%NBPLAYERSPERGAME)] = p1; //asup*/
-/*		nbPlayer--;*/
-		
+        jeu *theGame = addPlayer(p);
+
 		arg_struct args;
 		args.sock = nouv_socket_descriptor;
 		args.p = p;
-		args.gameNumber = lastGame;
+
 		
 		/* Traitement du pseudo */
 		printf("Reception du pseudo. \n");
@@ -784,14 +714,14 @@ int main(int argc, char* argv[])
         char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!\n";
 //		clientPrintStairs(p, jeux[lastGame].s, temp);
 //		printPlayerStatus(p, jeux[lastGame].s, temp);
-		serveurPrintStairs(p, jeux[lastGame].s);
+//		serveurPrintStairs(p, jeux[lastGame].s);
 
         toClient tc;
         toClientInitialisation(&tc);
         int tresurPos[2];
         tresurPos[0] = -1;
         tresurPos[1] = -1;
-        initSending(&tc, p, jeux[lastGame].s, tresurPos);
+        initSending(&tc, p, theGame->etage, tresurPos);
 
 /*        write(nouv_socket_descriptor, &tc, sizeof(toClient));*/
 		write(nouv_socket_descriptor, temp, strlen(temp));

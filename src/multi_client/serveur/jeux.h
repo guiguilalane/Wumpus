@@ -23,15 +23,17 @@ typedef struct
 
 //Définition du joueur
 //Double liste chainée
+
 /**
  * @brief structure about players informations
  *
  *  This structure is a double Linked list that contain all informations about players
  *
  */
-typedef struct
+typedef struct player player;
+struct player
 {
-    struct player *previousPlayer; /**< The previous player*/
+    player *previousPlayer; /**< The previous player*/
 
     char* pseudo; /**< The player pseudonym*/
     int score; /**< The player score */
@@ -45,9 +47,9 @@ typedef struct
     bool shotTheWumpus; /**< Whether the player had killed the wumpus */
     struct jeu *game; /**< The game that contain the player */
 
-    struct player *nextPlayer; /**< The next player */
+    player *nextPlayer; /**< The next player */
 
-} player;
+};
 
 //Double liste chainée
 /**
@@ -56,7 +58,9 @@ typedef struct
  *  This structure is a double linked list that contain game informations
  *
  */
-typedef struct{
+typedef struct jeu jeu;
+struct jeu
+{
 
     struct jeu *previousGame; /**< The previous game */
 
@@ -67,7 +71,7 @@ typedef struct{
 
     struct jeu *nextGame; /**< The next game */
 
-} jeu;
+};
 
 /**
  * @brief the game manager that contain the first and the last created game
@@ -133,11 +137,14 @@ jeu *removePlayer(player *p);
 /**
  * @brief search the last player of a specific game
  *
+ * @pre j must contain at least one player
+ *
  * @param j the game which run through to find the last player
  * @return the last player of the specific game
  */
 player *findLastPlayerFromGame(jeu* j);
 
+int numberOfPlayer();
 
 //************************************************
 

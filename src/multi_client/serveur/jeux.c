@@ -3,10 +3,15 @@
 jeu *createGame(player* p)
 {
     jeu* j = (jeu*) malloc(sizeof(jeu));
+    if(j == NULL)
+    {
+        perror("Erreur d'allocation mémoire lors de la création d'un nouveau jeu");
+        return NULL;
+    }
     j->etage = stairInitialisation();
     j->joueur = p;
     p->game = j;
-    j->nbPlayer = 0;
+    j->nbPlayer = 1;
     j->numberOfStairs = 1;
     if(NULL == manager->firstCreatedGame)
     {//aucun jeu n'est créé
@@ -17,6 +22,7 @@ jeu *createGame(player* p)
     else
     {//au moins un jeu est créé
         j->previousGame = manager->lastCreatedGame;
+        manager->lastCreatedGame->nextGame = j;
         manager->lastCreatedGame = j;
     }
     j->nextGame = NULL;
@@ -66,6 +72,7 @@ jeu *addPlayer(player *p)
                 lastPlayer->nextPlayer = p;
                 p->previousPlayer = lastPlayer;
                 p->game = j;
+                j->nbPlayer++;
             }
             else
             {
@@ -105,7 +112,30 @@ jeu *removePlayer(player *p)
             p->previousPlayer->nextPlayer = NULL;
         }
     }
+    j->nbPlayer--;
     free(p);
 
     return j;
+}
+
+player *findLastPlayerFromGame(jeu *j)
+{
+    player *current = j->joueur;
+    while(current->nextPlayer != NULL)
+    {
+        current = current->nextPlayer;
+    }
+    return current;
+}
+
+int numberOfPlayer()
+{
+    int count = 0;
+    jeu* current = manager->firstCreatedGame;
+    while(current != NULL)
+    {
+        count += current->nbPlayer;
+        current = current->nextGame;
+    }
+    return count;
 }

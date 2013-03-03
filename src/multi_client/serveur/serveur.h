@@ -36,5 +36,5 @@ T_FONC_ACTION down;
 
 Action* findActionFromCommand(Action* action, char* command);
 Action* initialisationActions();
-void playerInitialisation(player* p);
+player *playerInitialisation();
 bool sensor(player* p, stairs* s, char o);
