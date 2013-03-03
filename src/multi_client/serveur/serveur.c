@@ -96,6 +96,7 @@ void move(player* p)
 			}
 			break;
 	}
+    checkPosition(p);
 	/*    printf("Avancer d'une case dans la direction pointée.\n");*/
 }
 
@@ -468,18 +469,44 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
 	return temp;
 }
 
-//on suppose que le tableau tabP, à une taille de NBPLAYERSPERGAME
-bool isEmpty(player** tabP)
+void checkPosition(player *p)
 {
-	int i = 0;
-	bool res = true;
-    for(; i < NBPLAYERSPERGAME; ++i)
-	{
-/*		printf("%d\n", tabP[i]);*/
-		res = res && (tabP[i]==NULL);
-	}
-	return res;
+    char c = p->game->etage->map[p->posY][p->posX];
+    switch(c)
+    {
+    case 'E' :
+        printf("T'es sur l'échelle.\n");
+        break;
+
+    case 'W' :
+        printf("T'es mort!! Le Wumpus t'as mangé.\n");
+        break;
+
+    case 'T' :
+        printf("Bien joué! T'as trouvé le trésor.\n");
+        break;
+
+    case 'H' :
+        printf("Fait attention ou tu marches, t'as glissé dans un trou!\n");
+        break ;
+
+    default :
+        ;
+    }
 }
+
+//on suppose que le tableau tabP, à une taille de NBPLAYERSPERGAME
+//bool isEmpty(player** tabP)
+//{
+//	int i = 0;
+//	bool res = true;
+//    for(; i < NBPLAYERSPERGAME; ++i)
+//	{
+///*		printf("%d\n", tabP[i]);*/
+//		res = res && (tabP[i]==NULL);
+//	}
+//	return res;
+//}
 
 void * jeuNjoueur (void * arguments)
 {

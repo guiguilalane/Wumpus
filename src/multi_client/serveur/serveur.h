@@ -38,3 +38,4 @@ Action* findActionFromCommand(Action* action, char* command);
 Action* initialisationActions();
 player *playerInitialisation();
 bool sensor(player* p, stairs* s, char o);
+void checkPosition(player* p);
