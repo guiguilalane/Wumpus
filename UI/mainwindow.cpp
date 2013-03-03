@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene_->addItem(characterItem_);
     ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
 
-    //    mapLoader(QString("../Wumpus/Wumpus.tmx"));
+//        mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
@@ -45,7 +45,7 @@ MainWindow::~MainWindow()
 void MainWindow::mapLoader(QString file)
 {
     MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
+//    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
 }
 
 void MainWindow::loadCharacter(fromServer * s)
@@ -151,13 +151,13 @@ void MainWindow::updateInfo(fromServer * s)
         msg.setText("<center> Vous venez de tomber dans le trou !</center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
         msg.exec();
-        // TODO : Quitter le nivo
+        // TODO : Quitter le nivo ?
     }
     if (s->wumpusFind){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();
-        // TODO : Quitter le nivo
+        // TODO : Quitter le nivo ?
     }
     // TODO A revoir les nb points
     if (s->tresureFind){
@@ -174,15 +174,22 @@ void MainWindow::updateInfo(fromServer * s)
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
         msg.exec();
     }
-    // TODO ajouter les sensors sur la carte
+    // On affiche les senseurs sur l'IHM
+    ui->treasure->setVisible(s->besideTresure);
+    ui->hole->setVisible(s->besideHole);
+    ui->wumpus->setVisible(s->besideWumpus);
     // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
+    // TODO quand un joueur change de nivo avertir tous les autres joueurs
 }
 
+
 // TODO Afficher la carte
+// TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
+// A vérifier
 // TODO Récupérer la position du joueur:
 //  - Desactiver les boutons quand le personnage ne peut pas avancer dans la direction
 //  - Afficher le joueur
+//  - Dans le bon sens
 // TODO Afficher le tresor sur la carte s'il est trouver
 // TODO Fenêtre popup trésor trouver, tomber trou ou tomber wumpus
-// TODO Afficher score lors du quit
 // TODO Afficher les sensors

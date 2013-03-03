@@ -15,5 +15,8 @@
         <file>Pictures/wumpusColor.jpg</file>
         <file>Pictures/wumpusColor.png</file>
         <file>Pictures/hole.jpg</file>
+        <file>Pictures/coins.png</file>
+        <file>Pictures/odor.png</file>
+        <file>Pictures/wind.png</file>
     </qresource>
 </RCC>

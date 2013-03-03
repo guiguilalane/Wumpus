@@ -55,6 +55,10 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEditPseudo</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -17,7 +17,7 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="game" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -25,10 +25,105 @@
         <widget class="QGraphicsView" name="view"/>
        </item>
        <item>
-        <widget class="QLabel" name="score">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QFormLayout" name="formLayout">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::ExpandingFieldsGrow</enum>
+          </property>
+          <property name="rowWrapPolicy">
+           <enum>QFormLayout::DontWrapRows</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignHCenter|Qt::AlignTop</set>
+          </property>
+          <property name="formAlignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="verticalSpacing">
+           <number>1</number>
+          </property>
+          <property name="topMargin">
+           <number>12</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Indications</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::AutoText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QWidget" name="widget" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QLabel" name="hole">
+               <property name="toolTip">
+                <string>PFFFF ! Tiens un courant d'air !</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="../Resource.qrc">:/Pictures/Pictures/wind.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="treasure">
+               <property name="toolTip">
+                <string>Ça sonne comme des pièces d'or à mes oreilles !!!</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="../Resource.qrc">:/Pictures/Pictures/coins.png</pixmap>
+               </property>
+               <property name="scaledContents">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="wumpus">
+               <property name="toolTip">
+                <string>Pouark ! Ça pue !!!</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="../Resource.qrc">:/Pictures/Pictures/odor.png</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="score">
+            <property name="text">
+             <string>Scores</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -182,6 +277,16 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>turnR</tabstop>
+  <tabstop>turnL</tabstop>
+  <tabstop>move</tabstop>
+  <tabstop>shoot</tabstop>
+  <tabstop>down</tabstop>
+  <tabstop>connect</tabstop>
+  <tabstop>quit</tabstop>
+  <tabstop>view</tabstop>
+ </tabstops>
  <resources>
   <include location="../Resource.qrc"/>
  </resources>

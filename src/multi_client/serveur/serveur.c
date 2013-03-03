@@ -388,7 +388,7 @@ void printPlayerStatus(player* p, stairs* s, char* temp)
 		strcat(temp, "Ça sonne comme des pièces d'or à mes oreilles.\n");
 	}
 	if(sensor(p, s, 'H'))
-	{
+	{ 
 		strcat(temp, "PFFFFF! Tiens un courant d'air!\n");
 	}
 	

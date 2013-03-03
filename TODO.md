@@ -14,6 +14,8 @@
 		changement d'étage
 		
 	- Affichage des scores quand l'un des joueurs quit la partie -> Comment est-ce qu'on va gérer le fait qu'un joueur quitte la partie (est-ce que ca arrete pour tout le monde ? si non: est-ce qu'un joueur qui se connecte peut rejoindre la partie en cours ou non)
+	
+	- Quand on joueur se fait tuer ou tombe dans le trou ! Comment ça se passe pour gérer avec les autres joueurs ! Il perd des points et attends qu'un joueur passe à un étage inférieur ??????????????
 
 Forme de la structure:
 int x; // position x du personnage

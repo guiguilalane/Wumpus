@@ -30,6 +30,8 @@ typedef struct
     bool wumpusFind; //Flag indiquant que le joueur à fait une malencontreuse rencontre avec le wumpus
     bool wumpusKill; //Flag indiquant que le joueur vient de tuer le wumpus
     int score; //Score du joueur, -1 si mauvaise commande
+    // il faudrait une map
+    int * scores; //Scores de tous les autres joueurs
     bool besideWumpus; //Flag indiquant que le joueur est à côté du wumpus
     bool besideHole; //Flag indiquant que le joueur est à côté d'un trou
     bool besideTresure; //Flag indiquant que le joueur est à côté du trésor
