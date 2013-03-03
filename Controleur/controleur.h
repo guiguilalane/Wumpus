@@ -3,8 +3,10 @@
 
 #include "Client/client.h"
 
-class Controleur
+class Controleur : public QObject
 {
+    Q_OBJECT
+
 public:
     Controleur();
     ~Controleur();
@@ -12,6 +14,9 @@ public:
     void envoiPseudo(QString * p);
     void envoiCommand(char* command);
     void connexion();
+
+signals:
+    void infoRecu(fromServer * s);
 
 private:
     Client * client;

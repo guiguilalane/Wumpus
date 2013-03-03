@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     cont_ = new Controleur();
+    connect(cont_,SIGNAL(infoRecu(fromServer *)),this,SLOT(updateInfo(fromServer *)));
 
     ui->setupUi(this);
 
@@ -18,15 +19,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
 
     // Initialization of the scene and its components.
-    _scene = new QGraphicsScene;
-    _mapItem = new QGraphicsPixmapItem;
-    _characterItem = new QGraphicsPixmapItem;
+    // TODO : A voir pour que la redimensionnement soit automatique
+    scene_ = new QGraphicsScene(0,0,395,331,this);
+    mapItem_ = new QGraphicsPixmapItem;
+    characterItem_ = new QGraphicsPixmapItem;
+    treasureItem_ = new QGraphicsPixmapItem;
 
-    _scene->addItem(_mapItem);
-    _scene->addItem(_characterItem);
-    ui->view->setScene(_scene);
+    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+    // A revoir position qui ne marche pas
+    characterItem_->setPos(0,4*32);
 
-    mapLoader(QString("../Wumpus/Wumpus.tmx"));
+    scene_->addItem(mapItem_);
+    scene_->addItem(characterItem_);
+    ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
+
+    //    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
@@ -37,9 +44,44 @@ MainWindow::~MainWindow()
 
 void MainWindow::mapLoader(QString file)
 {
-    Map* m = GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap();
-    MapRenderer renderer(m);
-    _mapItem->setPixmap(renderer.createRendu()->pixmap().scaled(600,600));
+    MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
+    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
+}
+
+void MainWindow::loadCharacter(fromServer * s)
+{
+    // On change l'image du personnage selon la direction dans laquelle il regarde
+    bool boutonMoveActif = true;
+    QString dir;
+    if (s->dir == 'n'){
+        dir = ":/Pictures/Pictures/derriere.png";
+        if (s->playerPosY == 0){
+            boutonMoveActif = false;
+        }
+    }
+    else if (s->dir == 's'){
+        dir = ":/Pictures/Pictures/face.png";
+        if (s->playerPosY == 4){
+            boutonMoveActif = false;
+        }
+    }
+    else if (s->dir == 'e'){
+        dir = ":/Pictures/Pictures/left.png";
+        if (s->playerPosX == 0){
+            boutonMoveActif = false;
+        }
+    }
+    else if (s->dir == 'o'){
+        dir = ":/Pictures/Pictures/right.png";
+        if (s->playerPosX == 4){
+            boutonMoveActif = false;
+        }
+    }
+    characterItem_->setPixmap(QPixmap(dir).scaled(32,32));
+    // On repositionne le personnage sur la carte
+    characterItem_->setPos(s->playerPosX,s->playerPosY);
+    // En fonction emplacement personnage désactivé les boutons
+    ui->move->setEnabled(boutonMoveActif);
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
@@ -96,6 +138,44 @@ void MainWindow::on_quit_clicked()
     ui->shoot->setEnabled(false);
     ui->down->setEnabled(false);
     ui->quit->setEnabled(false);
+}
+
+void MainWindow::updateInfo(fromServer * s)
+{
+    loadCharacter(s);
+    // Fenêtre message
+    QMessageBox msg;
+    msg.setWindowTitle("Information");
+    msg.setStandardButtons(QMessageBox::Ok);
+    if (s->fallInHole){
+        msg.setText("<center> Vous venez de tomber dans le trou !</center>");
+        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
+        msg.exec();
+        // TODO : Quitter le nivo
+    }
+    if (s->wumpusFind){
+        msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
+        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
+        msg.exec();
+        // TODO : Quitter le nivo
+    }
+    // TODO A revoir les nb points
+    if (s->tresureFind){
+        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Félicitation, vous gagnez 100 points ! </center>");
+        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
+        msg.exec();
+        // TODO A vérifier s'il s'affiche au bon endroit
+        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+        treasureItem_->setPos(s->tresurePosX,s->tresurePosY);
+        scene_->addItem(treasureItem_);
+    }
+    if (s->wumpusKill){
+        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 50 points ! </center>");
+        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
+        msg.exec();
+    }
+    // TODO ajouter les sensors sur la carte
+    // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
 }
 
 // TODO Afficher la carte

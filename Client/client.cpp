@@ -2,6 +2,9 @@
 
 Client::Client()
 {
+    server = (fromServer*) malloc(sizeof(fromServer));
+    fromServerInitialisation(server);
+
     //    if (argc !=2) {
     //        perror("Usage: client <adresse-serveur>");
     //        exit(1);
@@ -10,6 +13,11 @@ Client::Client()
     //    prog = argv[0];
     host = (char*)"127.0.0.1"/*argv[1]*/;
     //	command=argv[2];
+
+//    if(argc == 3)
+//	{
+//		port = atoi(argv[2]);
+//	}
 
     if ((ptr_host = gethostbyname(host)) == NULL){
         perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
@@ -66,13 +74,18 @@ void Client::envoiCommand(char *command)
 
     /* Mise en attente du programme pour simuler un délai de transmission */
     /*sleep(3);*/
-    printf("Commande envoyée au serveur. \n");
-    receptionInfo();
+    std::printf("Commande envoyée au serveur. \n");
 }
 
 void Client::receptionInfo()
 {
     /* Lecture des informations du jeu en provenance du serveur */
+//    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
+//        printf("Réponse du serveur : \n");
+//                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
+////                printf("besideTreasure : %d\n", server->besideTresure);
+//            }
+//Ancienne version a supprimer
     if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
         printf("Réponse du serveur : \n");
         write(1,buffer,longueur);
@@ -82,5 +95,37 @@ void Client::receptionInfo()
 
 void Client::connexion()
 {
-    // A voir ce qu'il faut mettre dedans
+    // TODO A voir ce qu'il faut mettre dedans car là on concerve le jeu sur lequel on est
+    /* Création de la socket */
+    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
+        exit(1);
+    }
+
+    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
+    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
+        perror("Erreur : impossible de se connecter au serveur");
+        exit(1);
+    }
+    connect_ = true;
+    printf("Connexion établie avec le serveur \n");
+    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
+}
+
+void fromServerInitialisation(fromServer *receiv)
+{
+    receiv->coherent = false;
+    receiv->dir = 'n';
+    receiv->playerPosX = /*-1*/0;
+    receiv->playerPosY = /*-1*/4;
+    receiv->tresurePosX = -1;
+    receiv->tresurePosY = -1;
+    receiv->besideHole = false;
+    receiv->besideTresure = false;
+    receiv->besideWumpus = false;
+    receiv->score = -1;
+    receiv->tresureFind = false;
+    receiv->fallInHole = false;
+    receiv->wumpusFind = false;
+    receiv->wumpusKill = false;
 }
