@@ -28,6 +28,7 @@ wumpus
 
 src/client/client
 src/serveur/serveur
-
+src/multi_client/client/client
+src/multi_client/serveur/serveur
 # Fichier Mac
 *.DS_STORE
