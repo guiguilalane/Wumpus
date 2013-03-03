@@ -8,8 +8,6 @@
 #define TAILLE_MAX_NOM 256
 #define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
-#define NBPLAYERSPERGAME 2
-
 int vardebug;
 
 typedef struct
@@ -36,13 +34,13 @@ typedef struct
 	int gameNumber;
 } arg_struct;
 
-typedef struct{
+//typedef struct{
 
-	stairs *s;
-	player** p;
-	int nbPlayerInGame;
+//	stairs *s;
+//	player** p;
+//	int nbPlayerInGame;
 	
-} jeu;
+//} jeu;
 
 jeu* jeux;
 
@@ -205,8 +203,9 @@ void playerInitialisation(player* p)
 }
 
 // Initialise l'étage
-void stairInitialisation(stairs *s)
+stairs *stairInitialisation()
 {
+    stairs *s = (stairs*) malloc(sizeof(stairs));
 	/* Définition des coordonnées des objets */
 	
 	// Contiendra les coordonnées de l'échelles, du trou, du wumpus et du trésor.
@@ -250,7 +249,6 @@ void stairInitialisation(stairs *s)
 		j = 0;
 		for(j; j < STAIRSIZE; ++j)
 		{
-			
 			s->map[i][j] = ' ';
 		}
 	}
@@ -279,6 +277,7 @@ void stairInitialisation(stairs *s)
 				break;
 		}
 	}
+    return s;
 }
 
 //Senseur de détection de l'objet
