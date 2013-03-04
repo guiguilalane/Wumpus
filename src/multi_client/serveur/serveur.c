@@ -12,6 +12,12 @@ int vardebug;
 
 typedef struct
 {
+    int type;
+    char* structure;
+} sendToClient;
+
+typedef struct
+{
     bool coherent;//indique si les données (reçues/envoyées) sont coherentes
     int playerPosX;
     int playerPosY;
@@ -25,6 +31,7 @@ typedef struct
     bool besideWumpus;
     bool besideHole;
     bool besideTresure;
+    int direction;
 } toClient;
 
 typedef struct
@@ -328,8 +335,8 @@ bool sensor(player* p, stairs* s, char o)
 void toClientInitialisation(toClient *toSend)
 {
     toSend->coherent = false;
-    toSend->playerPosX = -1;
-    toSend->playerPosY = -1;
+    toSend->playerPosX = 0;
+    toSend->playerPosY = 4;
     toSend->tresurePosX = -1;
     toSend->tresurPosY = -1;
     toSend->besideHole = false;
@@ -340,12 +347,14 @@ void toClientInitialisation(toClient *toSend)
     toSend->fallInHole = false;
     toSend->wumpusFind = false;
     toSend->wumpusKill = false;
+    toSend->direction = NORD;
 }
 
 /***************************************TO FINISH***************************************/
 
 void initSending(toClient* c, player* p, stairs* s, int tresurePos[2])
 {
+//    sendToClient* test = (sendToClient*) malloc(sizeof(int) + sizeof(toClient));
     c->coherent = true;
     c->playerPosX = p->posX;
     c->playerPosY = p->posY;
@@ -359,6 +368,10 @@ void initSending(toClient* c, player* p, stairs* s, int tresurePos[2])
     c->fallInHole = p->fallInHole;
     c->wumpusFind = p->findTresure;
     c->wumpusKill = p->shotTheWumpus;
+    c->direction = p->direction;
+//    test->type = 1;
+//    test->structure = (char*) test;
+//    return test;
 }
 
 // Fonction temporaire
