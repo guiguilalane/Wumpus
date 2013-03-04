@@ -603,8 +603,9 @@ void * jeuNjoueur (void * arguments)
             }
 		}
         // Ecrit le nouvel état de l'étage
-        write(nouv_socket_descriptor, result, strlen(result)+1);
+//        write(nouv_socket_descriptor, result, strlen(result)+1);
 //        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
+        write(nouv_socket_descriptor, toSend, sizeof(toClient));
 
 		printf("Message envoye. \n");
 	}

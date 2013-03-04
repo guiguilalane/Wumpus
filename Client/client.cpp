@@ -76,8 +76,7 @@ void Client::envoiCommand(char *command)
 
     /* Mise en attente du programme pour simuler un délai de transmission */
     /*sleep(3);*/
-    std::printf("Commande envoyée au serveur. \n");
-//    printf("Commande envoyée au serveur. \n");
+    printf("Commande envoyée au serveur. \n");
 }
 
 void Client::receptionInfo()
