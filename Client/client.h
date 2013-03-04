@@ -20,7 +20,7 @@ typedef struct servent servent;
 typedef struct
 {
     bool coherent; //Indique si les données (reçues/envoyées) sont coherentes (incohérentes si mauvaise commande)
-    char dir; // Direction dans laquelle regarde le joueur n = nord, s = sud, e=est et o=ouest
+    int dir; // Direction dans laquelle regarde le joueur 0 = nord, 2 = sud, 1 = est et 3 = ouest
     int playerPosX; //Position du joueur sur la carte, -1 si mauvaise commande
     int playerPosY;
     int tresurePosX; //Position du trésor sur la carte, -1 si le joueur n'a pas trouver le trésor

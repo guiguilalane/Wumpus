@@ -81,16 +81,16 @@ void Client::envoiCommand(char *command)
 void Client::receptionInfo()
 {
     /* Lecture des informations du jeu en provenance du serveur */
-//    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-//        printf("Réponse du serveur : \n");
-//                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
-////                printf("besideTreasure : %d\n", server->besideTresure);
-//            }
-//Ancienne version a supprimer
-    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
+    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
         printf("Réponse du serveur : \n");
-        write(1,buffer,longueur);
-    }
+                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
+//                printf("besideTreasure : %d\n", server->besideTresure);
+            }
+//Ancienne version a supprimer
+//    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
+//        printf("Réponse du serveur : \n");
+//        write(1,buffer,longueur);
+//    }
     printf("\nFin de la reception.\n");
 }
 
@@ -116,9 +116,9 @@ void Client::connexion()
 void fromServerInitialisation(fromServer *receiv)
 {
     receiv->coherent = false;
-    receiv->dir = 'n';
-    receiv->playerPosX = -1;
-    receiv->playerPosY = -1;
+    receiv->dir = 0;
+    receiv->playerPosX = 0;
+    receiv->playerPosY = 4;
     receiv->tresurePosX = -1;
     receiv->tresurePosY = -1;
     receiv->besideHole = false;

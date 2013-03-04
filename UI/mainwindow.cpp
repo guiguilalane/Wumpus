@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mapItem_->setPos(0,0);
     characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
     // A revoir position qui ne marche pas
-    characterItem_->setPos(1,4*33);
+    characterItem_->setPos(1,4*33+1);
 
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
@@ -47,26 +47,26 @@ void MainWindow::loadCharacter(fromServer * s)
 {
     // On change l'image du personnage selon la direction dans laquelle il regarde
     bool boutonMoveActif = true;
-    QString dir;
-    if (s->dir == 'n'){
+    QString dir = ":/Pictures/Pictures/derriere.png";
+    if (s->dir == 0){
         dir = ":/Pictures/Pictures/derriere.png";
         if (s->playerPosY == 0){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 's'){
+    else if (s->dir == 2){
         dir = ":/Pictures/Pictures/face.png";
         if (s->playerPosY == 4){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 'e'){
+    else if (s->dir == 1){
         dir = ":/Pictures/Pictures/left.png";
         if (s->playerPosX == 0){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 'o'){
+    else if (s->dir == 4){
         dir = ":/Pictures/Pictures/right.png";
         if (s->playerPosX == 4){
             boutonMoveActif = false;
@@ -74,7 +74,8 @@ void MainWindow::loadCharacter(fromServer * s)
     }
     characterItem_->setPixmap(QPixmap(dir).scaled(32,32));
     // On repositionne le personnage sur la carte
-    characterItem_->setPos(s->playerPosX,s->playerPosY);
+    std::cout << s->playerPosX << " - " << s->playerPosY << std::endl;
+    characterItem_->setPos(s->playerPosX*33,s->playerPosY*33);
     // En fonction emplacement personnage désactivé les boutons
     ui->move->setEnabled(boutonMoveActif);
     // Si le personnage est sur l'échelle et qu'il a trouvé le trésor
