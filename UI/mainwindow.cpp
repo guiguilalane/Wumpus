@@ -35,20 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
     ui->view->setScene(scene_);
-
-//    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete cont_;
-}
-
-void MainWindow::mapLoader(QString file)
-{
-    MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-    //    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
 }
 
 void MainWindow::loadCharacter(fromServer * s)
