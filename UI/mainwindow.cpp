@@ -152,20 +152,22 @@ void MainWindow::updateInfo(fromServer * s)
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
-    if (s->fallInHole){
+    if (s->fallInHole && !popupH){
         msg.setText("<center> Vous venez de tomber dans le trou !</center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
         msg.exec();
+        popupH = true;
         // TODO : Quitter le nivo ?
     }
     if (s->wumpusFind && !popupWF){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();
+        popupWF = true;
         // TODO : Quitter le nivo ?
     }
     // TODO A revoir les nb points
-    if (s->tresureFind){
+    if (s->tresureFind && !popupTF){
         msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
@@ -173,11 +175,13 @@ void MainWindow::updateInfo(fromServer * s)
         treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
         treasureItem_->setPos(s->tresurePosX,s->tresurePosY);
         scene_->addItem(treasureItem_);
+        popupTF = true;
     }
-    if (s->wumpusKill){
+    if (s->wumpusKill && !popupWK){
         msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
         msg.exec();
+        popupWK = true;
     }
     // On affiche les senseurs sur l'IHM
     ui->treasure->setVisible(s->besideTresure);
@@ -199,3 +203,4 @@ void MainWindow::updateInfo(fromServer * s)
 // TODO Afficher le tresor sur la carte s'il est trouver
 // TODO Fenêtre popup trésor trouver, tomber trou ou tomber wumpus
 // TODO Afficher les sensors
+// TODO Quand on change de stair remettre les bool des popup à 0
