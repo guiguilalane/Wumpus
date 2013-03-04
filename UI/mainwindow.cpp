@@ -21,18 +21,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialization of the scene and its components.
     // TODO : A voir pour que la redimensionnement soit automatique
-    scene_ = new QGraphicsScene(0,0,395,331,this);
+    scene_ = new QGraphicsScene();
     mapItem_ = new QGraphicsPixmapItem;
     characterItem_ = new QGraphicsPixmapItem;
     treasureItem_ = new QGraphicsPixmapItem;
 
+    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
+    mapItem_->setPos(0,0);
     characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
     // A revoir position qui ne marche pas
-    characterItem_->setPos(0,4*32);
+    characterItem_->setPos(1,4*33);
 
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
-    ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
+    ui->view->setScene(scene_);
 
 //    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }

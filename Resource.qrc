@@ -18,5 +18,6 @@
         <file>Pictures/coins.png</file>
         <file>Pictures/odor.png</file>
         <file>Pictures/wind.png</file>
+        <file>Pictures/carte.png</file>
     </qresource>
 </RCC>
