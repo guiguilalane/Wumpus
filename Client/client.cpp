@@ -74,8 +74,7 @@ void Client::envoiCommand(char *command)
 
     /* Mise en attente du programme pour simuler un délai de transmission */
     /*sleep(3);*/
-    std::printf("Commande envoyée au serveur. \n");
-//    printf("Commande envoyée au serveur. \n");
+    printf("Commande envoyée au serveur. \n");
 }
 
 void Client::receptionInfo()
@@ -117,14 +116,16 @@ void fromServerInitialisation(fromServer *receiv)
 {
     receiv->coherent = false;
     receiv->dir = 'n';
-    receiv->playerPosX = /*-1*/0;
-    receiv->playerPosY = /*-1*/4;
+    receiv->playerPosX = -1;
+    receiv->playerPosY = -1;
     receiv->tresurePosX = -1;
     receiv->tresurePosY = -1;
     receiv->besideHole = false;
     receiv->besideTresure = false;
     receiv->besideWumpus = false;
-    receiv->score = -1;
+    receiv->score = -1; // TODO Initialisatio à 0 ?
+    // TODO Initialiser la tableau avec des -1 ou 0 ?
+    //receiv->scores = (int *) malloc(NBJOUEUR-1xsizeof(int)); // A t'on acces à NB-JOUEUR, il faudrait auusi récupérer leur pseudo ?
     receiv->tresureFind = false;
     receiv->fallInHole = false;
     receiv->wumpusFind = false;

@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Désactiver le bouton connexion
     ui->connect->setEnabled(false);
+    ui->down->setEnabled(false);
 
     // Fenêtre pseudo
     pseudoDialog_ = new Pseudo(this);
@@ -20,20 +21,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialization of the scene and its components.
     // TODO : A voir pour que la redimensionnement soit automatique
-    scene_ = new QGraphicsScene(0,0,395,331,this);
+    scene_ = new QGraphicsScene();
     mapItem_ = new QGraphicsPixmapItem;
     characterItem_ = new QGraphicsPixmapItem;
     treasureItem_ = new QGraphicsPixmapItem;
 
+    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
+    mapItem_->setPos(0,0);
     characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
     // A revoir position qui ne marche pas
-    characterItem_->setPos(0,4*32);
+    characterItem_->setPos(1,4*33);
 
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
-    ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
+    ui->view->setScene(scene_);
 
-    //    mapLoader(QString("../Wumpus/Wumpus.tmx"));
+//    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
@@ -45,7 +48,7 @@ MainWindow::~MainWindow()
 void MainWindow::mapLoader(QString file)
 {
     MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
+    //    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
 }
 
 void MainWindow::loadCharacter(fromServer * s)
@@ -82,6 +85,10 @@ void MainWindow::loadCharacter(fromServer * s)
     characterItem_->setPos(s->playerPosX,s->playerPosY);
     // En fonction emplacement personnage désactivé les boutons
     ui->move->setEnabled(boutonMoveActif);
+    // Si le personnage est sur l'échelle et qu'il a trouvé le trésor
+    if (s->playerPosX==0 && s->playerPosY==4 && s->tresureFind){
+        ui->down->setEnabled(true);
+    }
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
@@ -124,7 +131,7 @@ void MainWindow::on_connect_clicked()
     ui->turnR->setEnabled(true);
     ui->move->setEnabled(true);
     ui->shoot->setEnabled(true);
-    ui->down->setEnabled(true);
+    ui->down->setEnabled(false);
     ui->quit->setEnabled(true);
 }
 
@@ -151,17 +158,17 @@ void MainWindow::updateInfo(fromServer * s)
         msg.setText("<center> Vous venez de tomber dans le trou !</center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
         msg.exec();
-        // TODO : Quitter le nivo
+        // TODO : Quitter le nivo ?
     }
     if (s->wumpusFind){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();
-        // TODO : Quitter le nivo
+        // TODO : Quitter le nivo ?
     }
     // TODO A revoir les nb points
     if (s->tresureFind){
-        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Félicitation, vous gagnez 100 points ! </center>");
+        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
         // TODO A vérifier s'il s'affiche au bon endroit
@@ -170,19 +177,27 @@ void MainWindow::updateInfo(fromServer * s)
         scene_->addItem(treasureItem_);
     }
     if (s->wumpusKill){
-        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 50 points ! </center>");
+        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
         msg.exec();
     }
-    // TODO ajouter les sensors sur la carte
+    // On affiche les senseurs sur l'IHM
+    ui->treasure->setVisible(s->besideTresure);
+    ui->hole->setVisible(s->besideHole);
+    ui->wumpus->setVisible(s->besideWumpus);
     // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
+    // TODO quand un joueur change de nivo avertir tous les autres joueurs
 }
 
+
 // TODO Afficher la carte
+// TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
+// TODO Au lancement --> Adresse + port ? Comment on fait ? --> Argument, rentrer par l'utilisateur ???
+// A vérifier:
 // TODO Récupérer la position du joueur:
 //  - Desactiver les boutons quand le personnage ne peut pas avancer dans la direction
 //  - Afficher le joueur
+//  - Dans le bon sens
 // TODO Afficher le tresor sur la carte s'il est trouver
 // TODO Fenêtre popup trésor trouver, tomber trou ou tomber wumpus
-// TODO Afficher score lors du quit
 // TODO Afficher les sensors
