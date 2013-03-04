@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include <pthread.h>
 #define TAILLE_MAX_NOM 256
+#define TAILLEMAX 36
 #define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
 int vardebug;
@@ -13,7 +14,7 @@ int vardebug;
 typedef struct
 {
     int type;
-    char* structure;
+    char structure[TAILLEMAX];
 } sendToClient;
 
 typedef struct
@@ -353,9 +354,8 @@ void toClientInitialisation(toClient *toSend)
 
 /***************************************TO FINISH***************************************/
 
-void initSending(toClient* c, player* p, stairs* s, int tresurePos[2])
+void initSending(toClient* c, player* p, stairs* s, sendToClient* test, int tresurePos[2])
 {
-//    sendToClient* test = (sendToClient*) malloc(sizeof(int) + sizeof(toClient));
     c->coherent = true;
     c->playerPosX = p->posX;
     c->playerPosY = p->posY;
@@ -365,14 +365,13 @@ void initSending(toClient* c, player* p, stairs* s, int tresurePos[2])
     c->besideTresure = sensor(p, s, 'T');
     c->besideWumpus = sensor(p, s, 'W');
     c->score = p->score;
-    c->tresureFinf= p->deadByWumpus;
+    c->tresureFinf= p->findTresure;
     c->fallInHole = p->fallInHole;
-    c->wumpusFind = p->findTresure;
+    c->wumpusFind = p->deadByWumpus;
     c->wumpusKill = p->shotTheWumpus;
     c->direction = p->direction;
-//    test->type = 1;
-//    test->structure = (char*) test;
-//    return test;
+    test->type = 1;
+    *((toClient*)&test->structure) = *c;
 }
 
 // Fonction temporaire
@@ -527,6 +526,9 @@ void * jeuNjoueur (void * arguments)
     player* p = args->p;
     stairs* s = p->game->etage;
 
+    //NOTE: pour tester l'envoi de structure de structure
+    sendToClient test;
+
     //TODO: valeur à changer quand le joueur trouve le trésor
     int tresurPos[2];
     tresurPos[0] = -1;//tresurePosX
@@ -593,14 +595,16 @@ void * jeuNjoueur (void * arguments)
                 result = (char*) realloc(result, strlen(temp));
                 sprintf(result, "%s", temp);
                 serveurPrintStairs(p, s);
+//                printf("taille structure : %d\n", sizeof(*test));
+//                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
+                initSending(toSend, p, s, &test, tresurPos);
+                printf("youhou %d\n", test.type);
 
-                initSending(toSend, p, s, tresurPos);
             }
 		}
-		
-		// Ecrit le nouvel état de l'étage
-//		write(nouv_socket_descriptor, result, strlen(result)+1);
-        write(nouv_socket_descriptor, toSend, sizeof(toClient));
+        // Ecrit le nouvel état de l'étage
+        write(nouv_socket_descriptor, result, strlen(result)+1);
+//        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
 
 		printf("Message envoye. \n");
 	}
@@ -753,11 +757,11 @@ int main(int argc, char* argv[])
         int tresurPos[2];
         tresurPos[0] = -1;
         tresurPos[1] = -1;
-        initSending(&tc, p, theGame->etage, tresurPos);
+        sendToClient test;
+        initSending(&tc, p, theGame->etage, &test, tresurPos);
 
-/*        write(nouv_socket_descriptor, &tc, sizeof(toClient));*/
-		write(nouv_socket_descriptor, temp, strlen(temp));
-		
+//        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
+        write(nouv_socket_descriptor, temp, strlen(temp));
 		if(pthread_create(&nouveau_client, NULL,
 								jeuNjoueur,
 							  (void*) &args) < 0)
