@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Désactiver le bouton connexion
     ui->connect->setEnabled(false);
+    ui->down->setEnabled(false);
 
     // Fenêtre pseudo
     pseudoDialog_ = new Pseudo(this);
@@ -33,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene_->addItem(characterItem_);
     ui->view->setSceneRect(0,0,scene_->width(),scene_->height());
 
-//        mapLoader(QString("../Wumpus/Wumpus.tmx"));
+//    mapLoader(QString("../Wumpus/Wumpus.tmx"));
 }
 
 MainWindow::~MainWindow()
@@ -45,7 +46,7 @@ MainWindow::~MainWindow()
 void MainWindow::mapLoader(QString file)
 {
     MapRenderer renderer(GestionnaireMap::getInstance((char *)file.toStdString().c_str())->getMap());
-//    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
+    //    mapItem_->setPixmap(renderer.createRendu()->pixmap().scaled(160,160));
 }
 
 void MainWindow::loadCharacter(fromServer * s)
@@ -82,6 +83,10 @@ void MainWindow::loadCharacter(fromServer * s)
     characterItem_->setPos(s->playerPosX,s->playerPosY);
     // En fonction emplacement personnage désactivé les boutons
     ui->move->setEnabled(boutonMoveActif);
+    // Si le personnage est sur l'échelle et qu'il a trouvé le trésor
+    if (s->playerPosX==0 && s->playerPosY==4 && s->tresureFind){
+        ui->down->setEnabled(true);
+    }
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
@@ -124,7 +129,7 @@ void MainWindow::on_connect_clicked()
     ui->turnR->setEnabled(true);
     ui->move->setEnabled(true);
     ui->shoot->setEnabled(true);
-    ui->down->setEnabled(true);
+    ui->down->setEnabled(false);
     ui->quit->setEnabled(true);
 }
 
@@ -161,7 +166,7 @@ void MainWindow::updateInfo(fromServer * s)
     }
     // TODO A revoir les nb points
     if (s->tresureFind){
-        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Félicitation, vous gagnez 100 points ! </center>");
+        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
         // TODO A vérifier s'il s'affiche au bon endroit
@@ -170,7 +175,7 @@ void MainWindow::updateInfo(fromServer * s)
         scene_->addItem(treasureItem_);
     }
     if (s->wumpusKill){
-        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 50 points ! </center>");
+        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
         msg.exec();
     }
@@ -186,7 +191,7 @@ void MainWindow::updateInfo(fromServer * s)
 // TODO Afficher la carte
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
 // TODO Au lancement --> Adresse + port ? Comment on fait ? --> Argument, rentrer par l'utilisateur ???
-// A vérifier
+// A vérifier:
 // TODO Récupérer la position du joueur:
 //  - Desactiver les boutons quand le personnage ne peut pas avancer dans la direction
 //  - Afficher le joueur

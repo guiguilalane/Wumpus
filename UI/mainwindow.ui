@@ -278,6 +278,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>view</tabstop>
   <tabstop>turnR</tabstop>
   <tabstop>turnL</tabstop>
   <tabstop>move</tabstop>
@@ -285,7 +286,6 @@
   <tabstop>down</tabstop>
   <tabstop>connect</tabstop>
   <tabstop>quit</tabstop>
-  <tabstop>view</tabstop>
  </tabstops>
  <resources>
   <include location="../Resource.qrc"/>
