@@ -11,7 +11,9 @@ Client::Client()
     //    }
 
     //    prog = argv[0];
-    host = (char*)"127.0.0.1"/*argv[1]*/;
+    host = new char[strlen("127.0.0.1")+1];
+    strcpy(host,"127.0.0.1");
+    port = 5000;
     //	command=argv[2];
 
 //    if(argc == 3)
@@ -19,31 +21,31 @@ Client::Client()
 //		port = atoi(argv[2]);
 //	}
 
-    if ((ptr_host = gethostbyname(host)) == NULL){
-        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
-        exit(1);
-    }
+//    if ((ptr_host = gethostbyname(host)) == NULL){
+//        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
+//        exit(1);
+//    }
 
-    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
-    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
-    adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype */
+//    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
+//    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
+//    adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype */
 
-    adresse_locale.sin_port = htons(5000);
+//    adresse_locale.sin_port = htons(5000);
 
-    /* Création de la socket */
-    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
-        exit(1);
-    }
+//    /* Création de la socket */
+//    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+//        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
+//        exit(1);
+//    }
 
-    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
-    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
-        perror("Erreur : impossible de se connecter au serveur");
-        exit(1);
-    }
-    connect_ = true;
-    printf("Connexion établie avec le serveur \n");
-    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
+//    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
+//    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
+//        perror("Erreur : impossible de se connecter au serveur");
+//        exit(1);
+//    }
+//    connect_ = true;
+//    printf("Connexion établie avec le serveur \n");
+//    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }
 
 void Client::envoiPseudo(char *p)
@@ -96,7 +98,22 @@ void Client::receptionInfo()
 
 void Client::connexion()
 {
-    // TODO A voir ce qu'il faut mettre dedans car là on concerve le jeu sur lequel on est
+    fromServerInitialisation(server);
+    // TODO A revoir si on met bien tout ça dedans
+    // Pour la première connexion OK
+
+    /* Connexion au serveur */
+    if ((ptr_host = gethostbyname(host)) == NULL){
+        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
+        exit(1);
+    }
+
+    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
+    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
+    adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype */
+
+    adresse_locale.sin_port = htons(5000);
+
     /* Création de la socket */
     if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         perror("Erreur : impossible de créer la socket de connexion avec le serveur");

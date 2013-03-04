@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -8,21 +10,27 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *)),this,SLOT(updateInfo(fromServer *)));
 
-    popupWK = false;
-    popupWF = false;
-    popupTF = false;
-    popupH = false;
+    pseudoRenseigne_ = false;
 
     ui->setupUi(this);
 
-    // Désactiver le bouton connexion
-    ui->connect->setEnabled(false);
+    // Désactivation des boutons sauf celui de connexion
+    ui->connect->setEnabled(true);
+    ui->turnL->setEnabled(false);
+    ui->turnR->setEnabled(false);
+    ui->move->setEnabled(false);
+    ui->shoot->setEnabled(false);
     ui->down->setEnabled(false);
+    ui->quit->setEnabled(false);
+
+    // Désactiver le bouton connexion
+    //    ui->connect->setEnabled(false);
+    //    ui->down->setEnabled(false);
 
     // Fenêtre pseudo
-    pseudoDialog_ = new Pseudo(this);
-    pseudoDialog_->show();
-    connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
+    //    pseudoDialog_ = new Pseudo(this);
+    //    pseudoDialog_->show();
+    //    connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
 
     // Initialization of the scene and its components.
     // TODO : A voir pour que la redimensionnement soit automatique
@@ -31,15 +39,14 @@ MainWindow::MainWindow(QWidget *parent) :
     characterItem_ = new QGraphicsPixmapItem;
     treasureItem_ = new QGraphicsPixmapItem;
 
-    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
-    mapItem_->setPos(0,0);
-    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
-    // A revoir position qui ne marche pas
-    characterItem_->setPos(1,4*33+1);
+//    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
+//    mapItem_->setPos(0,0);
+//    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+//    characterItem_->setPos(1,4*33+1);
 
-    scene_->addItem(mapItem_);
-    scene_->addItem(characterItem_);
-    ui->view->setScene(scene_);
+//    scene_->addItem(mapItem_);
+//    scene_->addItem(characterItem_);
+//    ui->view->setScene(scene_);
 }
 
 MainWindow::~MainWindow()
@@ -90,6 +97,7 @@ void MainWindow::acceptPseudo(QString* pseudo)
 {
     delete pseudoDialog_;
     cont_->envoiPseudo(pseudo);
+    pseudoRenseigne_ = true;
 }
 
 void MainWindow::on_shoot_clicked()
@@ -121,6 +129,30 @@ void MainWindow::on_down_clicked()
 void MainWindow::on_connect_clicked()
 {
     cont_->connexion();
+    if (!pseudoRenseigne_){
+        pseudoDialog_ = new Pseudo(this);
+        pseudoDialog_->show();
+        connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
+    }
+
+//    cont_->connexion();
+
+    // Display the map and composant
+    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
+    mapItem_->setPos(0,0);
+    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+    characterItem_->setPos(1,4*33+1);
+    scene_->addItem(mapItem_);
+    scene_->addItem(characterItem_);
+    ui->view->setScene(scene_);
+
+    // Booléean des popup initialisée à false
+    popupWK_ = false;
+    popupWF_ = false;
+    popupTF_ = false;
+    popupH_ = false;
+
+    // Activation des boutons ou non
     ui->connect->setEnabled(false);
     ui->turnL->setEnabled(true);
     ui->turnR->setEnabled(true);
@@ -133,6 +165,12 @@ void MainWindow::on_connect_clicked()
 void MainWindow::on_quit_clicked()
 {
     cont_->envoiCommand((char*)"quit");
+    // On vide la scene
+    scene_->removeItem(mapItem_);
+    scene_->removeItem(characterItem_);
+    scene_->removeItem(treasureItem_);
+
+    // Désactivation des boutons
     ui->connect->setEnabled(true);
     ui->turnL->setEnabled(false);
     ui->turnR->setEnabled(false);
@@ -149,37 +187,37 @@ void MainWindow::updateInfo(fromServer * s)
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
-    if (s->fallInHole && !popupH){
+    if (s->fallInHole && !popupH_){
         msg.setText("<center> Vous venez de tomber dans le trou !</center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
         msg.exec();
-        popupH = true;
+        popupH_ = true;
         // TODO : Quitter le nivo ?
     }
-    if (s->wumpusFind && !popupWF){
+    if (s->wumpusFind && !popupWF_){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();
-        popupWF = true;
+        popupWF_ = true;
         // TODO : Quitter le nivo ?
     }
     // TODO A revoir les nb points
-    if (s->tresureFind && !popupTF){
+    if (s->tresureFind && !popupTF_){
         msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
         // TODO A vérifier s'il s'affiche au bon endroit
-            std::cout << s->tresurePosX << " - " << s->tresurePosY << std::endl;
+        std::cout << s->tresurePosX << " - " << s->tresurePosY << std::endl;
         treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(32,32));
         treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
         scene_->addItem(treasureItem_);
-        popupTF = true;
+        popupTF_ = true;
     }
-    if (s->wumpusKill && !popupWK){
+    if (s->wumpusKill && !popupWK_){
         msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
         msg.exec();
-        popupWK = true;
+        popupWK_ = true;
     }
     // On affiche les senseurs sur l'IHM
     ui->treasure->setVisible(s->besideTresure);
@@ -195,4 +233,22 @@ void MainWindow::updateInfo(fromServer * s)
 // A vérifier:
 // TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
 // TODO Afficher les sensors --> A revoir pour l'initialisation au début
-// TODO Quand on change de stair remettre les bool des popup à 0
+// TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
+// TODO Bannière défilante avec texte après pseudo
+
+
+void MainWindow::on_toolButton_clicked()
+{
+    QString ad = cont_->getAdresse();
+    QString p = cont_->getPort();
+    optionDialog_ = new Option(this);
+    optionDialog_->putValeur(ad, p);
+    optionDialog_->show();
+    connect(optionDialog_, SIGNAL(newValeur(QString *, QString *)), this, SLOT(acceptValeur(QString *, QString *)));
+}
+
+void MainWindow::acceptValeur(QString* ad, QString * p)
+{
+    cont_->envoiValeurConnexion(ad->toStdString().c_str(), p->toInt());
+    delete optionDialog_;
+}

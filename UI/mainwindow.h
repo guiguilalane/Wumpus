@@ -7,6 +7,7 @@
 #include <QMessageBox>
 
 #include "pseudo.h"
+#include "option.h"
 #include "../Controleur/controleur.h"
 #include "../Model/viewer/mapRenderer.h"
 #include "../Model/controleur/gestionnaireMap.h"
@@ -28,6 +29,8 @@ public:
 private slots:
     void acceptPseudo(QString *pseudo);
 
+    void acceptValeur(QString *ad, QString *p);
+
     void on_shoot_clicked();
 
     void on_turnR_clicked();
@@ -44,6 +47,8 @@ private slots:
 
     void updateInfo(fromServer * s);
 
+    void on_toolButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene * scene_;
@@ -51,12 +56,14 @@ private:
     QGraphicsPixmapItem * characterItem_;
     QGraphicsPixmapItem * treasureItem_;
     Controleur * cont_;
-    bool popupWK;
-    bool popupWF;
-    bool popupTF;
-    bool popupH;
+    bool pseudoRenseigne_;
+    bool popupWK_;
+    bool popupWF_;
+    bool popupTF_;
+    bool popupH_;
 
     Pseudo * pseudoDialog_;
+    Option * optionDialog_;
 };
 
 #endif // MAINWINDOW_H

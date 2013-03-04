@@ -54,6 +54,7 @@ public:
     char buffer[256];
     char * prog; /* Nom du programme */
     char * host; /* Nom de la machine distante */
+    int port; /* Port de connexion */
     char command[15] /* Commande envoyée */, temp[15];
     bool connect_;
     fromServer* server;
