@@ -185,6 +185,7 @@ void MainWindow::updateInfo(fromServer * s)
 
 // TODO Afficher la carte
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
+// TODO Au lancement --> Adresse + port ? Comment on fait ? --> Argument, rentrer par l'utilisateur ???
 // A vérifier
 // TODO Récupérer la position du joueur:
 //  - Desactiver les boutons quand le personnage ne peut pas avancer dans la direction
