@@ -66,27 +66,24 @@ void MainWindow::loadCharacter(fromServer * s)
         }
     }
     else if (s->dir == 1){
-        dir = ":/Pictures/Pictures/left.png";
-        if (s->playerPosX == 0){
-            boutonMoveActif = false;
-        }
-    }
-    else if (s->dir == 4){
         dir = ":/Pictures/Pictures/right.png";
         if (s->playerPosX == 4){
             boutonMoveActif = false;
         }
     }
+    else if (s->dir == 3){
+        dir = ":/Pictures/Pictures/left.png";
+        if (s->playerPosX == 0){
+            boutonMoveActif = false;
+        }
+    }
     characterItem_->setPixmap(QPixmap(dir).scaled(32,32));
     // On repositionne le personnage sur la carte
-    std::cout << s->playerPosX << " - " << s->playerPosY << std::endl;
-    characterItem_->setPos(s->playerPosX*33,s->playerPosY*33);
+    characterItem_->setPos(s->playerPosX*33+1,s->playerPosY*33+1);
     // En fonction emplacement personnage désactivé les boutons
     ui->move->setEnabled(boutonMoveActif);
     // Si le personnage est sur l'échelle et qu'il a trouvé le trésor
-    if (s->playerPosX==0 && s->playerPosY==4 && s->tresureFind){
-        ui->down->setEnabled(true);
-    }
+    ui->down->setEnabled(s->playerPosX==0 && s->playerPosY==4 && s->tresureFind);
 }
 
 void MainWindow::acceptPseudo(QString* pseudo)
@@ -172,8 +169,9 @@ void MainWindow::updateInfo(fromServer * s)
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
         // TODO A vérifier s'il s'affiche au bon endroit
-        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
-        treasureItem_->setPos(s->tresurePosX,s->tresurePosY);
+            std::cout << s->tresurePosX << " - " << s->tresurePosY << std::endl;
+        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(32,32));
+        treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
         scene_->addItem(treasureItem_);
         popupTF = true;
     }
@@ -192,15 +190,9 @@ void MainWindow::updateInfo(fromServer * s)
 }
 
 
-// TODO Afficher la carte
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
 // TODO Au lancement --> Adresse + port ? Comment on fait ? --> Argument, rentrer par l'utilisateur ???
 // A vérifier:
-// TODO Récupérer la position du joueur:
-//  - Desactiver les boutons quand le personnage ne peut pas avancer dans la direction
-//  - Afficher le joueur
-//  - Dans le bon sens
-// TODO Afficher le tresor sur la carte s'il est trouver
-// TODO Fenêtre popup trésor trouver, tomber trou ou tomber wumpus
-// TODO Afficher les sensors
+// TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
+// TODO Afficher les sensors --> A revoir pour l'initialisation au début
 // TODO Quand on change de stair remettre les bool des popup à 0
