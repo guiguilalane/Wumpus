@@ -9,8 +9,6 @@
 #include "pseudo.h"
 #include "option.h"
 #include "../Controleur/controleur.h"
-#include "../Model/viewer/mapRenderer.h"
-#include "../Model/controleur/gestionnaireMap.h"
 
 namespace Ui {
 class MainWindow;

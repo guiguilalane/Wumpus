@@ -124,6 +124,8 @@ void MainWindow::on_connect_clicked()
         cont_->envoiPseudo(pseudo_);
     }
 
+    ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
+
     // Display the map and composant
     mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
     mapItem_->setPos(0,0);
@@ -165,6 +167,8 @@ void MainWindow::on_quit_clicked()
     ui->shoot->setEnabled(false);
     ui->down->setEnabled(false);
     ui->quit->setEnabled(false);
+
+    ui->statusBar->setStatusTip("");
 }
 
 void MainWindow::updateInfo(fromServer * s)
