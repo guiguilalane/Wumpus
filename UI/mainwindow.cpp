@@ -8,6 +8,11 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *)),this,SLOT(updateInfo(fromServer *)));
 
+    popupWK = false;
+    popupWF = false;
+    popupTF = false;
+    popupH = false;
+
     ui->setupUi(this);
 
     // Désactiver le bouton connexion
@@ -153,7 +158,7 @@ void MainWindow::updateInfo(fromServer * s)
         msg.exec();
         // TODO : Quitter le nivo ?
     }
-    if (s->wumpusFind){
+    if (s->wumpusFind && !popupWF){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();

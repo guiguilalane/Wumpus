@@ -51,6 +51,10 @@ private:
     QGraphicsPixmapItem * characterItem_;
     QGraphicsPixmapItem * treasureItem_;
     Controleur * cont_;
+    bool popupWK;
+    bool popupWF;
+    bool popupTF;
+    bool popupH;
 
     Pseudo * pseudoDialog_;
 };
