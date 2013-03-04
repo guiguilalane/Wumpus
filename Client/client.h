@@ -7,7 +7,7 @@
 #include <QObject>
 
 #include <stdio.h>
-//#include <linux/types.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>

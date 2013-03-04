@@ -23,7 +23,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void mapLoader(QString file);
     void loadCharacter(fromServer *s);
 
 private slots:
