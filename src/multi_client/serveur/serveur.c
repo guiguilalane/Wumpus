@@ -19,6 +19,7 @@ typedef struct
 typedef struct
 {
     bool coherent;//indique si les données (reçues/envoyées) sont coherentes
+    int direction;
     int playerPosX;
     int playerPosY;
     int tresurePosX;
@@ -31,7 +32,7 @@ typedef struct
     bool besideWumpus;
     bool besideHole;
     bool besideTresure;
-    int direction;
+
 } toClient;
 
 typedef struct
