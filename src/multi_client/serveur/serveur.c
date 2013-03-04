@@ -123,7 +123,7 @@ void shot()
 // Lorsque le personnage descend l'échelle
 void down()
 {
-	printf("Le personnage descend d'un étage.\n");
+    printf("Le personnage descend d'un étage.\n");
 }
 
 // Recherche l'action qui correspond à la commande
@@ -480,33 +480,25 @@ void checkPosition(player *p)
 
     case 'W' :
         printf("T'es mort!! Le Wumpus t'as mangé.\n");
+        p->score -= 50;
+        p->deadByWumpus = true;
         break;
 
     case 'T' :
         printf("Bien joué! T'as trouvé le trésor.\n");
+        p->findTresure = true;
         break;
 
     case 'H' :
         printf("Fait attention ou tu marches, t'as glissé dans un trou!\n");
+        p->score -= 30;
+        p->fallInHole = true;
         break ;
 
     default :
         ;
     }
 }
-
-//on suppose que le tableau tabP, à une taille de NBPLAYERSPERGAME
-//bool isEmpty(player** tabP)
-//{
-//	int i = 0;
-//	bool res = true;
-//    for(; i < NBPLAYERSPERGAME; ++i)
-//	{
-///*		printf("%d\n", tabP[i]);*/
-//		res = res && (tabP[i]==NULL);
-//	}
-//	return res;
-//}
 
 void * jeuNjoueur (void * arguments)
 {
@@ -589,13 +581,12 @@ void * jeuNjoueur (void * arguments)
                 serveurPrintStairs(p, s);
 
                 initSending(toSend, p, s, tresurPos);
-
             }
 		}
 		
 		// Ecrit le nouvel état de l'étage
-		write(nouv_socket_descriptor, result, strlen(result)+1);
-/*        write(nouv_socket_descriptor, toSend, sizeof(toClient));*/
+//		write(nouv_socket_descriptor, result, strlen(result)+1);
+        write(nouv_socket_descriptor, toSend, sizeof(toClient));
 
 		printf("Message envoye. \n");
 	}
