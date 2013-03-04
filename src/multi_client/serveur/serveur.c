@@ -348,7 +348,7 @@ void toClientInitialisation(toClient *toSend)
     toSend->fallInHole = false;
     toSend->wumpusFind = false;
     toSend->wumpusKill = false;
-    toSend->direction = NORD;
+    toSend->direction = NORTH;
 }
 
 /***************************************TO FINISH***************************************/
