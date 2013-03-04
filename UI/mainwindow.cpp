@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QDebug>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,30 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->down->setEnabled(false);
     ui->quit->setEnabled(false);
 
-    // Désactiver le bouton connexion
-    //    ui->connect->setEnabled(false);
-    //    ui->down->setEnabled(false);
-
-    // Fenêtre pseudo
-    //    pseudoDialog_ = new Pseudo(this);
-    //    pseudoDialog_->show();
-    //    connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
-
     // Initialization of the scene and its components.
     // TODO : A voir pour que la redimensionnement soit automatique
     scene_ = new QGraphicsScene();
     mapItem_ = new QGraphicsPixmapItem;
     characterItem_ = new QGraphicsPixmapItem;
     treasureItem_ = new QGraphicsPixmapItem;
-
-//    mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
-//    mapItem_->setPos(0,0);
-//    characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
-//    characterItem_->setPos(1,4*33+1);
-
-//    scene_->addItem(mapItem_);
-//    scene_->addItem(characterItem_);
-//    ui->view->setScene(scene_);
+    ui->view->setScene(scene_);
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +78,7 @@ void MainWindow::acceptPseudo(QString* pseudo)
 {
     delete pseudoDialog_;
     cont_->envoiPseudo(pseudo);
+    pseudo_ = pseudo;
     pseudoRenseigne_ = true;
 }
 
@@ -128,14 +110,19 @@ void MainWindow::on_down_clicked()
 
 void MainWindow::on_connect_clicked()
 {
+    // Connexion
     cont_->connexion();
+
+    // Envoi du pseudo
     if (!pseudoRenseigne_){
         pseudoDialog_ = new Pseudo(this);
         pseudoDialog_->show();
         connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
     }
-
-//    cont_->connexion();
+    else
+    {
+        cont_->envoiPseudo(pseudo_);
+    }
 
     // Display the map and composant
     mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
@@ -144,7 +131,6 @@ void MainWindow::on_connect_clicked()
     characterItem_->setPos(1,4*33+1);
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
-    ui->view->setScene(scene_);
 
     // Booléean des popup initialisée à false
     popupWK_ = false;
@@ -165,6 +151,7 @@ void MainWindow::on_connect_clicked()
 void MainWindow::on_quit_clicked()
 {
     cont_->envoiCommand((char*)"quit");
+
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
@@ -229,7 +216,6 @@ void MainWindow::updateInfo(fromServer * s)
 
 
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
-// TODO Au lancement --> Adresse + port ? Comment on fait ? --> Argument, rentrer par l'utilisateur ???
 // A vérifier:
 // TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
 // TODO Afficher les sensors --> A revoir pour l'initialisation au début
