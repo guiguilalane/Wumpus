@@ -45,7 +45,7 @@ void deconnexionServeur(int socket_descriptor)
 void writeFunction(int socket_descriptor, char* p)
 {
     if ((write(socket_descriptor, p, strlen(p))) < 0) {
-        perror("Erreur : impossible d'écrire le pseudo destine au serveur.");
+        perror("Erreur : impossible d'envoyer au serveur.");
         exit(1);
     }
 }
