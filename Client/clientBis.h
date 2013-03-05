@@ -57,11 +57,16 @@ void writeFunction(int socket_descriptor, char* p); // Permet d'envoyer des info
 
 void readFunction(int socket_descriptor); // Permet de lire des informations venant du serveur
 
-void envoiPseudoClient(char *p, int socket_descriptor); // Permet d'envoyer
-void envoiCommandClient(int socket_descriptor, char *command);
+void envoiPseudoClient(char *p, int socket_descriptor); // Permet d'envoyer le pseudo au serveur
+
+void envoiCommandClient(int socket_descriptor, char *command); // Permet d'envoyer une commande au serveur
+
 void readData(int socket_descriptor, dispatchStruct* structure);
+
 void receptionInfoClient(int socket_descriptor, fromServer * server);
-void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale);
-void fromServerInitialisation(fromServer *receiv);
+
+void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale); // Permet d'établir la connexion avec l'initialisation au serveur
+
+void fromServerInitialisation(fromServer *receiv); // Initialisation de la structure de données
 
 #endif // CLIENTBIS_H
