@@ -95,17 +95,17 @@ void Client::receptionInfo()
 {
 
     /* Lecture des informations du jeu en provenance du serveur */
-    readData(socket_descriptor, &test);
-    printf("type : %d\n", test.type);
-    fromServer* tmp = ((fromServer*) test.structure);
-    // serveur = tmp ???????
-    server = tmp;
+//    readData(socket_descriptor, &test);
+//    printf("type : %d\n", test.type);
+//    fromServer* tmp = ((fromServer*) test.structure);
+//    // serveur = tmp ???????
+//    server = tmp;
     // Ancienne version a supprimer
-    //    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-    //        printf("Réponse du serveur : \n");
-    //                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
-    ////                printf("besideTreasure : %d\n", server->besideTresure);
-    //            }
+        if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
+            printf("Réponse du serveur : \n");
+                    printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
+    //                printf("besideTreasure : %d\n", server->besideTresure);
+                }
     printf("\nFin de la reception.\n");
 }
 
