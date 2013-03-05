@@ -12,10 +12,19 @@
 #include <netdb.h>
 #include <string.h>
 
+#define TAILLEMAX 36
+
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
 typedef struct hostent hostent;
 typedef struct servent servent;
+
+typedef struct
+{
+    int type;
+    char structure[TAILLEMAX];
+
+} dispatchStruct;
 
 typedef struct
 {
@@ -57,6 +66,7 @@ public:
     int port; /* Port de connexion */
     char command[15] /* Commande envoyée */, temp[15];
     bool connect_;
+    dispatchStruct test;
     fromServer* server;
 };
 

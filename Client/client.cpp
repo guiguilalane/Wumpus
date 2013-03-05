@@ -16,36 +16,36 @@ Client::Client()
     port = 5000;
     //	command=argv[2];
 
-//    if(argc == 3)
-//	{
-//		port = atoi(argv[2]);
-//	}
+    //    if(argc == 3)
+    //	{
+    //		port = atoi(argv[2]);
+    //	}
 
-//    if ((ptr_host = gethostbyname(host)) == NULL){
-//        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
-//        exit(1);
-//    }
+    //    if ((ptr_host = gethostbyname(host)) == NULL){
+    //        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
+    //        exit(1);
+    //    }
 
-//    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
-//    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
-//    adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype */
+    //    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
+    //    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
+    //    adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype */
 
-//    adresse_locale.sin_port = htons(5000);
+    //    adresse_locale.sin_port = htons(5000);
 
-//    /* Création de la socket */
-//    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-//        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
-//        exit(1);
-//    }
+    //    /* Création de la socket */
+    //    if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+    //        perror("Erreur : impossible de créer la socket de connexion avec le serveur");
+    //        exit(1);
+    //    }
 
-//    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
-//    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
-//        perror("Erreur : impossible de se connecter au serveur");
-//        exit(1);
-//    }
-//    connect_ = true;
-//    printf("Connexion établie avec le serveur \n");
-//    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
+    //    /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
+    //    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
+    //        perror("Erreur : impossible de se connecter au serveur");
+    //        exit(1);
+    //    }
+    //    connect_ = true;
+    //    printf("Connexion établie avec le serveur \n");
+    //    printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }
 
 void Client::envoiPseudo(char *p)
@@ -77,22 +77,36 @@ void Client::envoiCommand(char *command)
     /* Mise en attente du programme pour simuler un délai de transmission */
     /*sleep(3);*/
     std::printf("Commande envoyée au serveur. \n");
-//    printf("Commande envoyée au serveur. \n");
+    //    printf("Commande envoyée au serveur. \n");
+}
+
+void readData(int socket_descriptor, dispatchStruct* structure)
+{
+    char buffer[sizeof(dispatchStruct)];
+    int longueur;
+
+    while((longueur = read(socket_descriptor, buffer, sizeof(dispatchStruct))) <= 0)
+    {
+        exit(1);
+    }
+    *structure = *((dispatchStruct*)&buffer);
 }
 
 void Client::receptionInfo()
 {
+
     /* Lecture des informations du jeu en provenance du serveur */
-    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-        printf("Réponse du serveur : \n");
-                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
-//                printf("besideTreasure : %d\n", server->besideTresure);
-            }
-//Ancienne version a supprimer
-//    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-//        printf("Réponse du serveur : \n");
-//        write(1,buffer,longueur);
-//    }
+    readData(socket_descriptor, &test);
+    printf("type : %d\n", test.type);
+    fromServer* tmp = ((fromServer*) test.structure);
+    // serveur = tmp ???????
+    server = tmp;
+    // Ancienne version a supprimer
+    //    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
+    //        printf("Réponse du serveur : \n");
+    //                printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
+    ////                printf("besideTreasure : %d\n", server->besideTresure);
+    //            }
     printf("\nFin de la reception.\n");
 }
 
