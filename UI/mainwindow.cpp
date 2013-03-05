@@ -224,7 +224,7 @@ void MainWindow::updateInfo(fromServer * s)
 // TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
 // TODO Afficher les sensors --> A revoir pour l'initialisation au début
 // TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
-// TODO Bannière défilante avec texte après pseudo
+// TODO changer le fond ?
 
 
 void MainWindow::on_toolButton_clicked()
