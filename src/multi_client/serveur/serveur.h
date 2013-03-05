@@ -16,7 +16,7 @@
 #define WEST 3
 
 //taille maximum d'une structure d'envoi
-#define TAILLEMAX 36
+#define TAILLEMAX 999
 
 //définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0

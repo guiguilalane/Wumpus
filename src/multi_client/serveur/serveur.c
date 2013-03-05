@@ -10,10 +10,10 @@
 
 int vardebug;
 
-typedef struct
-{
-    char theMessage[TAILLEMAX];
-} message;
+//typedef struct
+//{
+//    char theMessage[TAILLEMAX];
+//} message;
 
 typedef struct
 {
@@ -88,6 +88,7 @@ void move(player* p, int sock)
     toClient tc;
     sendToClient stc;
     initMovingSending(&tc, p, &stc);
+//    write(sock, &stc, sizeof(sendToClient));
     write(sock, &stc, sizeof(sendToClient));
 	/*    printf("Avancer d'une case dans la direction pointée.\n");*/
 }
@@ -368,11 +369,13 @@ void initMovingSending(toClient* c, player* p, sendToClient* stc)
     *((toClient*)&stc->structure) = *c;
 }
 
-void initMessageSending(message* m, sendToClient* stc)
+void initMessageSending(char* m, sendToClient* stc)
 {
     stc->type = STRUCTMESSAGE;
-    strcpy(stc->structure, m->theMessage);
-    stc->structure[TAILLEMAX] = '\0';
+    strcpy(stc->structure, m);
+    //TODO: asup
+    printf("%s\n", stc->structure);
+//    stc->structure = '\0';
 }
 
 // Fonction temporaire
@@ -761,10 +764,10 @@ int main(int argc, char* argv[])
 //        tresurPos[1] = -1;
 
         //TODO: changer l'envoi
-        sendToClient test;
-        initMessageSending(temp, &test);
 
-        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
+        sendToClient stc;
+        initMessageSending(temp, &stc);
+        write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
 //        write(nouv_socket_descriptor, temp, strlen(temp));
 		if(pthread_create(&nouveau_client, NULL,
 								jeuNjoueur,
