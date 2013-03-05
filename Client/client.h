@@ -1,16 +1,16 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <QString>
-
 #include <stdlib.h>
-#include <QObject>
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netdb.h>
 #include <string.h>
+#include <stdbool.h>
+
+#include <unistd.h>
 
 #define TAILLEMAX 36
 
@@ -23,7 +23,6 @@ typedef struct
 {
     int type;
     char structure[TAILLEMAX];
-
 } dispatchStruct;
 
 typedef struct
@@ -46,30 +45,30 @@ typedef struct
     bool besideTresure; //Flag indiquant que le joueur est à côté du trésor
 } fromServer;
 
-class Client
-{
-public:
-    Client();
-    void envoiPseudo(char* p);
-    void envoiCommand(char* command);
-    void receptionInfo();
-    void connexion();
+void initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale); // Permet l'intitialisation du host
 
-    int socket_descriptor, /* Descripteur de socket */
-        longueur; /* Longueur d'un buffer utilisé */
-    sockaddr_in adresse_locale; /* Adresse de socket local */
-    hostent * ptr_host; /* Info sur une machine hote */
-    servent * ptr_service; /* Info sur un service */
-    char buffer[256];
-    char * prog; /* Nom du programme */
-    char * host; /* Nom de la machine distante */
-    int port; /* Port de connexion */
-    char command[15] /* Commande envoyée */, temp[15];
-    bool connect_;
-    dispatchStruct test;
-    fromServer* server;
-};
+void attribuerPort(sockaddr_in * adresse_locale, int port); // Permet d'attribuer le port
 
-void fromServerInitialisation(fromServer *receiv);
+int createSocket(); // Permet de créer la socket
+
+void connectionServeur(int socket_descriptor, sockaddr_in adresse_locale); // Permet de se connecter au serveur
+
+void deconnexionServeur(int socket_descriptor); // Permet de se déconnecter du serveur
+
+void writeFunction(int socket_descriptor, char* p); // Permet d'envoyer des informations au serveur
+
+void readFunction(int socket_descriptor); // Permet de lire des informations venant du serveur
+
+void envoiPseudoClient(char *p, int socket_descriptor); // Permet d'envoyer le pseudo au serveur
+
+void envoiCommandClient(int socket_descriptor, char *command); // Permet d'envoyer une commande au serveur
+
+void readData(int socket_descriptor, dispatchStruct* structure);
+
+void receptionInfoClient(int socket_descriptor, fromServer * server);
+
+void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale); // Permet d'établir la connexion avec l'initialisation au serveur
+
+void fromServerInitialisation(fromServer *receiv); // Initialisation de la structure de données
 
 #endif // CLIENT_H

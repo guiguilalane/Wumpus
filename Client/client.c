@@ -1,4 +1,4 @@
-#include "clientBis.h"
+#include "client.h"
 
 void initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale)
 {
@@ -105,7 +105,6 @@ void receptionInfoClient(int socket_descriptor, fromServer * server)
     //    readFunction(socket_descriptor, server);
     if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
         printf("Réponse du serveur : \n");
-        printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
     }
     printf("\nFin de la reception.\n");
 }

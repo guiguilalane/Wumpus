@@ -1,8 +1,6 @@
 #ifndef CONTROLEUR_H
 #define CONTROLEUR_H
 
-//#include "Client/client.h"
-
 #include <iostream>
 
 #include <QString>
@@ -10,7 +8,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#include "Client/clientBis.h"
+#include "Client/client.h"
 }
 #endif
 
@@ -31,11 +29,12 @@ public:
     QString getAdresse();
     QString getPort();
 
+    fromServer* server;
+
 signals:
     void infoRecu(fromServer * s);
 
 private:
-//    Client * client;
     int socket_descriptor; /* Descripteur de socket */
     sockaddr_in adresse_locale; /* Adresse de socket local */
     hostent * ptr_host; /* Info sur une machine hote */
@@ -46,8 +45,6 @@ private:
     char command[15] /* Commande envoyée */;
     bool connect_;
     dispatchStruct test;
-    fromServer* server;
-
 };
 
 #endif // CONTROLEUR_H

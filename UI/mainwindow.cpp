@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     characterItem_ = new QGraphicsPixmapItem;
     treasureItem_ = new QGraphicsPixmapItem;
     ui->view->setScene(scene_);
+
+    ui->widgetInd->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -126,6 +128,12 @@ void MainWindow::on_connect_clicked()
 
     ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
 
+    // On affiche les senseurs sur l'IHM
+    ui->treasure->setVisible(cont_->server->besideTresure);
+    ui->hole->setVisible(cont_->server->besideHole);
+    ui->wumpus->setVisible(cont_->server->besideWumpus);
+    ui->widgetInd->setVisible(true);
+
     // Display the map and composant
     mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
     mapItem_->setPos(0,0);
@@ -220,11 +228,9 @@ void MainWindow::updateInfo(fromServer * s)
 
 
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
+// TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
 // A vérifier:
 // TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
-// TODO Afficher les sensors --> A revoir pour l'initialisation au début
-// TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
-// TODO changer le fond ?
 
 
 void MainWindow::on_toolButton_clicked()
