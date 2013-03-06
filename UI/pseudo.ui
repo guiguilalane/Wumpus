@@ -50,7 +50,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEditPseudo"/>
+     <widget class="QLineEdit" name="lineEditPseudo">
+      <property name="maxLength">
+       <number>256</number>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

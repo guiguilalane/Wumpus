@@ -1,6 +1,6 @@
 CC = gcc
 LDFLAGS = -lpthread
-CXXFLAG =
+CFLAGS = 
 
 SRC = jeux.c serveur.c
 OBJ = $(SRC:.c=.o)
@@ -8,10 +8,10 @@ OBJ = $(SRC:.c=.o)
 EXEC = serveur
 
 serveur: $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 	
 %.o: %.c
-	$(CC) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 		
 clean:
 	rm -f *.o
