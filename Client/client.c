@@ -138,11 +138,11 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 /* Idem à revoir quand terminer sur ce qu'on recoit */
 void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct dispStruc)
 {
+    /* Lecture des informations du jeu en provenance du serveur */
     readData(socket_descriptor, &dispStruc);
     dataProcessing(server, &dispStruc);
 
 //    int longueur;
-//    /* Lecture des informations du jeu en provenance du serveur */
 //    //    readData(socket_descriptor, &test);
 //    //    printf("type : %d\n", test.type);
 //    //    fromServer* tmp = ((fromServer*) test.structure);
