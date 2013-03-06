@@ -29,7 +29,7 @@ public:
     QString getAdresse();
     QString getPort();
 
-    fromServer* server;
+    fromServer server;
 
 signals:
     void infoRecu(fromServer * s);

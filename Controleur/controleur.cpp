@@ -9,8 +9,7 @@ Controleur::Controleur()
     port = 5000;
 
     // Initialisation de la structure des datas
-    server = (fromServer*) malloc(sizeof(fromServer));
-    fromServerInitialisation(server);
+    fromServerInitialisation(&server);
 }
 
 Controleur::~Controleur()
@@ -19,7 +18,7 @@ Controleur::~Controleur()
 
 void Controleur::envoiPseudo(QString *p)
 {
-    envoiPseudoClient((char*)p->toStdString().c_str(), socket_descriptor);
+    envoiPseudoClient((char*)p->toStdString().c_str(), socket_descriptor, server, dispStruc);
 }
 
 void Controleur::envoiCommand(char *command)
@@ -31,8 +30,8 @@ void Controleur::envoiCommand(char *command)
         connect_ = false;
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }
-    receptionInfoClient(socket_descriptor, server, dispStruc);
-    emit infoRecu(server);
+    receptionInfoClient(socket_descriptor, &server, dispStruc);
+    emit infoRecu(&server);
 }
 
 void Controleur::connexion()

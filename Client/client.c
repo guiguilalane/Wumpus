@@ -59,16 +59,17 @@ void readFunction(int socket_descriptor)
     }
 }
 
-void envoiPseudoClient(char *p, int socket_descriptor)
+void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispatchStruct dispStruct)
 {
     writeFunction(socket_descriptor, p);
     //    readFunction(socket_descriptor);
     /* Ce qui suit sera à supprimer quand je saurais comment récupérer les infos */
-    char buffer[256];
-    int longueur;
-    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-        write(1,buffer,longueur);
-    }
+//    char buffer[256];
+//    int longueur;
+//    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
+//        write(1,buffer,longueur);
+//    }
+    receptionInfoClient(socket_descriptor, &server, dispStruct);
 }
 
 void envoiCommandClient(int socket_descriptor, char *command)
@@ -88,13 +89,12 @@ void readData(int socket_descriptor, dispatchStruct* structure)
         }
     /*	char buffer[sizeof(dispatchStruct)];*/
         char buffer[len];
-//        int longueur;
+        int longueur;
 
-//        while((longueur = read(socket_descriptor, buffer, len)) <= 0)
-//        {
-//            exit(1);
-//        }
-        readFunction(socket_descriptor);
+        while((longueur = read(socket_descriptor, buffer, len)) <= 0)
+        {
+            exit(1);
+        }
         *structure = *((dispatchStruct*)&buffer);
 }
 
@@ -125,21 +125,21 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 /* Idem à revoir quand terminer sur ce qu'on recoit */
 void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct dispStruc)
 {
-//    readData(socket_descriptor, &dispStruc);
-//    dataProcessing(server, &dispStruc);
+    readData(socket_descriptor, &dispStruc);
+    dataProcessing(server, &dispStruc);
 
-    int longueur;
-    /* Lecture des informations du jeu en provenance du serveur */
-    //    readData(socket_descriptor, &test);
-    //    printf("type : %d\n", test.type);
-    //    fromServer* tmp = ((fromServer*) test.structure);
-    //    // serveur = tmp ???????
-    //    server = tmp;
-    // Ancienne version a supprimer
-    //    readFunction(socket_descriptor, server);
-    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-        printf("Réponse du serveur : \n");
-    }
+//    int longueur;
+//    /* Lecture des informations du jeu en provenance du serveur */
+//    //    readData(socket_descriptor, &test);
+//    //    printf("type : %d\n", test.type);
+//    //    fromServer* tmp = ((fromServer*) test.structure);
+//    //    // serveur = tmp ???????
+//    //    server = tmp;
+//    // Ancienne version a supprimer
+//    //    readFunction(socket_descriptor, server);
+//    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
+//        printf("Réponse du serveur : \n");
+//    }
     printf("\nFin de la reception.\n");
 }
 
