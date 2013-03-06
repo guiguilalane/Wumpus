@@ -116,8 +116,12 @@ void turn_left(player* p, int sock)
 }
 
 // Lorsque le peronnage tire une flèche
-void shot()
+void shot(player* p, int sock)
 {
+//    int x = p->posX;
+//    int y = p->posY;
+//    switch(p->direction)
+//    for(int )
 	printf("Le personnage tire une flèche.\n");
 }
 
@@ -504,6 +508,8 @@ void checkPosition(player *p)
     case 'T' :
         printf("Bien joué! T'as trouvé le trésor.\n");
         p->findTresure = true;
+        p->tresurPosX = p->posX;
+        p->tresurPosY = p->posY;
         break;
 
     case 'H' :

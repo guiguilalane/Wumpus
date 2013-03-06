@@ -101,8 +101,10 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 		server->playerPosX = tmp->playerPosX;
 		server->playerPosY = tmp->playerPosY;
 		server->besideTresure = tmp->besideTresure;
+		server->direction = tmp->direction;
 		printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
 		printf("besideTreasure : %d\n", server->besideTresure);
+		printf("direction : %d\n", server->direction);
 		break;
 		
 	default:
