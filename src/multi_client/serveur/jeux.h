@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
-
+#define TAILLE_MAX_NOM 256
 #define NBPLAYERSPERGAME 2
 
 //taille de l'étage
@@ -35,7 +35,7 @@ struct player
 {
     player *previousPlayer; /**< The previous player*/
 
-    char* pseudo; /**< The player pseudonym*/
+    char pseudo[TAILLE_MAX_NOM]; /**< The player pseudonym*/
     int score; /**< The player score */
     int posX; /**< The player X position in the map */
     int posY; /**< The player Y position in the map */
