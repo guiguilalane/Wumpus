@@ -104,17 +104,20 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 		server->playerPosY = tmp->playerPosY;
 		server->tresurePosX = tmp->tresurePosX;
 		server->tresurPosY = tmp->tresurPosY;
-		server->besideHole = tmp->besideHole;
-		server->besideTresure = tmp->besideTresure;
-		server->besideWumpus = tmp->besideWumpus;
-		server->score = tmp->score;
 		server->tresureFinf = tmp->tresureFinf;
 		server->fallInHole = tmp->fallInHole;
 		server->wumpusFind = tmp->wumpusFind;
 		server->wumpusKill = tmp->wumpusKill;
+		server->score = tmp->score;
+		server->besideWumpus = tmp->besideWumpus;
+		server->besideHole = tmp->besideHole;
+		server->besideTresure = tmp->besideTresure;
+	
 		printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
 		printf("besideTreasure : %d\n", server->besideTresure);
-		printf("tresureFind : %d\n", server->tresureFinf);
+		printf("direction : %d\n", server->direction);
+		printf("findTreasureS : %d\n", server->tresureFinf);
+		printf("findTreasureT : %d\n", tmp->tresureFinf);
 		break;
 		
 	default:
