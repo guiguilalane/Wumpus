@@ -182,7 +182,6 @@ void MainWindow::on_quit_clicked()
 void MainWindow::updateInfo(fromServer * s)
 {
     loadCharacter(s);
-    std::cout << "tourner " << s->dir << std::endl;
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");

@@ -38,6 +38,11 @@ void Controleur::connexion()
 {
     connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
     connect_ = true;
+    // Lancer un thread
+//    if(pthread_create(&listener, NULL, ecouter, NULL) < 0)
+//    {
+//        exit(1);
+//    }
 }
 
 void Controleur::envoiValeurConnexion(const char* ad, int p)
@@ -56,4 +61,12 @@ QString Controleur::getAdresse()
 QString Controleur::getPort()
 {
     return QString::number(port);
+}
+
+void* ecouter(void * arg)
+{
+//    while(true){
+//        receptionInfoClient(socket_descriptor, &server, dispStruc);
+//        emit infoRecu(&server);
+//    }
 }
