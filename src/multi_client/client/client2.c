@@ -18,6 +18,7 @@
 //définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
 #define STRUCTMOVING 1
+#define STRUCTDOWN 2
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -118,6 +119,10 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 		printf("direction : %d\n", server->direction);
 		printf("findTreasureS : %d\n", server->tresureFinf);
 		printf("findTreasureT : %d\n", tmp->tresureFinf);
+		break;
+			
+	case STRUCTDOWN:
+		printf("Struct du down");
 		break;
 		
 	default:
@@ -220,6 +225,8 @@ int main(int argc, char **argv){
 /*	}*/
 	printf("debugg 2\n");
 /*	sleep(3);*/
+	
+	printf("socket %d\n", socket_descriptor);
 	
 	/* Détection d'une commande ecrite par le joueur */
     do

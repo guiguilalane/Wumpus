@@ -128,6 +128,10 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         printf("fallInHole : %d\n", tmp->fallInHole);
         break;
 
+    case STRUCTDOWN:
+        printf("Struct du down");
+        break;
+
     default:
         printf("type de structure inconnue");
     }

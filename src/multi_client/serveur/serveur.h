@@ -21,6 +21,7 @@
 //définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
 #define STRUCTMOVING 1
+#define STRUCTDOWN 2
 
 
 char arrows[4] = {'8', '6', '2', '4'};

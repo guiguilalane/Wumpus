@@ -17,6 +17,7 @@
 //Définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
 #define STRUCTMOVING 1
+#define STRUCTDOWN 2
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;

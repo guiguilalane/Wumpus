@@ -39,6 +39,7 @@ void Controleur::connexion()
 {
     connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
     connect_ = true;
+    std::cout << "Sock: " << socket_descriptor << std::endl;
     // Lancer un thread
     if(pthread_create(&listener, NULL, Controleur::ecouter, (void*) this) < 0)
     {
@@ -67,9 +68,9 @@ QString Controleur::getPort()
 void * Controleur::ecouter(void * arg)
 {
     Controleur * cont = ( Controleur * ) arg;
-    while(true){
+    while(cont->connect_){
         receptionInfoClient(cont->socket_descriptor, &(cont->server), &(cont->dispStruc));
-        emit cont->infoRecu(&(cont->server));
+        emit cont->infoRecu(&(cont->server), &(cont->dispStruc));
     }
     return NULL;
 }

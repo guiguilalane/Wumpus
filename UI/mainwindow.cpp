@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     cont_ = new Controleur();
-    connect(cont_,SIGNAL(infoRecu(fromServer *)),this,SLOT(updateInfo(fromServer *)));
+    connect(cont_,SIGNAL(infoRecu(fromServer *, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, dispatchStruct *)));
 
     pseudoRenseigne_ = false;
 
@@ -185,28 +185,72 @@ void MainWindow::on_quit_clicked()
     ui->statusBar->setStatusTip("");
 }
 
-void MainWindow::updateInfo(fromServer * s)
+void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
 {
-    loadCharacter(s);
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
+    if (d->type == 2)
+    {
+        msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
+        msg.exec();
+        std::cout << "type down" << std::endl;
+
+        // On vide la scene
+        scene_->removeItem(mapItem_);
+        scene_->removeItem(characterItem_);
+        if(cont_->server.tresureFind){
+            scene_->removeItem(treasureItem_);
+        }
+
+        // Display the map and composant
+        mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
+        mapItem_->setPos(0,0);
+        characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+        characterItem_->setZValue(3);
+        characterItem_->setPos(1,4*33+1);
+        scene_->addItem(mapItem_);
+        scene_->addItem(characterItem_);
+
+        // TODO Add initialisation of sensor sans qu'auncune action soit effectuée
+        ui->treasure->setVisible(s->besideTresure);
+        ui->hole->setVisible(s->besideHole);
+        ui->wumpus->setVisible(s->besideWumpus);
+
+        // Booléean des popup initialisée à false
+        popupWK_ = false;
+        popupWF_ = false;
+        popupTF_ = false;
+        popupH_ = false;
+
+        // Activation des boutons ou non
+        ui->connect->setEnabled(false);
+        ui->turnL->setEnabled(true);
+        ui->turnR->setEnabled(true);
+        ui->move->setEnabled(true);
+        ui->shoot->setEnabled(true);
+        ui->down->setEnabled(false);
+        ui->quit->setEnabled(true);
+        ui->option->setEnabled(false);
+    }
+    else
+    {
+    loadCharacter(s);
     if (s->fallInHole && !popupH_){
-        msg.setText("<center> Vous venez de tomber dans le trou !</center>");
+        msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
         msg.exec();
         popupH_ = true;
         // TODO : Quitter le nivo ?
     }
     if (s->wumpusFind && !popupWF_){
-        msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant ! </center>");
+        msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
         msg.exec();
         popupWF_ = true;
         // TODO : Quitter le nivo ?
     }
-    // TODO A revoir les nb points
     if (s->tresureFind && !popupTF_){
         msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
@@ -226,15 +270,19 @@ void MainWindow::updateInfo(fromServer * s)
         popupWK_ = true;
     }
     // On affiche les senseurs sur l'IHM
+    // TODO Récupérer les bonnes valeurs
     ui->treasure->setVisible(s->besideTresure);
     ui->hole->setVisible(s->besideHole);
     ui->wumpus->setVisible(s->besideWumpus);
+    }
     // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
     // TODO quand un joueur change de nivo avertir tous les autres joueurs
 }
 
+// TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
-// TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
+// TODO Remettre sensor à 0
+
 
 void MainWindow::on_option_clicked()
 {
@@ -251,3 +299,5 @@ void MainWindow::acceptValeur(QString* ad, QString * p)
     cont_->envoiValeurConnexion(ad->toStdString().c_str(), p->toInt());
     delete optionDialog_;
 }
+
+// TODO Quand un joueur quit est-ce qu'il est bien supprimer du jeu ...

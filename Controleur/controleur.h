@@ -33,7 +33,7 @@ public:
     fromServer server;
 
 signals:
-    void infoRecu(fromServer * s);
+    void infoRecu(fromServer * s, dispatchStruct * d);
 
 private:
 

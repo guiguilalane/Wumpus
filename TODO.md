@@ -17,18 +17,10 @@
 	
 	- Quand on joueur se fait tuer ou tombe dans le trou ! Comment ça se passe pour gérer avec les autres joueurs ! Il perd des points et attends qu'un joueur passe à un étage inférieur ??????????????
 
-Forme de la structure:
-int x; // position x du personnage
-int y; // position y du personnage
-int xt; // position x du tresor
-int yt; // position y du trésor
-// Besoin de la position du trésor car une fois trouver je souhaite l'afficher sur la carte
-bool treasureFind; // Quand le personnage trouve le trésor
-bool fallInHole; // Quand le personnage tombe dans le trou
-bool wumpusFind; // Quand le personnage tombe sur la case du Wumpus
-bool wumpusKill; // Quand le Wumpus est tué par la flèche
-int score; // Le score du personnage
-bool besideWumpus; // Quand le personnage est à coté du Wumpus
-bool besideHole; // Quand le personnage est à coté du trou
-bool besideTreasure; // Quand le personnage est à coté du trésor
-// J'en oubli peut être mais c'est ce que j'ai pour le moment ;)
+THE MOST IMPORTANT FOR TOMMOROW:
+- Regler le pb lors du lancement de la connexion ou ça plante l'IHM !
+- Lors du down Avertir tous les autres joueurs --> Alors là j'ai essayé de le faire mais je pense qu'il y a un souci au nivo des socket récupérer. J'ai ajouter la socket pour chaque joueur (ligne 816) mais elle n'a pas l'air de correspondre avec le numéro de socket coté client !
+- Puis réinitialiser le stair
+- Quand on creér l'étage --> Ajouter les bon sensor au joueurs et les renvoyer au serveur???
+- Dans IHM remettre à jour les données de la carte ... --> NO
+

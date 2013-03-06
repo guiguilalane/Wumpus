@@ -186,8 +186,26 @@ void shot(player* p, int sock)
 }
 
 // Lorsque le personnage descend l'échelle
-void down()
+void down(player* p, int sock)
 {
+    sendToClient stc;
+    initDownSending(&stc);
+	// Récupération de la socket des autres joueurs et envoye de l'information
+	player * j = p->game->joueur;
+	int i = 1;
+	printf("Socket joueur %d\n", sock);
+	while (j->nextPlayer != NULL)
+	{
+		printf("Socket autre joueur %d\n", j->sock);
+		if (j->sock != sock)
+		{
+			write(j->sock, &stc, sizeof(sendToClient));
+		}
+		j = j->nextPlayer;
+		i++;
+	}
+	printf("Il y a %d joueurs\n",i);
+	// TODO recréer stair
     printf("Le personnage descend d'un étage.\n");
 }
 
@@ -279,6 +297,7 @@ player* playerInitialisation()
     p->fallInHole = false;
     p->findTresure = false;
     p->shotTheWumpus = false;
+	p->sock = 0;
 
     p->nextPlayer = NULL;
     p->previousPlayer = NULL;
@@ -440,6 +459,12 @@ void initMessageSending(char* m, sendToClient* stc)
     //TODO: asup
     printf("%s\n", stc->structure);
 //    stc->structure = '\0';
+}
+
+void initDownSending(sendToClient* stc)
+{
+	stc->type = STRUCTDOWN;
+//	strcpy(stc->structure, m)
 }
 
 // Fonction temporaire
@@ -788,6 +813,7 @@ int main(int argc, char* argv[])
         player *p = playerInitialisation();
         jeu *theGame = addPlayer(p);
         p->game = theGame;
+		p->sock = nouv_socket_descriptor;
 
         arg_struct args;
         args.sock = nouv_socket_descriptor;

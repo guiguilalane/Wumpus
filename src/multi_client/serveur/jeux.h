@@ -48,6 +48,7 @@ struct player
     bool findTresure; /**< Whether the player find the tresure */
     bool shotTheWumpus; /**< Whether the player had killed the wumpus */
     struct jeu *game; /**< The game that contain the player */
+	int sock; /**< The socket to communicate with the player */
 
     player *nextPlayer; /**< The next player */
 

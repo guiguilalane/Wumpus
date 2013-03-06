@@ -43,7 +43,7 @@ private slots:
 
     void on_quit_clicked();
 
-    void updateInfo(fromServer * s);
+    void updateInfo(fromServer * s, dispatchStruct * d);
 
     void on_option_clicked();
 
