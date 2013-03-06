@@ -90,7 +90,6 @@ void readData(int socket_descriptor, dispatchStruct* structure)
     /*	char buffer[sizeof(dispatchStruct)];*/
         char buffer[len];
         int longueur;
-
         while((longueur = read(socket_descriptor, buffer, len)) <= 0)
         {
             exit(1);

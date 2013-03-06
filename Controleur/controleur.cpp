@@ -30,8 +30,8 @@ void Controleur::envoiCommand(char *command)
         connect_ = false;
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }
-    receptionInfoClient(socket_descriptor, &server, &dispStruc);
-    emit infoRecu(&server);
+//    receptionInfoClient(socket_descriptor, &server, &dispStruc);
+//    emit infoRecu(&server);
 }
 
 void Controleur::connexion()
@@ -39,10 +39,10 @@ void Controleur::connexion()
     connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
     connect_ = true;
     // Lancer un thread
-//    if(pthread_create(&listener, NULL, ecouter, NULL) < 0)
-//    {
-//        exit(1);
-//    }
+    if(pthread_create(&listener, NULL, Controleur::ecouter, (void*) this) < 0)
+    {
+        exit(1);
+    }
 }
 
 void Controleur::envoiValeurConnexion(const char* ad, int p)
@@ -63,10 +63,12 @@ QString Controleur::getPort()
     return QString::number(port);
 }
 
-void* ecouter(void * arg)
+void * Controleur::ecouter(void * arg)
 {
-//    while(true){
-//        receptionInfoClient(socket_descriptor, &server, &dispStruc);
-//        emit infoRecu(&server);
-//    }
+    Controleur * cont = ( Controleur * ) arg;
+    while(true){
+        receptionInfoClient(cont->socket_descriptor, &(cont->server), &(cont->dispStruc));
+        emit cont->infoRecu(&(cont->server));
+    }
+    return NULL;
 }

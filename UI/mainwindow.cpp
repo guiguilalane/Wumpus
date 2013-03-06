@@ -167,7 +167,9 @@ void MainWindow::on_quit_clicked()
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
-    scene_->removeItem(treasureItem_);
+    if(cont_->server.tresureFind){
+        scene_->removeItem(treasureItem_);
+    }
 
     // Désactivation des boutons
     ui->connect->setEnabled(true);

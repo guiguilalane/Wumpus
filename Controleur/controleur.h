@@ -37,6 +37,8 @@ signals:
 
 private:
 
+    static void *ecouter(void * arg);
+
     int socket_descriptor; /* Descripteur de socket */
     sockaddr_in adresse_locale; /* Adresse de socket local */
     hostent * ptr_host; /* Info sur une machine hote */
