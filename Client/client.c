@@ -108,11 +108,13 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         printf("%s", dispStruc->structure);
         break;
 
+        // Ajouter tous les attributs
     case STRUCTMOVING:
         tmp = ((fromServer*) dispStruc->structure);
         server->playerPosX = tmp->playerPosX;
         server->playerPosY = tmp->playerPosY;
         server->besideTresure = tmp->besideTresure;
+        server->dir = tmp->dir;
         printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
         printf("besideTreasure : %d\n", server->besideTresure);
         break;
