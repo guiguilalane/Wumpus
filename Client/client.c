@@ -81,18 +81,52 @@ void envoiCommandClient(int socket_descriptor, char *command)
 /* A revoir quand on connaitra la structure à recevoir */
 void readData(int socket_descriptor, dispatchStruct* structure)
 {
-    char buffer[sizeof(dispatchStruct)];
-    //    readFunction(socket_descriptor, structure);
-    //    while((longueur = read(socket_descriptor, buffer, sizeof(dispatchStruct))) <= 0)
-    //    {
-    //        exit(1);
-    //    }
-    *structure = *((dispatchStruct*)&buffer);
+    int len = 0;
+        while(!len && ioctl(socket_descriptor, FIONREAD, &len) >= 0)
+        {
+            usleep(500);
+        }
+    /*	char buffer[sizeof(dispatchStruct)];*/
+        char buffer[len];
+//        int longueur;
+
+//        while((longueur = read(socket_descriptor, buffer, len)) <= 0)
+//        {
+//            exit(1);
+//        }
+        readFunction(socket_descriptor);
+        *structure = *((dispatchStruct*)&buffer);
 }
 
-/* Idem à revoir quand terminer surce qu'on recoit */
-void receptionInfoClient(int socket_descriptor, fromServer * server)
+void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 {
+    printf("type : %d\n", dispStruc->type);
+    fromServer* tmp;
+    switch(dispStruc->type)
+    {
+    case STRUCTMESSAGE:
+        printf("%s", dispStruc->structure);
+        break;
+
+    case STRUCTMOVING:
+        tmp = ((fromServer*) dispStruc->structure);
+        server->playerPosX = tmp->playerPosX;
+        server->playerPosY = tmp->playerPosY;
+        server->besideTresure = tmp->besideTresure;
+        printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
+        printf("besideTreasure : %d\n", server->besideTresure);
+        break;
+
+    default:
+        printf("type de structure inconnue");
+    }
+}
+
+/* Idem à revoir quand terminer sur ce qu'on recoit */
+void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct dispStruc)
+{
+//    readData(socket_descriptor, &dispStruc);
+//    dataProcessing(server, &dispStruc);
 
     int longueur;
     /* Lecture des informations du jeu en provenance du serveur */
@@ -109,10 +143,10 @@ void receptionInfoClient(int socket_descriptor, fromServer * server)
     printf("\nFin de la reception.\n");
 }
 
-void connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale)
+void connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
 {
     initialisationHost(ptr_host, host, &adresse_locale);
-    attribuerPort(&adresse_locale, 5000/*port*/);
+    attribuerPort(&adresse_locale, port);
     *socket_descriptor = createSocket();
     connectionServeur(*socket_descriptor, adresse_locale);
     printf("Connexion établie avec le serveur \n");

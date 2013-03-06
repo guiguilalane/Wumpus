@@ -44,7 +44,7 @@ private:
     int port; /* Port de connexion */
     char command[15] /* Commande envoyée */;
     bool connect_;
-    dispatchStruct test;
+    dispatchStruct dispStruc;
 };
 
 #endif // CONTROLEUR_H

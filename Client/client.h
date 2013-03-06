@@ -12,7 +12,11 @@
 
 #include <unistd.h>
 
-#define TAILLEMAX 36
+#define TAILLEMAX 999
+
+//définition des types de structures qui peuvent être envoyées
+#define STRUCTMESSAGE 0
+#define STRUCTMOVING 1
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -65,9 +69,11 @@ void envoiCommandClient(int socket_descriptor, char *command); // Permet d'envoy
 
 void readData(int socket_descriptor, dispatchStruct* structure);
 
-void receptionInfoClient(int socket_descriptor, fromServer * server);
+void dataProcessing(fromServer* server, dispatchStruct* dispStruc);
 
-void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale); // Permet d'établir la connexion avec l'initialisation au serveur
+void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct dispStruc);
+
+void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port); // Permet d'établir la connexion avec l'initialisation au serveur
 
 void fromServerInitialisation(fromServer *receiv); // Initialisation de la structure de données
 

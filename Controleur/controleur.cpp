@@ -31,13 +31,13 @@ void Controleur::envoiCommand(char *command)
         connect_ = false;
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }
-    receptionInfoClient(socket_descriptor, server);
+    receptionInfoClient(socket_descriptor, server, dispStruc);
     emit infoRecu(server);
 }
 
 void Controleur::connexion()
 {
-    connexionClient(&socket_descriptor, ptr_host, host, adresse_locale);
+    connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
     connect_ = true;
 }
 
