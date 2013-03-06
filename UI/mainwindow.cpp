@@ -129,9 +129,9 @@ void MainWindow::on_connect_clicked()
     ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
 
     // On affiche les senseurs sur l'IHM
-    ui->treasure->setVisible(cont_->server->besideTresure);
-    ui->hole->setVisible(cont_->server->besideHole);
-    ui->wumpus->setVisible(cont_->server->besideWumpus);
+    ui->treasure->setVisible(cont_->server.besideTresure);
+    ui->hole->setVisible(cont_->server.besideHole);
+    ui->wumpus->setVisible(cont_->server.besideWumpus);
     ui->widgetInd->setVisible(true);
 
     // Display the map and composant

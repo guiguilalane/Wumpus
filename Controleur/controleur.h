@@ -2,6 +2,7 @@
 #define CONTROLEUR_H
 
 #include <iostream>
+#include <pthread.h>
 
 #include <QString>
 #include <QObject>
@@ -29,12 +30,13 @@ public:
     QString getAdresse();
     QString getPort();
 
-    fromServer* server;
+    fromServer server;
 
 signals:
     void infoRecu(fromServer * s);
 
 private:
+
     int socket_descriptor; /* Descripteur de socket */
     sockaddr_in adresse_locale; /* Adresse de socket local */
     hostent * ptr_host; /* Info sur une machine hote */
@@ -44,7 +46,10 @@ private:
     int port; /* Port de connexion */
     char command[15] /* Commande envoyée */;
     bool connect_;
-    dispatchStruct test;
+    dispatchStruct dispStruc;
+    pthread_t listener;
 };
+
+void * ecouter(void * arg);
 
 #endif // CONTROLEUR_H
