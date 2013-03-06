@@ -15,6 +15,14 @@
 #define SOUTH 2
 #define WEST 3
 
+//taille maximum d'une structure d'envoi
+#define TAILLEMAX 999
+
+//définition des types de structures qui peuvent être envoyées
+#define STRUCTMESSAGE 0
+#define STRUCTMOVING 1
+
+
 char arrows[4] = {'8', '6', '2', '4'};
 
 /*déclaration du type T_FONC_ACTION*/
@@ -34,8 +42,34 @@ T_FONC_ACTION turn_left;
 T_FONC_ACTION shot;
 T_FONC_ACTION down;
 
+typedef struct
+{
+    bool coherent;//indique si les données (reçues/envoyées) sont coherentes
+    int direction;
+    int playerPosX;
+    int playerPosY;
+    int tresurePosX;
+    int tresurePosY;
+    bool tresureFinf;
+    bool fallInHole;
+    bool wumpusFind;
+    bool wumpusKill;
+    int score;
+    bool besideWumpus;
+    bool besideHole;
+    bool besideTresure;
+
+} toClient;
+
+typedef struct
+{
+    int type;
+    char structure[TAILLEMAX];
+} sendToClient;
+
 Action* findActionFromCommand(Action* action, char* command);
 Action* initialisationActions();
 player *playerInitialisation();
 bool sensor(player* p, stairs* s, char o);
 void checkPosition(player* p);
+void initMovingSending(toClient* c, player* p, sendToClient* stc);

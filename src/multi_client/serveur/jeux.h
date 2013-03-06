@@ -38,7 +38,9 @@ struct player
     char* pseudo; /**< The player pseudonym*/
     int score; /**< The player score */
     int posX; /**< The player X position in the map */
-    int posY; /**< The player Y position int the map */
+    int posY; /**< The player Y position in the map */
+    int tresurPosX;/**< The Tresur X position in the map when the player found it */
+    int tresurPosY;/**< The player Y position in the map when the player found it */
     int direction; /**< The player watching direction */
     bool arrow; /**< Whether the player have his arrow */
     bool deadByWumpus; /**< Whether the player was killed by the Wumpus */

@@ -6,35 +6,14 @@
 #include <netdb.h>
 #include <pthread.h>
 #define TAILLE_MAX_NOM 256
-#define TAILLEMAX 36
 #define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
 int vardebug;
 
-typedef struct
-{
-    int type;
-    char structure[TAILLEMAX];
-} sendToClient;
-
-typedef struct
-{
-    bool coherent;//indique si les données (reçues/envoyées) sont coherentes
-    int direction;
-    int playerPosX;
-    int playerPosY;
-    int tresurePosX;
-    int tresurPosY;
-    bool tresureFinf;
-    bool fallInHole;
-    bool wumpusFind;
-    bool wumpusKill;
-    int score;
-    bool besideWumpus;
-    bool besideHole;
-    bool besideTresure;
-
-} toClient;
+//typedef struct
+//{
+//    char theMessage[TAILLEMAX];
+//} message;
 
 typedef struct
 {
@@ -66,7 +45,7 @@ typedef struct servent servent;
 Action* playerActions;
 
 // Lorsque le joueur veux quitter la partie
-void quit(player* p)
+void quit(player* p, int sock)
 {
     jeu* j = removePlayer(p);
     if(NULL == j->joueur)
@@ -77,7 +56,7 @@ void quit(player* p)
 }
 
 // Lorsque le personnage avance
-void move(player* p)
+void move(player* p, int sock)
 {
 	switch(p->direction)
 	{
@@ -106,20 +85,33 @@ void move(player* p)
 			break;
 	}
     checkPosition(p);
+    toClient tc;
+    sendToClient stc;
+    initMovingSending(&tc, p, &stc);
+//    write(sock, &stc, sizeof(sendToClient));
+    write(sock, &stc, sizeof(sendToClient));
 	/*    printf("Avancer d'une case dans la direction pointée.\n");*/
 }
 
 // Lorsque le personnage tourne à droite
-void turn_right(player* p)
+void turn_right(player* p, int sock)
 {
 	p->direction = (p->direction+1)%4;
+    toClient tc;
+    sendToClient stc;
+    initMovingSending(&tc, p, &stc);
+    write(sock, &stc, sizeof(sendToClient));
 	printf("Le personnage change de direction dans le sens horaire.\n");
 }
 
 // Lorsque le personnage tourne à gauche
-void turn_left(player* p)
+void turn_left(player* p, int sock)
 {
 	p->direction = (p->direction+3)%4;//tourne 3 fois dans le sens horaire
+    toClient tc;
+    sendToClient stc;
+    initMovingSending(&tc, p, &stc);
+    write(sock, &stc, sizeof(sendToClient));
 	printf("Le personnage change de direction dans le sens anti-horaire.\n");
 }
 
@@ -214,6 +206,8 @@ player* playerInitialisation()
 	p->pseudo = "";
 	p->score = 0;
 	p->posX = 0;
+    p->tresurPosX = -1;
+    p->tresurPosY = -1;
 	p->posY = (STAIRSIZE - 1);
 	p->direction = NORTH;
 	p->arrow = true;
@@ -340,7 +334,7 @@ void toClientInitialisation(toClient *toSend)
     toSend->playerPosX = 0;
     toSend->playerPosY = 4;
     toSend->tresurePosX = -1;
-    toSend->tresurPosY = -1;
+    toSend->tresurePosY = -1;
     toSend->besideHole = false;
     toSend->besideTresure = false;
     toSend->besideWumpus = false;
@@ -354,13 +348,14 @@ void toClientInitialisation(toClient *toSend)
 
 /***************************************TO FINISH***************************************/
 
-void initSending(toClient* c, player* p, stairs* s, sendToClient* test, int tresurePos[2])
+void initMovingSending(toClient* c, player* p, sendToClient* stc)
 {
+    stairs* s = p->game->etage;
     c->coherent = true;
     c->playerPosX = p->posX;
     c->playerPosY = p->posY;
-    c->tresurePosX = tresurePos[0];
-    c->tresurPosY = tresurePos[1];
+    c->tresurePosX = p->tresurPosX;
+    c->tresurePosY = p->tresurPosY;
     c->besideHole = sensor(p, s, 'H');
     c->besideTresure = sensor(p, s, 'T');
     c->besideWumpus = sensor(p, s, 'W');
@@ -370,8 +365,17 @@ void initSending(toClient* c, player* p, stairs* s, sendToClient* test, int tres
     c->wumpusFind = p->deadByWumpus;
     c->wumpusKill = p->shotTheWumpus;
     c->direction = p->direction;
-    test->type = 1;
-    *((toClient*)&test->structure) = *c;
+    stc->type = STRUCTMOVING;
+    *((toClient*)&stc->structure) = *c;
+}
+
+void initMessageSending(char* m, sendToClient* stc)
+{
+    stc->type = STRUCTMESSAGE;
+    strcpy(stc->structure, m);
+    //TODO: asup
+    printf("%s\n", stc->structure);
+//    stc->structure = '\0';
 }
 
 // Fonction temporaire
@@ -521,25 +525,25 @@ void * jeuNjoueur (void * arguments)
 //	int gameNum = args->gameNumber;
 
     //initilalisation de la structur
-    toClient *toSend = (toClient*) malloc(sizeof(toClient));
+//    toClient *toSend = (toClient*) malloc(sizeof(toClient));
 
     player* p = args->p;
     stairs* s = p->game->etage;
 
     //NOTE: pour tester l'envoi de structure de structure
-    sendToClient test;
+//    sendToClient test;
 
     //TODO: valeur à changer quand le joueur trouve le trésor
-    int tresurPos[2];
-    tresurPos[0] = -1;//tresurePosX
-    tresurPos[1] = -1;//tresurePosY
+//    int tresurPos[2];
+//    tresurPos[0] = -1;//tresurePosX
+//    tresurPos[1] = -1;//tresurePosY
 	
     bool sortie = false;
 	
     while(!sortie)
 	{
         //sera envoyé tel quel si erreur si la commande
-        toClientInitialisation(toSend);
+//        toClientInitialisation(toSend);
 
 		printf("Reception d'une commande\n.");
 		// Attente de la reception d'un message pour en connaitre la longueur.
@@ -582,7 +586,7 @@ void * jeuNjoueur (void * arguments)
 		}
 		else
 		{
-			theAction->action(p);
+            theAction->action(p, nouv_socket_descriptor);
 			if(strcmp(realCommand, "quit")==0)
 			{
                 sortie = true;
@@ -597,8 +601,8 @@ void * jeuNjoueur (void * arguments)
                 serveurPrintStairs(p, s);
 //                printf("taille structure : %d\n", sizeof(*test));
 //                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
-                initSending(toSend, p, s, &test, tresurPos);
-                printf("youhou %d\n", test.type);
+//                initSending(toSend, p, s, &test, tresurPos);
+//                printf("youhou %d\n", test.type);
 
             }
 		}
@@ -609,7 +613,7 @@ void * jeuNjoueur (void * arguments)
 
 		printf("Message envoye. \n");
 	}
-    free(toSend);
+//    free(toSend);
 	close(nouv_socket_descriptor);
 	return;
 }
@@ -718,6 +722,7 @@ int main(int argc, char* argv[])
         player *p = playerInitialisation();
 		
         jeu *theGame = addPlayer(p);
+        p->game = theGame;
 
 		arg_struct args;
 		args.sock = nouv_socket_descriptor;
@@ -753,16 +758,18 @@ int main(int argc, char* argv[])
 //		printPlayerStatus(p, jeux[lastGame].s, temp);
 //		serveurPrintStairs(p, jeux[lastGame].s);
 
-        toClient tc;
-        toClientInitialisation(&tc);
-        int tresurPos[2];
-        tresurPos[0] = -1;
-        tresurPos[1] = -1;
-        sendToClient test;
-        initSending(&tc, p, theGame->etage, &test, tresurPos);
+//        toClient tc;
+//        toClientInitialisation(&tc);
+//        int tresurPos[2];
+//        tresurPos[0] = -1;
+//        tresurPos[1] = -1;
 
-//        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
-        write(nouv_socket_descriptor, temp, strlen(temp));
+        //TODO: changer l'envoi
+
+        sendToClient stc;
+        initMessageSending(temp, &stc);
+        write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
+//        write(nouv_socket_descriptor, temp, strlen(temp));
 		if(pthread_create(&nouveau_client, NULL,
 								jeuNjoueur,
 							  (void*) &args) < 0)
