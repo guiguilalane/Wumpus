@@ -366,7 +366,6 @@ void initMovingSending(toClient* c, player* p, sendToClient* stc)
     c->score = p->score;
     c->tresureFinf= p->findTresure;
     c->fallInHole = p->fallInHole;
-    printf("trou :%d\n", p->fallInHole);
     c->wumpusFind = p->deadByWumpus;
     c->wumpusKill = p->shotTheWumpus;
     c->direction = p->direction;
@@ -585,7 +584,6 @@ void * jeuNjoueur (void * arguments)
 		
         // Faire le traitement en fonction de la commande
         Action* theAction = findActionFromCommand(playerActions, realCommand);
-		
         if(theAction == NULL)
         {
             result = (char*) realloc(result, strlen("La commande : , n'existe pas\n") + strlen(realCommand) + 1);

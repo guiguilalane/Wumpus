@@ -48,7 +48,6 @@ void removeGame(jeu * j)
     {
         manager->firstCreatedGame = j->nextGame;
     }
-
     free(j->etage);
     free(j);
 }
