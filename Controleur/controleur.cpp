@@ -26,7 +26,8 @@ void Controleur::envoiCommand(char *command)
     envoiCommandClient(socket_descriptor, command);
     if (command == (char*)"quit"){
         /* Le joueur a quitter le jeu */
-        deconnexionServeur(socket_descriptor);
+//        close(socket_descriptor);
+//        deconnexionServeur(socket_descriptor);
         connect_ = false;
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }

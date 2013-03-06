@@ -158,6 +158,7 @@ void MainWindow::on_connect_clicked()
     ui->shoot->setEnabled(true);
     ui->down->setEnabled(false);
     ui->quit->setEnabled(true);
+    ui->option->setEnabled(false);
 }
 
 void MainWindow::on_quit_clicked()
@@ -179,6 +180,7 @@ void MainWindow::on_quit_clicked()
     ui->shoot->setEnabled(false);
     ui->down->setEnabled(false);
     ui->quit->setEnabled(false);
+    ui->option->setEnabled(true);
 
     ui->statusBar->setStatusTip("");
 }
@@ -234,7 +236,7 @@ void MainWindow::updateInfo(fromServer * s)
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
 // TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
 
-void MainWindow::on_toolButton_clicked()
+void MainWindow::on_option_clicked()
 {
     QString ad = cont_->getAdresse();
     QString p = cont_->getPort();

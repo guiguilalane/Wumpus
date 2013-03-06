@@ -76,7 +76,6 @@ void envoiCommandClient(int socket_descriptor, char *command)
 {
     /* Envoi de la command vers le serveur */
     writeFunction(socket_descriptor, command);
-    printf("Commande envoyée au serveur. \n");
 }
 
 /* A revoir quand on connaitra la structure à recevoir */

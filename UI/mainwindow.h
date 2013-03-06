@@ -45,7 +45,7 @@ private slots:
 
     void updateInfo(fromServer * s);
 
-    void on_toolButton_clicked();
+    void on_option_clicked();
 
 private:
     Ui::MainWindow *ui;
