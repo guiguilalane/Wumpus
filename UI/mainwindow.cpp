@@ -68,6 +68,7 @@ void MainWindow::loadCharacter(fromServer * s)
         }
     }
     characterItem_->setPixmap(QPixmap(dir).scaled(32,32));
+    characterItem_->setZValue(3);
     // On repositionne le personnage sur la carte
     characterItem_->setPos(s->playerPosX*33+1,s->playerPosY*33+1);
     // En fonction emplacement personnage désactivé les boutons
@@ -138,6 +139,7 @@ void MainWindow::on_connect_clicked()
     mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
     mapItem_->setPos(0,0);
     characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
+    characterItem_->setZValue(3);
     characterItem_->setPos(1,4*33+1);
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
@@ -207,9 +209,10 @@ void MainWindow::updateInfo(fromServer * s)
         msg.exec();
         // TODO A vérifier s'il s'affiche au bon endroit
         std::cout << s->tresurePosX << " - " << s->tresurePosY << std::endl;
-        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(32,32));
+        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
         treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
         scene_->addItem(treasureItem_);
+
         popupTF_ = true;
     }
     if (s->wumpusKill && !popupWK_){
@@ -226,12 +229,8 @@ void MainWindow::updateInfo(fromServer * s)
     // TODO quand un joueur change de nivo avertir tous les autres joueurs
 }
 
-
 // TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
 // TODO Quand on change de stair remettre les bool des popup à 0 --> Remmetre carte à 0 ...
-// A vérifier:
-// TODO Afficher le tresor sur la carte s'il est trouver --> Pas les bonne valeur renvoyée par le serveur pour le moment
-
 
 void MainWindow::on_toolButton_clicked()
 {

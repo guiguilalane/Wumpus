@@ -98,13 +98,26 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 		
 	case STRUCTMOVING:
 		tmp = ((fromServer*) dispStruc->structure);
+		server->coherent = tmp->coherent;
+		server->direction = tmp->direction;
 		server->playerPosX = tmp->playerPosX;
 		server->playerPosY = tmp->playerPosY;
+		server->tresurePosX = tmp->tresurePosX;
+		server->tresurPosY = tmp->tresurPosY;
+		server->tresureFinf = tmp->tresureFinf;
+		server->fallInHole = tmp->fallInHole;
+		server->wumpusFind = tmp->wumpusFind;
+		server->wumpusKill = tmp->wumpusKill;
+		server->score = tmp->score;
+		server->besideWumpus = tmp->besideWumpus;
+		server->besideHole = tmp->besideHole;
 		server->besideTresure = tmp->besideTresure;
-		server->direction = tmp->direction;
+	
 		printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
 		printf("besideTreasure : %d\n", server->besideTresure);
 		printf("direction : %d\n", server->direction);
+		printf("findTreasureS : %d\n", server->tresureFinf);
+		printf("findTreasureT : %d\n", tmp->tresureFinf);
 		break;
 		
 	default:

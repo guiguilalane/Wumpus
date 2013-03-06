@@ -30,7 +30,7 @@ void Controleur::envoiCommand(char *command)
         connect_ = false;
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }
-    receptionInfoClient(socket_descriptor, &server, dispStruc);
+    receptionInfoClient(socket_descriptor, &server, &dispStruc);
     emit infoRecu(&server);
 }
 
@@ -66,7 +66,7 @@ QString Controleur::getPort()
 void* ecouter(void * arg)
 {
 //    while(true){
-//        receptionInfoClient(socket_descriptor, &server, dispStruc);
+//        receptionInfoClient(socket_descriptor, &server, &dispStruc);
 //        emit infoRecu(&server);
 //    }
 }

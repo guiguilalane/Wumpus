@@ -59,7 +59,7 @@ void readFunction(int socket_descriptor)
     }
 }
 
-void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispatchStruct dispStruct)
+void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispatchStruct dispStruc)
 {
     writeFunction(socket_descriptor, p);
     //    readFunction(socket_descriptor);
@@ -69,7 +69,7 @@ void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispat
 //    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
 //        write(1,buffer,longueur);
 //    }
-    receptionInfoClient(socket_descriptor, &server, dispStruct);
+    receptionInfoClient(socket_descriptor, &server, &dispStruc);
 }
 
 void envoiCommandClient(int socket_descriptor, char *command)
@@ -108,7 +108,6 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         printf("%s", dispStruc->structure);
         break;
 
-    // TODO Vérifier si le serveur renvoi bien les bonnes valeurs
     case STRUCTMOVING:
         tmp = ((fromServer*) dispStruc->structure);
         server->coherent = tmp->coherent;
@@ -128,6 +127,7 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
         printf("besideTreasure : %d\n", server->besideTresure);
         printf("findTreasure : %d\n", tmp->tresureFind);
+        printf("fallInHole : %d\n", tmp->fallInHole);
         break;
 
     default:
@@ -136,11 +136,11 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 }
 
 /* Idem à revoir quand terminer sur ce qu'on recoit */
-void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct dispStruc)
+void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct * dispStruc)
 {
     /* Lecture des informations du jeu en provenance du serveur */
-    readData(socket_descriptor, &dispStruc);
-    dataProcessing(server, &dispStruc);
+    readData(socket_descriptor, dispStruc);
+    dataProcessing(server, dispStruc);
 
 //    int longueur;
 //    //    readData(socket_descriptor, &test);
