@@ -118,10 +118,70 @@ void turn_left(player* p, int sock)
 // Lorsque le peronnage tire une flèche
 void shot(player* p, int sock)
 {
-//    int x = p->posX;
-//    int y = p->posY;
-//    switch(p->direction)
-//    for(int )
+    int x = p->posX;
+    int y = p->posY;
+    int i = 0;
+    bool find = false;
+    switch(p->direction)
+    {
+        case NORTH :
+            i = --y;
+            break;
+			
+        case EAST :
+            i = ++x;
+            break;
+			
+        case SOUTH :
+            i = ++y;
+            break;
+			
+        case WEST :
+            i = --x;
+            break;
+    }
+    
+    while(i < STAIRSIZE && i >= 0 && !find)
+    {
+    	char c = p->game->etage->map[y][x];
+    	if(c != 'W')
+    	{
+			switch(p->direction)
+			{
+			case NORTH :
+			    --y;
+			    break;
+			
+			case EAST :
+			    ++x;
+			    break;
+		
+			case SOUTH :
+			    ++y;
+			    break;
+		
+			case WEST :
+			    --x;
+			    break;
+			}
+    	}
+    	else
+    	{
+    		find = true;
+    	}
+		++i;
+    }
+    if(find)
+    {
+    	p->game->etage->map[y][x] = ' ';
+    	p->score += 20;
+    	p->shotTheWumpus = true;
+    	toClient tc;
+		sendToClient stc;
+		initMovingSending(&tc, p, &stc);
+		write(sock, &stc, sizeof(sendToClient));
+    	printf("bien joué vous avez tué le wumpus!!\n");
+    }
     printf("Le personnage tire une flèche.\n");
 }
 
@@ -507,6 +567,7 @@ void checkPosition(player *p)
 
     case 'T' :
         printf("Bien joué! T'as trouvé le trésor.\n");
+        p->score += 100;
         p->findTresure = true;
         p->tresurPosX = p->posX;
         p->tresurPosY = p->posY;
