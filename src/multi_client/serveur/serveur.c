@@ -525,7 +525,7 @@ void * jeuNjoueur (void * arguments)
 //	int gameNum = args->gameNumber;
 
     //initilalisation de la structur
-//    toClient *toSend = (toClient*) malloc(sizeof(toClient));
+//    toClient toSend;
 
     player* p = args->p;
     stairs* s = p->game->etage;
@@ -543,7 +543,7 @@ void * jeuNjoueur (void * arguments)
     while(!sortie)
 	{
         //sera envoyé tel quel si erreur si la commande
-//        toClientInitialisation(toSend);
+//        toClientInitialisation(&toSend);
 
 		printf("Reception d'une commande\n.");
 		// Attente de la reception d'un message pour en connaitre la longueur.
@@ -601,7 +601,7 @@ void * jeuNjoueur (void * arguments)
                 serveurPrintStairs(p, s);
 //                printf("taille structure : %d\n", sizeof(*test));
 //                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
-//                initSending(toSend, p, s, &test, tresurPos);
+//                initSending(&toSend, p, s, &test, tresurPos);
 //                printf("youhou %d\n", test.type);
 
             }
@@ -609,7 +609,7 @@ void * jeuNjoueur (void * arguments)
         // Ecrit le nouvel état de l'étage
 //        write(nouv_socket_descriptor, result, strlen(result)+1);
 //        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
-        write(nouv_socket_descriptor, toSend, sizeof(toClient));
+//        write(nouv_socket_descriptor, &toSend, sizeof(toClient));
 
 		printf("Message envoye. \n");
 	}

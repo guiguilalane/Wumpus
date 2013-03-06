@@ -125,8 +125,8 @@ int main(int argc, char **argv){
     uint16_t port = 5000;
 	char command[15] /* Commande envoyée */, temp[15];
 	
-	fromServer* server = (fromServer*) malloc(sizeof(fromServer));
-	fromServerInitialisation(server);
+	fromServer server;
+	fromServerInitialisation(&server);
 	
 	dispatchStruct dispStruc;
 	
@@ -196,7 +196,7 @@ int main(int argc, char **argv){
 	
 	printf("debugg 1\n");
 	readData(socket_descriptor, &dispStruc);
-	dataProcessing(server, &dispStruc);
+	dataProcessing(&server, &dispStruc);
 /*	if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {*/
 /*	printf("Réponse du serveur : \n");*/
 /*			printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);*/
@@ -229,7 +229,7 @@ int main(int argc, char **argv){
 		
 		
 		readData(socket_descriptor, &dispStruc);
-		dataProcessing(server, &dispStruc);
+		dataProcessing(&server, &dispStruc);
 		
 		
 		/* Lecture des informations du jeu en provenance du serveur */
