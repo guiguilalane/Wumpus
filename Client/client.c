@@ -28,13 +28,9 @@ int createSocket()
     return socket_descriptor;
 }
 
-/*void*/int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
+int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
 {
     /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
-//    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
-//        perror("Erreur : impossible de se connecter au serveur");
-//        exit(1);
-//    }
     return connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale));
 }
 
@@ -71,7 +67,6 @@ void envoiCommandClient(int socket_descriptor, char *command)
     writeFunction(socket_descriptor, command);
 }
 
-/* A revoir quand on connaitra la structure à recevoir */
 void readData(int socket_descriptor, dispatchStruct* structure)
 {
     int len = 0;
@@ -132,7 +127,7 @@ void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStr
     printf("Fin de la reception.\n");
 }
 
-/*void*/int connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
+int connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
 {
     initialisationHost(ptr_host, host, &adresse_locale);
     attribuerPort(&adresse_locale, port);

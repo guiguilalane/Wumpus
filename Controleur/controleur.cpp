@@ -35,7 +35,7 @@ void Controleur::envoiCommand(char *command)
     }
 }
 
-/*void*/int Controleur::connexion()
+int Controleur::connexion()
 {
     // Initialisation de la structure des datas
     fromServerInitialisation(&server);
