@@ -69,7 +69,9 @@ void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispat
 //    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
 //        write(1,buffer,longueur);
 //    }
+    printf("bonjour\n");
     receptionInfoClient(socket_descriptor, &server, &dispStruc);
+    printf("au revoir\n");
 }
 
 void envoiCommandClient(int socket_descriptor, char *command)
@@ -155,7 +157,7 @@ void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStr
 //    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
 //        printf("Réponse du serveur : \n");
 //    }
-    printf("\nFin de la reception.\n");
+    printf("Fin de la reception.\n");
 }
 
 void connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)

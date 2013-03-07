@@ -27,7 +27,7 @@ typedef struct
 //	stairs *s;
 //	player** p;
 //	int nbPlayerInGame;
-	
+
 //} jeu;
 
 //jeu* jeux;
@@ -65,19 +65,19 @@ void move(player* p, int sock)
                 p->posY--;
             }
             break;
-			
+
         case EAST :
             if(p->posX < STAIRSIZE - 1){
                 p->posX++;
             }
             break;
-			
+
         case SOUTH :
             if(p->posY < STAIRSIZE - 1){
                 p->posY++;
             }
             break;
-			
+
         case WEST :
             if(p->posX > 0){
                 p->posX--;
@@ -127,60 +127,60 @@ void shot(player* p, int sock)
         case NORTH :
             i = --y;
             break;
-			
+
         case EAST :
             i = ++x;
             break;
-			
+
         case SOUTH :
             i = ++y;
             break;
-			
+
         case WEST :
             i = --x;
             break;
     }
-    
+
     while(i < STAIRSIZE && i >= 0 && !find)
     {
-    	char c = p->game->etage->map[y][x];
-    	if(c != 'W')
-    	{
-			switch(p->direction)
-			{
-			case NORTH :
-			    --y;
-			    break;
-			
-			case EAST :
-			    ++x;
-			    break;
-		
-			case SOUTH :
-			    ++y;
-			    break;
-		
-			case WEST :
-			    --x;
-			    break;
-			}
-    	}
-    	else
-    	{
-    		find = true;
-    	}
-		++i;
+        char c = p->game->etage->map[y][x];
+        if(c != 'W')
+        {
+            switch(p->direction)
+            {
+            case NORTH :
+                --y;
+                break;
+
+            case EAST :
+                ++x;
+                break;
+
+            case SOUTH :
+                ++y;
+                break;
+
+            case WEST :
+                --x;
+                break;
+            }
+        }
+        else
+        {
+            find = true;
+        }
+        ++i;
     }
     if(find)
     {
-    	p->game->etage->map[y][x] = ' ';
-    	p->score += 20;
-    	p->shotTheWumpus = true;
-    	toClient tc;
-		sendToClient stc;
-		initMovingSending(&tc, p, &stc);
-		write(sock, &stc, sizeof(sendToClient));
-    	printf("bien joué vous avez tué le wumpus!!\n");
+        p->game->etage->map[y][x] = ' ';
+        p->score += 20;
+        p->shotTheWumpus = true;
+        toClient tc;
+        sendToClient stc;
+        initMovingSending(&tc, p, &stc);
+        write(sock, &stc, sizeof(sendToClient));
+        printf("bien joué vous avez tué le wumpus!!\n");
     }
     printf("Le personnage tire une flèche.\n");
 }
@@ -190,22 +190,26 @@ void down(player* p, int sock)
 {
     sendToClient stc;
     initDownSending(&stc);
-	// Récupération de la socket des autres joueurs et envoye de l'information
-	player * j = p->game->joueur;
-	int i = 1;
-	printf("Socket joueur %d\n", sock);
-	while (j->nextPlayer != NULL)
-	{
-		printf("Socket autre joueur %d\n", j->sock);
-		if (j->sock != sock)
-		{
-			write(j->sock, &stc, sizeof(sendToClient));
-		}
-		j = j->nextPlayer;
-		i++;
-	}
-	printf("Il y a %d joueurs\n",i);
-	// TODO recréer stair
+    // Récupération de la socket des autres joueurs et envoye de l'information
+    player * j = p->game->joueur;
+    int i = 0;
+    printf("Socket joueur %d\n", sock);
+    while (j != NULL)
+    {
+        printf("Socket autre joueur %d\n", j->sock);
+        if(j->sock == sock)
+        {
+            p->score += 100;
+        }
+//        if (j->sock != sock)
+//        {
+            write(j->sock, &stc, sizeof(sendToClient));
+//        }
+        j = j->nextPlayer;
+        i++;
+    }
+    printf("Il y a %d joueurs\n",i);
+    // TODO recréer stair
     printf("Le personnage descend d'un étage.\n");
 }
 
@@ -219,7 +223,7 @@ Action* findActionFromCommand(Action* action, char* command)
     Action* a = NULL;
     int i = 0;
     bool find = false;
-    
+
     while(i < NBACTION && !find)
     {
         if(strcmp(action[i].command, command)==0)
@@ -236,43 +240,43 @@ Action* findActionFromCommand(Action* action, char* command)
 Action* initialisationActions()
 {
     Action* actions = (Action*)malloc(NBACTION*sizeof(Action));
-    
+
     //Action quitter
     Action* quitAction = (Action*)malloc(sizeof(Action));
     quitAction->command = "quit";
     quitAction->action = quit;
     actions[A_QUITTER] = *quitAction;
-    
+
     //Action avancer
     Action* moveAction = (Action*)malloc(sizeof(Action));
     moveAction->command = "move";
     moveAction->action = move;
     actions[A_AVANCER] = *moveAction;
-    
+
     //Action tourner à droite
     Action* tRightAction = (Action*)malloc(sizeof(Action));
     tRightAction->command = "turnright";
     tRightAction->action = turn_right;
     actions[A_TOURNERDROITE] = *tRightAction;
-    
+
     //Action tourner à gauche
     Action* tLeftAction = (Action*)malloc(sizeof(Action));
     tLeftAction->command = "turnleft";
     tLeftAction->action = turn_left;
     actions[A_TOURNERGAUCHE] = *tLeftAction;
-    
+
     //Action tirer une fleche
     Action* shotAction = (Action*)malloc(sizeof(Action));
     shotAction->command = "shot";
     shotAction->action = shot;
     actions[A_TIRER] = *shotAction;
-    
+
     //Action descendre
     Action* downAction = (Action*)malloc(sizeof(Action));
     downAction->command = "down";
     downAction->action = down;
     actions[A_DESCENDRE] = *downAction;
-    
+
     return actions;
 }
 
@@ -297,7 +301,7 @@ player* playerInitialisation()
     p->fallInHole = false;
     p->findTresure = false;
     p->shotTheWumpus = false;
-	p->sock = 0;
+    p->sock = 0;
 
     p->nextPlayer = NULL;
     p->previousPlayer = NULL;
@@ -310,7 +314,7 @@ stairs *stairInitialisation()
 {
     stairs *s = (stairs*) malloc(sizeof(stairs));
     /* Définition des coordonnées des objets */
-	
+
     // Contiendra les coordonnées de l'échelles, du trou, du wumpus et du trésor.
     int objects[4][2] = { //{y, x}
         {STAIRSIZE - 1, 0},// Echelle
@@ -343,7 +347,7 @@ stairs *stairInitialisation()
             ++k;
         }
     }
-	
+
     /* Mise en place des objets sur la map */
     s->wumpusAlive = true;
     s->tresureFounded = false;
@@ -355,7 +359,7 @@ stairs *stairInitialisation()
             s->map[i][j] = ' ';
         }
     }
-	
+
     // Lecture de la variables objects et placement des objects
     for(k = 0; k < 4 ; ++k)
     {
@@ -366,15 +370,15 @@ stairs *stairInitialisation()
             case 0:
                 s->map[x][y] = 'E';// Echelle
                 break;
-				
+
             case 1:
                 s->map[x][y] = 'H';// Trou(hole)
                 break;
-				
+
             case 2:
                 s->map[x][y] = 'W';// Wumpus
                 break;
-				
+
             case 3:
                 s->map[x][y] = 'T';// Tresor
                 break;
@@ -463,7 +467,7 @@ void initMessageSending(char* m, sendToClient* stc)
 
 void initDownSending(sendToClient* stc)
 {
-	stc->type = STRUCTDOWN;
+    stc->type = STRUCTDOWN;
 //	strcpy(stc->structure, m)
 }
 
@@ -475,15 +479,15 @@ void getDirection(int d, char* direction)
         case NORTH :
             strcpy(direction, "du Nord");
             break;
-			
+
         case EAST :
             strcpy(direction, "de l'Est");
             break;
-			
+
         case SOUTH :
             strcpy(direction, "du Sud");
             break;
-			
+
         case WEST :
             strcpy(direction, "de l'Ouest");
             break;
@@ -495,9 +499,9 @@ void printPlayerStatus(player* p, stairs* s, char* temp)
 {
     char direction[11];
     getDirection(p->direction, direction);
-	
+
     char* t = (char*) malloc(strlen("Le joueur est à la position : (xxx, xxx)\nregarde en direction  et  sa flèche.\n") + 11 + strlen("ne possède plus"));
-	
+
     sprintf(t, "Le joueur est à la position : (%d, %d)\nregarde en direction %s et %s sa flèche.\n",
            p->posX, p->posY, direction, p->arrow ? "possède encore" : "ne possède plus");
     strcat(temp, t);
@@ -513,7 +517,7 @@ void printPlayerStatus(player* p, stairs* s, char* temp)
     {
         strcat(temp, "PFFFFF! Tiens un courant d'air!\n");
     }
-	
+
 }
 
 // Affiche l'étage sans les informations sur la position des éléments (trésor, wumpus, trou)
@@ -592,7 +596,6 @@ void checkPosition(player *p)
 
     case 'T' :
         printf("Bien joué! T'as trouvé le trésor.\n");
-        p->score += 100;
         p->findTresure = true;
         p->tresurPosX = p->posX;
         p->tresurPosY = p->posY;
@@ -629,9 +632,9 @@ void * jeuNjoueur (void * arguments)
 //    int tresurPos[2];
 //    tresurPos[0] = -1;//tresurePosX
 //    tresurPos[1] = -1;//tresurePosY
-	
+
     bool sortie = false;
-	
+
     while(!sortie)
     {
         //sera envoyé tel quel si erreur si la commande
@@ -646,28 +649,28 @@ void * jeuNjoueur (void * arguments)
         }
         // Initialisation de la taille de la commande en fonction de la longueur reçu par la socket
         char command[len];
-		
+
         // Pour le moment notifie le client que ça commande à bien été reçue
         /*TODO: retourner le traitement de la nouvelle position*/
         char* result = (char*) malloc(strlen("Commande reçue"));
         sprintf(result, "Commande reçue\n");
-		
+
         int longueur;
         if((longueur = read(nouv_socket_descriptor, command, len)) <= 0)
         {
             return;
         }
-		
+
         /* Il arrive que malgrès la connaissance de la longueur de la commande retournée
          par la socket il y ai des soucis de longueur.
          Pour palier à ce probleme on créer une nouvelle variable qui ne contient que les 'len' premiers caractères.*/
         char realCommand[len];
         strncpy(realCommand, command, len);
         realCommand[len] = '\0';
-		
+
         // Récupère la commande envoyé par l'utilisateur
         printf("Commande lue : %s\n", realCommand);
-		
+
         // Faire le traitement en fonction de la commande
         Action* theAction = findActionFromCommand(playerActions, realCommand);
         if(theAction == NULL)
@@ -717,43 +720,43 @@ int main(int argc, char* argv[])
     {
         port = atoi(argv[1]);
     }
-	
+
     manager = (gameManager*) malloc(sizeof(gameManager));
     manager->firstCreatedGame = NULL;
     manager->lastCreatedGame = NULL;
 
     int socket_descriptor, 		/* Descripteur de socket */
     nouv_socket_descriptor;	/* Descripteur du nouveau socket */
-	
+
     pthread_t nouveau_client;
-	
+
     socklen_t longueur_adresse_courante;	/* Longueur d'adresse courante d'un client */
-	
+
     sockaddr_in adresse_locale,		/* Structure d'adresse locale */
         adresse_client_courant;		/* Adresse client courant */
     hostent* ptr_hote;		/* Les infos récupérées sur la machine hote */
     //		servent* ptr_service;		/* Les infos récupérées sur le service de la machine */
     char machine[TAILLE_MAX_NOM+1];		/* Nom de la machine locale */
-	
+
     gethostname(machine, TAILLE_MAX_NOM);		/* Récupération du nom de la machine */
-	
+
     /* Récupération de la structure d'adresse en utilisant le nom*/
     if((ptr_hote = gethostbyname(machine)) == NULL)
     {
         perror("Erreur : impossible de trouver le serveur a partir de son nom.");
         exit(1);
     }
-	
+
     /* Initialisation de la structure adresse_locale avec les infos récupérées */
-	
+
     /* Copie de ptr_hote vers adresse_locale */
     bcopy((char*)ptr_hote->h_addr, (char*)&adresse_locale.sin_addr, ptr_hote->h_length);
     adresse_locale.sin_family = ptr_hote->h_addrtype;		/* ou AF_INET */
     adresse_locale.sin_addr.s_addr = INADDR_ANY;		/* ou AF_INET */
-	
+
     /*2 façon de définir le service que l'on va utiliser a distance */
     /*(commenter l'une ou l'autre des solutions)*/
-	
+
     /******************************************/
     /* SOLUTION 1 : utiliser un service déjà existant, par ex. "irc". */
     /*if(ptr_service = getservbyname("irc", "tcp") == NULL)
@@ -766,35 +769,35 @@ int main(int argc, char* argv[])
     /*******************************************/
     /*SOLUTION 2 : utiliser un nouveau numero de port */
     adresse_locale.sin_port = htons(port);
-	
+
     /**************************************************/
-	
+
     printf("Numero de port pour la connexion serveur %d. \n",
            ntohs(adresse_locale.sin_port) /*ntohs(ptr_service->s_port) */);
-	
+
     /* Création de la socket */
     if((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("Erreur : impossible de créer la socket de connexion avec le client.");
         exit(1);
     }
-	
+
     /* Association du socket socket_descriptor à la structure de l'adresse adresse_locale */
     if((bind(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0 )
     {
         perror("Erreur : impossible de lier la socket à l'adresse de connexion.");
         exit(1);
     }
-	
+
     /* Initialisation de la file d'écoute */
     listen(socket_descriptor, 5);
-	
+
     // Fin initialisation socket
-	
+
     /* Associe la chaine de caractère entrée par l'utilisateur
      à la fonction qui correspond */
     playerActions = initialisationActions();// Retourne le tableau de toutes les actions
-	
+
     while(1)
     {
         longueur_adresse_courante = sizeof(adresse_client_courant);
@@ -808,18 +811,18 @@ int main(int argc, char* argv[])
             perror("Erreur : impossible d'accepter la connexion avec le client.");
             exit(1);
         }
-		
+
         // Initialisation du joueur
         player *p = playerInitialisation();
         jeu *theGame = addPlayer(p);
         p->game = theGame;
-		p->sock = nouv_socket_descriptor;
+        p->sock = nouv_socket_descriptor;
 
         arg_struct args;
         args.sock = nouv_socket_descriptor;
         args.p = p;
 
-		
+
         /* Traitement du pseudo */
         printf("Reception du pseudo. \n");
         // Attente de la reception d'un message pour en connaitre la longueur.
@@ -843,7 +846,7 @@ int main(int argc, char* argv[])
         strncpy(realCommand, command, len);
         realCommand[len] = '\0';
         strcpy(p->pseudo, realCommand);
-		
+
         char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!\n";
 //		clientPrintStairs(p, jeux[lastGame].s, temp);
 //		printPlayerStatus(p, jeux[lastGame].s, temp);
@@ -870,9 +873,10 @@ int main(int argc, char* argv[])
             }
         /* Traitement du message */
 /*		jeuNjoueur(nouv_socket_descriptor, p);*/
-		
+
 
     }
     close(socket_descriptor);
     return EXIT_SUCCESS;
 }
+
