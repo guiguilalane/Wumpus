@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QProcess>
 #include <QObject>
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {

@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->view->setScene(scene_);
 
     ui->widgetInd->setVisible(false);
+    ui->widgetScore->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -133,6 +134,8 @@ void MainWindow::on_connect_clicked()
     ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
 
     initialisation(&cont_->server);
+    ui->widgetInd->setVisible(true);
+    ui->widgetScore->setVisible(true);
 }
 
 void MainWindow::initialisation(fromServer *s)
@@ -170,7 +173,6 @@ void MainWindow::initialisation(fromServer *s)
 
 void MainWindow::clearScene()
 {
-    std::cout << "treasureDisplay " << treasureDisplay_ << std::endl;
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
@@ -197,6 +199,8 @@ void MainWindow::on_quit_clicked()
     ui->option->setEnabled(true);
 
     ui->statusBar->setStatusTip("");
+    ui->widgetInd->setVisible(false);
+    ui->widgetScore->setVisible(false);
 }
 
 void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
@@ -225,6 +229,8 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
         msg.exec();
         popupH_ = true;
         // TODO : Quitter le nivo ?
+        // Désactiver les boutons et attendre --> si on est pas tout seul
+        //
     }
     if (s->wumpusFind && !popupWF_){
         msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
