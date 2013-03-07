@@ -201,10 +201,10 @@ void down(player* p, int sock)
         {
             p->score += 100;
         }
-//        if (j->sock != sock)
-//        {
+        if (j->sock != sock)
+        {
             write(j->sock, &stc, sizeof(sendToClient));
-//        }
+        }
         j = j->nextPlayer;
         i++;
     }

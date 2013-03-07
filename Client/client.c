@@ -59,19 +59,9 @@ void readFunction(int socket_descriptor)
     }
 }
 
-void envoiPseudoClient(char *p, int socket_descriptor, fromServer server, dispatchStruct dispStruc)
+void envoiPseudoClient(char *p, int socket_descriptor)
 {
     writeFunction(socket_descriptor, p);
-    //    readFunction(socket_descriptor);
-    /* Ce qui suit sera à supprimer quand je saurais comment récupérer les infos */
-//    char buffer[256];
-//    int longueur;
-//    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-//        write(1,buffer,longueur);
-//    }
-    printf("bonjour\n");
-    receptionInfoClient(socket_descriptor, &server, &dispStruc);
-    printf("au revoir\n");
 }
 
 void envoiCommandClient(int socket_descriptor, char *command)
