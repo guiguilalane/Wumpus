@@ -133,6 +133,16 @@ player *findLastPlayerFromGame(jeu *j)
     return current;
 }
 
+void resetGamePlayer(jeu* j)
+{
+	player *p = j->joueur;
+	while(p != NULL)
+	{
+		p = reinitPlayer(p);
+		p = p->nextPlayer;
+	}
+}
+
 int numberOfPlayer()
 {
     int count = 0;

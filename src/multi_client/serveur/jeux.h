@@ -155,6 +155,10 @@ jeu *removePlayer(player *p);
  */
 player *findLastPlayerFromGame(jeu* j);
 
+
+void resetGamePlayer(jeu* j);
+
+
 int numberOfPlayer();
 
 //************************************************
@@ -165,3 +169,5 @@ int numberOfPlayer();
  * @return the new stairs
  */
 stairs *stairInitialisation();
+
+void reinitPlayer(player *p);

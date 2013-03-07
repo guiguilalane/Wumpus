@@ -142,7 +142,7 @@ void MainWindow::initialisation(fromServer *s)
     mapItem_->setPos(0,0);
     characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
     characterItem_->setZValue(3);
-    characterItem_->setPos(1,4*33+1);
+    characterItem_->setPos(s->playerPosX*33+1,s->playerPosY*33+1);
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
 
