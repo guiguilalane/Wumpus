@@ -78,7 +78,6 @@ void readData(int socket_descriptor, dispatchStruct* structure)
         {
             usleep(500);
         }
-    /*	char buffer[sizeof(dispatchStruct)];*/
         char buffer[len];
         int longueur;
         while((longueur = read(socket_descriptor, buffer, len)) <= 0)
@@ -90,7 +89,6 @@ void readData(int socket_descriptor, dispatchStruct* structure)
 
 void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 {
-    printf("type : %d\n", dispStruc->type);
     fromServer* tmp;
     switch(dispStruc->type)
     {
@@ -114,10 +112,6 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         server->besideWumpus = tmp->besideWumpus;
         server->besideHole = tmp->besideHole;
         server->besideTresure = tmp->besideTresure;
-        printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
-        printf("besideTreasure : %d\n", server->besideTresure);
-        printf("findTreasure : %d\n", tmp->tresureFind);
-        printf("fallInHole : %d\n", tmp->fallInHole);
         break;
 
     case STRUCTDOWN:
@@ -129,24 +123,11 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
     }
 }
 
-/* Idem à revoir quand terminer sur ce qu'on recoit */
 void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct * dispStruc)
 {
     /* Lecture des informations du jeu en provenance du serveur */
     readData(socket_descriptor, dispStruc);
     dataProcessing(server, dispStruc);
-
-//    int longueur;
-//    //    readData(socket_descriptor, &test);
-//    //    printf("type : %d\n", test.type);
-//    //    fromServer* tmp = ((fromServer*) test.structure);
-//    //    // serveur = tmp ???????
-//    //    server = tmp;
-//    // Ancienne version a supprimer
-//    //    readFunction(socket_descriptor, server);
-//    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-//        printf("Réponse du serveur : \n");
-//    }
     printf("Fin de la reception.\n");
 }
 

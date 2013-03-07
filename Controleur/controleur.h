@@ -54,6 +54,4 @@ private:
     pthread_t listener;
 };
 
-void * ecouter(void * arg);
-
 #endif // CONTROLEUR_H
