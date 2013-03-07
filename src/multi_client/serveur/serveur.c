@@ -204,28 +204,29 @@ void down(player* p, int sock)
         {
             write(j->sock, &stc, sizeof(sendToClient));
         }
-		reinitPlayer(p);
-		toClient tc;
-		initMovingSending(&tc, p, &stc);
-		write(j->sock, &stc, sizeof(sendToClient));
+        reinitPlayer(p);
+        toClient tc;
+        initMovingSending(&tc, p, &stc);
+        write(j->sock, &stc, sizeof(sendToClient));
         j = j->nextPlayer;
     }
+    createNewStair(p->game);
     // TODO recréer stair
     printf("Le personnage descend d'un étage.\n");
 }
 
 void reinitPlayer(player *p)
 {
-	p->posX = 0;
-	p->posY = (STAIRSIZE - 1);
-	p->tresurPosX = -1;
-	p->tresurPosY = -1;
-	p->direction = NORTH;
-	p->arrow = true;
-	p->deadByWumpus = false;
-	p->fallInHole = false;
-	p->findTresure = false;
-	p->shotTheWumpus = false;
+    p->posX = 0;
+    p->posY = (STAIRSIZE - 1);
+    p->tresurPosX = -1;
+    p->tresurPosY = -1;
+    p->direction = NORTH;
+    p->arrow = true;
+    p->deadByWumpus = false;
+    p->fallInHole = false;
+    p->findTresure = false;
+    p->shotTheWumpus = false;
 }
 
 // Recherche l'action qui correspond à la commande

@@ -30,6 +30,12 @@ jeu *createGame(player* p)
     return j;
 }
 
+void createNewStair(jeu *j)
+{
+	free(j->etage);
+	j->etage = stairInitialisation();
+}
+
 void removeGame(jeu * j)
 {
     if(manager->lastCreatedGame != j)

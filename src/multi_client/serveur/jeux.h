@@ -95,7 +95,7 @@ gameManager* manager;
  * - ajouter le joueur
 */
 /**
- * @brief create a new stairs and add the player to the game
+ * @brief create a new stair and add the player to the game
  *
  *  @param the first player in the game
  *
@@ -104,6 +104,14 @@ gameManager* manager;
  */
 jeu *createGame(player* p);
 
+/**
+ * @brief create a new stair and update the game
+ *
+ * Use when player send the 'down' command
+ *
+ * @param the game to update with 
+*/
+void createNewStair(jeu *j);
 
 /**
  * @brief remove and delete a game from the gameManager
