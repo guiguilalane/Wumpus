@@ -31,7 +31,7 @@ typedef void T_FONC_ACTION();
 
 
 typedef struct {
-	char* command;
+    char* command;
     T_FONC_ACTION* action;
 } Action;
 
@@ -75,3 +75,4 @@ bool sensor(player* p, stairs* s, char o);
 void checkPosition(player* p);
 void initMovingSending(toClient* c, player* p, sendToClient* stc);
 void initDownSending(sendToClient* stc);
+

@@ -3,8 +3,14 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netdb.h>
+#include <pthread.h>
+
 #define TAILLE_MAX_NOM 256
-#define NBPLAYERSPERGAME 2
+#define NBPLAYERSPERGAME 3
 
 //taille de l'étage
 #define STAIRSIZE 5
@@ -48,7 +54,7 @@ struct player
     bool findTresure; /**< Whether the player find the tresure */
     bool shotTheWumpus; /**< Whether the player had killed the wumpus */
     struct jeu *game; /**< The game that contain the player */
-	int sock; /**< The socket to communicate with the player */
+    int sock; /**< The socket to communicate with the player */
 
     player *nextPlayer; /**< The next player */
 
@@ -67,6 +73,7 @@ struct jeu
 
     struct jeu *previousGame; /**< The previous game */
 
+    pthread_mutex_t playerMutex;
     stairs *etage; /**< The stair where players move */
     player *joueur; /**<  The first created player*/
     int nbPlayer; /**< The number of player in the game */
@@ -109,7 +116,7 @@ jeu *createGame(player* p);
  *
  * Use when player send the 'down' command
  *
- * @param the game to update with 
+ * @param the game to update with
 */
 void createNewStair(jeu *j);
 
@@ -170,4 +177,5 @@ int numberOfPlayer();
  */
 stairs *stairInitialisation();
 
-void reinitPlayer(player *p);
+player* reinitPlayer(player *p);
+

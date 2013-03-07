@@ -8,6 +8,7 @@ jeu *createGame(player* p)
         perror("Erreur d'allocation mémoire lors de la création d'un nouveau jeu");
         return NULL;
     }
+    pthread_mutex_init(&(j->playerMutex), NULL);
     j->etage = stairInitialisation();
     j->joueur = p;
     p->game = j;
@@ -32,8 +33,8 @@ jeu *createGame(player* p)
 
 void createNewStair(jeu *j)
 {
-	free(j->etage);
-	j->etage = stairInitialisation();
+    free(j->etage);
+    j->etage = stairInitialisation();
 }
 
 void removeGame(jeu * j)
@@ -135,12 +136,12 @@ player *findLastPlayerFromGame(jeu *j)
 
 void resetGamePlayer(jeu* j)
 {
-	player *p = j->joueur;
-	while(p != NULL)
-	{
-		p = reinitPlayer(p);
-		p = p->nextPlayer;
-	}
+    player *p = j->joueur;
+    while(p != NULL)
+    {
+        p = reinitPlayer(p);
+        p = p->nextPlayer;
+    }
 }
 
 int numberOfPlayer()
@@ -154,3 +155,4 @@ int numberOfPlayer()
     }
     return count;
 }
+

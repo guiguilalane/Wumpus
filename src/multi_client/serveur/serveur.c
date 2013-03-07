@@ -1,11 +1,5 @@
 #include "serveur.h"
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <netdb.h>
-#include <pthread.h>
-
 #define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
 int vardebug;
@@ -187,14 +181,15 @@ void shot(player* p, int sock)
 
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
-{
+{//TODO: faire gros débuggage de cette fonction
     sendToClient stc;
-    initDownSending(&stc);
     // Récupération de la socket des autres joueurs et envoye de l'information
+    resetGamePlayer(p->game);
     player * j = p->game->joueur;
     printf("Socket joueur %d\n", sock);
     while (j != NULL)
     {
+        initDownSending(&stc);
         printf("Socket autre joueur %d\n", j->sock);
         if(j->sock == sock)
         {
@@ -204,9 +199,10 @@ void down(player* p, int sock)
         {
             write(j->sock, &stc, sizeof(sendToClient));
         }
-        reinitPlayer(p);
+        //NOTE: seul le premier clienty connecté reçoi la notification de changement de niveau
         toClient tc;
-        initMovingSending(&tc, p, &stc);
+        usleep(500);
+        initMovingSending(&tc, j, &stc);
         write(j->sock, &stc, sizeof(sendToClient));
         j = j->nextPlayer;
     }
@@ -215,7 +211,7 @@ void down(player* p, int sock)
     printf("Le personnage descend d'un étage.\n");
 }
 
-void reinitPlayer(player *p)
+player* reinitPlayer(player *p)
 {
     p->posX = 0;
     p->posY = (STAIRSIZE - 1);
@@ -227,6 +223,7 @@ void reinitPlayer(player *p)
     p->fallInHole = false;
     p->findTresure = false;
     p->shotTheWumpus = false;
+    return p;
 }
 
 // Recherche l'action qui correspond à la commande
@@ -441,7 +438,7 @@ void toClientInitialisation(toClient *toSend)
     toSend->besideHole = false;
     toSend->besideTresure = false;
     toSend->besideWumpus = false;
-    toSend->score = 0;
+    toSend->score = -1;
     toSend->tresureFinf = false;
     toSend->fallInHole = false;
     toSend->wumpusFind = false;
@@ -633,6 +630,7 @@ void * jeuNjoueur (void * arguments)
     arg_struct *args = arguments;
     int *tmp = args->sock;
     int nouv_socket_descriptor = tmp;
+    printf("socket 1 : %d\n", nouv_socket_descriptor);
 //	int gameNum = args->gameNumber;
 
     //initilalisation de la structur
@@ -696,6 +694,7 @@ void * jeuNjoueur (void * arguments)
         }
         else
         {
+            pthread_mutex_lock(&(p->game->playerMutex));
             theAction->action(p, nouv_socket_descriptor);
             if(strcmp(realCommand, "quit")==0)
             {
@@ -704,6 +703,7 @@ void * jeuNjoueur (void * arguments)
             else
             {
                 char temp[277] = "\0";
+                s = p->game->etage;
                 clientPrintStairs(p, s, temp);
                 printPlayerStatus(p, s, temp);
                 result = (char*) realloc(result, strlen(temp));
@@ -715,6 +715,7 @@ void * jeuNjoueur (void * arguments)
 //                printf("youhou %d\n", test.type);
 
             }
+            pthread_mutex_unlock(&(p->game->playerMutex));
         }
         // Ecrit le nouvel état de l'étage
 //        write(nouv_socket_descriptor, result, strlen(result)+1);
