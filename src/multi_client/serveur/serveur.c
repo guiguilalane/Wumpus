@@ -182,14 +182,15 @@ void shot(player* p, int sock)
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
 {//TODO: faire gros débuggage de cette fonction
-    sendToClient stc;
+    sendToClient stcDown;
+    initDownSending(&stcDown);
+    sendToClient stcMove;
     // Récupération de la socket des autres joueurs et envoye de l'information
     resetGamePlayer(p->game);
     player * j = p->game->joueur;
     printf("Socket joueur %d\n", sock);
     while (j != NULL)
     {
-        initDownSending(&stc);
         printf("Socket autre joueur %d\n", j->sock);
         if(j->sock == sock)
         {
@@ -197,13 +198,13 @@ void down(player* p, int sock)
         }
         else
         {
-            write(j->sock, &stc, sizeof(sendToClient));
+            write(j->sock, &stcDown, sizeof(sendToClient));
         }
         //NOTE: seul le premier clienty connecté reçoi la notification de changement de niveau
         toClient tc;
         usleep(1000);
-        initMovingSending(&tc, j, &stc);
-        write(j->sock, &stc, sizeof(sendToClient));
+        initMovingSending(&tc, j, &stcMove);
+        write(j->sock, &stcMove, sizeof(sendToClient));
         j = j->nextPlayer;
     }
     createNewStair(p->game);
