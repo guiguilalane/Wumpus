@@ -201,7 +201,7 @@ void down(player* p, int sock)
         }
         //NOTE: seul le premier clienty connecté reçoi la notification de changement de niveau
         toClient tc;
-        usleep(500);
+        usleep(1000);
         initMovingSending(&tc, j, &stc);
         write(j->sock, &stc, sizeof(sendToClient));
         j = j->nextPlayer;
