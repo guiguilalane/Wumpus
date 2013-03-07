@@ -56,7 +56,7 @@ void attribuerPort(sockaddr_in * adresse_locale, int port); // Permet d'attribue
 
 int createSocket(); // Permet de créer la socket
 
-void connectionServeur(int socket_descriptor, sockaddr_in adresse_locale); // Permet de se connecter au serveur
+/*void*/int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale); // Permet de se connecter au serveur
 
 void deconnexionServeur(int socket_descriptor); // Permet de se déconnecter du serveur
 
@@ -74,7 +74,7 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc);
 
 void receptionInfoClient(int socket_descriptor, fromServer *server, dispatchStruct *dispStruc);
 
-void connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port); // Permet d'établir la connexion avec l'initialisation au serveur
+/*void*/int connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port); // Permet d'établir la connexion avec l'initialisation au serveur
 
 void fromServerInitialisation(fromServer *receiv); // Initialisation de la structure de données
 

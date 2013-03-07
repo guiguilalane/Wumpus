@@ -18,7 +18,6 @@
 	- Quand on joueur se fait tuer ou tombe dans le trou ! Comment ça se passe pour gérer avec les autres joueurs ! Il perd des points et attends qu'un joueur passe à un étage inférieur ??????????????
 
 THE MOST IMPORTANT FOR TOMMOROW:
-- Regler le pb lors du lancement de la connexion ou ça plante l'IHM !
 - Lors du down Avertir tous les autres joueurs --> Alors là j'ai essayé de le faire mais je pense qu'il y a un souci au nivo des socket récupérer. J'ai ajouter la socket pour chaque joueur (ligne 816) mais elle n'a pas l'air de correspondre avec le numéro de socket coté client !
 - Puis réinitialiser le stair
 - Quand on creér l'étage --> Ajouter les bon sensor au joueurs et les renvoyer au serveur???

@@ -118,24 +118,37 @@ void MainWindow::on_down_clicked()
 void MainWindow::on_connect_clicked()
 {
     // Connexion
-    cont_->connexion();
+    int r = cont_->connexion();
 
-    // Envoi du pseudo
-    if (!pseudoRenseigne_){
-        pseudoDialog_ = new Pseudo(this);
-        pseudoDialog_->show();
-        connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
+    if (r < 0)
+    {
+        // Afficher message
+        QMessageBox msg;
+        msg.setWindowTitle("Information");
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText("<center> Connexion au serveur impossible ! </center>");
+        msg.exec();
     }
     else
     {
-        cont_->envoiPseudo(pseudo_);
+        // Envoi du pseudo
+        if (!pseudoRenseigne_){
+            pseudoDialog_ = new Pseudo(this);
+            pseudoDialog_->show();
+            connect(pseudoDialog_, SIGNAL(newPseudo(QString *)), this, SLOT(acceptPseudo(QString *)));
+        }
+        else
+        {
+            cont_->envoiPseudo(pseudo_);
+        }
+
+        ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
+
+        initialisation(&cont_->server);
+        ui->widgetInd->setVisible(true);
+        ui->widgetScore->setVisible(true);
     }
-
-    ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
-
-    initialisation(&cont_->server);
-    ui->widgetInd->setVisible(true);
-    ui->widgetScore->setVisible(true);
 }
 
 void MainWindow::initialisation(fromServer *s)
@@ -221,45 +234,45 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     }
     else
     {
-    loadCharacter(s);
-    if (s->fallInHole && !popupH_){
-        msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points </center>");
-        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
-        msg.exec();
-        popupH_ = true;
-        // TODO : Quitter le nivo ?
-        // Désactiver les boutons et attendre --> si on est pas tout seul
-        //
-    }
-    if (s->wumpusFind && !popupWF_){
-        msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
-        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
-        msg.exec();
-        popupWF_ = true;
-        // TODO : Quitter le nivo ?
-    }
-    if (s->tresureFind && !popupTF_){
-        msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
-        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
-        msg.exec();
-        treasureDisplay_ = true;
-        treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
-        treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
-        scene_->addItem(treasureItem_);
+        loadCharacter(s);
+        if (s->fallInHole && !popupH_){
+            msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points </center>");
+            msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
+            msg.exec();
+            popupH_ = true;
+            // TODO : Quitter le nivo ?
+            // Désactiver les boutons et attendre --> si on est pas tout seul
+            //
+        }
+        if (s->wumpusFind && !popupWF_){
+            msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
+            msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
+            msg.exec();
+            popupWF_ = true;
+            // TODO : Quitter le nivo ?
+        }
+        if (s->tresureFind && !popupTF_){
+            msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
+            msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
+            msg.exec();
+            treasureDisplay_ = true;
+            treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
+            treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
+            scene_->addItem(treasureItem_);
 
-        popupTF_ = true;
-    }
-    if (s->wumpusKill && !popupWK_){
-        msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
-        msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
-        msg.exec();
-        popupWK_ = true;
-    }
-    // On affiche les senseurs sur l'IHM
-    // TODO Récupérer les bonnes valeurs
-    ui->treasure->setVisible(s->besideTresure);
-    ui->hole->setVisible(s->besideHole);
-    ui->wumpus->setVisible(s->besideWumpus);
+            popupTF_ = true;
+        }
+        if (s->wumpusKill && !popupWK_){
+            msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
+            msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
+            msg.exec();
+            popupWK_ = true;
+        }
+        // On affiche les senseurs sur l'IHM
+        // TODO Récupérer les bonnes valeurs
+        ui->treasure->setVisible(s->besideTresure);
+        ui->hole->setVisible(s->besideHole);
+        ui->wumpus->setVisible(s->besideWumpus);
     }
     // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
 }

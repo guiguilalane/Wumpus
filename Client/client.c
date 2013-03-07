@@ -28,13 +28,14 @@ int createSocket()
     return socket_descriptor;
 }
 
-void connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
+/*void*/int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
 {
     /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
-    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
-        perror("Erreur : impossible de se connecter au serveur");
-        exit(1);
-    }
+//    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
+//        perror("Erreur : impossible de se connecter au serveur");
+//        exit(1);
+//    }
+    return connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale));
 }
 
 void deconnexionServeur(int socket_descriptor)
@@ -131,12 +132,12 @@ void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStr
     printf("Fin de la reception.\n");
 }
 
-void connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
+/*void*/int connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
 {
     initialisationHost(ptr_host, host, &adresse_locale);
     attribuerPort(&adresse_locale, port);
     *socket_descriptor = createSocket();
-    connectionServeur(*socket_descriptor, adresse_locale);
+    return connectionServeur(*socket_descriptor, adresse_locale);
     printf("Connexion établie avec le serveur \n");
     printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }
