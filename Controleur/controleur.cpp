@@ -23,8 +23,6 @@ void Controleur::envoiCommand(char *command)
     envoiCommandClient(socket_descriptor, command);
     if (command == (char*)"quit"){
         /* Le joueur a quitter le jeu */
-//        close(socket_descriptor);
-//        deconnexionServeur(socket_descriptor);
         connect_ = false;
         pthread_cancel(listener);
         deconnexionServeur(socket_descriptor);

@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
 
     pseudoRenseigne_ = false;
+    treasureDisplay_ = false;
 
     ui->setupUi(this);
 
@@ -171,8 +172,9 @@ void MainWindow::clearScene()
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
-    if(cont_->server.tresureFind){
+    if(treasureDisplay_){
         scene_->removeItem(treasureItem_);
+        treasureDisplay_ = false;
     }
 }
 
@@ -232,8 +234,7 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
         msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
         msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
         msg.exec();
-        // TODO A vérifier s'il s'affiche au bon endroit
-        std::cout << s->tresurePosX << " - " << s->tresurePosY << std::endl;
+        treasureDisplay_ = true;
         treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
         treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
         scene_->addItem(treasureItem_);
