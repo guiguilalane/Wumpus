@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, dispatchStruct *)));
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
+    connect(cont_,SIGNAL(clearMap()),this,SLOT(clearScene()));
 
     pseudoRenseigne_ = false;
     treasureDisplay_ = false;
@@ -169,6 +170,7 @@ void MainWindow::initialisation(fromServer *s)
 
 void MainWindow::clearScene()
 {
+    std::cout << "treasureDisplay " << treasureDisplay_ << std::endl;
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
