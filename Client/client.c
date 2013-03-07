@@ -28,13 +28,10 @@ int createSocket()
     return socket_descriptor;
 }
 
-void connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
+int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale)
 {
     /* Tentative de connexion au serveur dont les infos sont dans adresse_locale */
-    if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0){
-        perror("Erreur : impossible de se connecter au serveur");
-        exit(1);
-    }
+    return connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale));
 }
 
 void deconnexionServeur(int socket_descriptor)
@@ -70,7 +67,6 @@ void envoiCommandClient(int socket_descriptor, char *command)
     writeFunction(socket_descriptor, command);
 }
 
-/* A revoir quand on connaitra la structure à recevoir */
 void readData(int socket_descriptor, dispatchStruct* structure)
 {
     int len = 0;
@@ -78,7 +74,6 @@ void readData(int socket_descriptor, dispatchStruct* structure)
         {
             usleep(500);
         }
-    /*	char buffer[sizeof(dispatchStruct)];*/
         char buffer[len];
         int longueur;
         while((longueur = read(socket_descriptor, buffer, len)) <= 0)
@@ -90,7 +85,6 @@ void readData(int socket_descriptor, dispatchStruct* structure)
 
 void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
 {
-    printf("type : %d\n", dispStruc->type);
     fromServer* tmp;
     switch(dispStruc->type)
     {
@@ -114,10 +108,6 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         server->besideWumpus = tmp->besideWumpus;
         server->besideHole = tmp->besideHole;
         server->besideTresure = tmp->besideTresure;
-        printf("PlayerPosX : %d, playerPosY : %d\n", server->playerPosX, server->playerPosY);
-        printf("besideTreasure : %d\n", server->besideTresure);
-        printf("findTreasure : %d\n", tmp->tresureFind);
-        printf("fallInHole : %d\n", tmp->fallInHole);
         break;
 
     case STRUCTDOWN:
@@ -129,33 +119,20 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
     }
 }
 
-/* Idem à revoir quand terminer sur ce qu'on recoit */
 void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct * dispStruc)
 {
     /* Lecture des informations du jeu en provenance du serveur */
     readData(socket_descriptor, dispStruc);
     dataProcessing(server, dispStruc);
-
-//    int longueur;
-//    //    readData(socket_descriptor, &test);
-//    //    printf("type : %d\n", test.type);
-//    //    fromServer* tmp = ((fromServer*) test.structure);
-//    //    // serveur = tmp ???????
-//    //    server = tmp;
-//    // Ancienne version a supprimer
-//    //    readFunction(socket_descriptor, server);
-//    if ((longueur = read(socket_descriptor, server, sizeof(fromServer))) > 0) {
-//        printf("Réponse du serveur : \n");
-//    }
     printf("Fin de la reception.\n");
 }
 
-void connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
+int connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
 {
     initialisationHost(ptr_host, host, &adresse_locale);
     attribuerPort(&adresse_locale, port);
     *socket_descriptor = createSocket();
-    connectionServeur(*socket_descriptor, adresse_locale);
+    return connectionServeur(*socket_descriptor, adresse_locale);
     printf("Connexion établie avec le serveur \n");
     printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }

@@ -23,7 +23,7 @@ public:
 
     void envoiPseudo(QString * p);
     void envoiCommand(char* command);
-    void connexion();
+    int connexion();
     void envoiValeurConnexion(const char *ad, int p);
     void getValeur(QString& ad, QString &p);
 
@@ -53,7 +53,5 @@ private:
     dispatchStruct dispStruc;
     pthread_t listener;
 };
-
-void * ecouter(void * arg);
 
 #endif // CONTROLEUR_H

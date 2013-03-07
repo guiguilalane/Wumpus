@@ -35,18 +35,21 @@ void Controleur::envoiCommand(char *command)
     }
 }
 
-void Controleur::connexion()
+int Controleur::connexion()
 {
     // Initialisation de la structure des datas
     fromServerInitialisation(&server);
-    connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
-    connect_ = true;
-    std::cout << "Sock: " << socket_descriptor << std::endl;
-    // Lancer un thread
-    if(pthread_create(&listener, NULL, Controleur::ecouter, (void*) this) < 0)
+    int r = connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
+    if (r >= 0)
     {
-        exit(1);
+        connect_ = true;
+        // Lancer un thread
+        if(pthread_create(&listener, NULL, Controleur::ecouter, (void*) this) < 0)
+        {
+            exit(1);
+        }
     }
+    return r;
 }
 
 void Controleur::envoiValeurConnexion(const char* ad, int p)
