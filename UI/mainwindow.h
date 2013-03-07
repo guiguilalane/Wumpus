@@ -60,6 +60,7 @@ private:
     Controleur * cont_;
     QString * pseudo_;
     bool pseudoRenseigne_;
+    bool treasureDisplay_;
     bool popupWK_;
     bool popupWF_;
     bool popupTF_;
