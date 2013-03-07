@@ -441,7 +441,7 @@ void toClientInitialisation(toClient *toSend)
     toSend->besideHole = false;
     toSend->besideTresure = false;
     toSend->besideWumpus = false;
-    toSend->score = -1;
+    toSend->score = 0;
     toSend->tresureFinf = false;
     toSend->fallInHole = false;
     toSend->wumpusFind = false;

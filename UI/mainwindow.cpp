@@ -205,6 +205,7 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
+    ui->score->setText(QString::number(s->score));
     if (d->type == 2)
     {
         msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
@@ -256,7 +257,6 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     ui->wumpus->setVisible(s->besideWumpus);
     }
     // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
-    // TODO quand un joueur change de nivo avertir tous les autres joueurs
 }
 
 // TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué
