@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, dispatchStruct *)));
+    connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
 
     pseudoRenseigne_ = false;
 
@@ -129,12 +130,11 @@ void MainWindow::on_connect_clicked()
 
     ui->statusBar->setStatusTip("Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant !!!");
 
-    // On affiche les senseurs sur l'IHM
-    ui->treasure->setVisible(cont_->server.besideTresure);
-    ui->hole->setVisible(cont_->server.besideHole);
-    ui->wumpus->setVisible(cont_->server.besideWumpus);
-    ui->widgetInd->setVisible(true);
+    initialisation(&cont_->server);
+}
 
+void MainWindow::initialisation(fromServer *s)
+{
     // Display the map and composant
     mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
     mapItem_->setPos(0,0);
@@ -143,6 +143,11 @@ void MainWindow::on_connect_clicked()
     characterItem_->setPos(1,4*33+1);
     scene_->addItem(mapItem_);
     scene_->addItem(characterItem_);
+
+    // TODO Add initialisation of sensor sans qu'auncune action soit effectuée
+    ui->treasure->setVisible(s->besideTresure);
+    ui->hole->setVisible(s->besideHole);
+    ui->wumpus->setVisible(s->besideWumpus);
 
     // Booléean des popup initialisée à false
     popupWK_ = false;
@@ -161,16 +166,21 @@ void MainWindow::on_connect_clicked()
     ui->option->setEnabled(false);
 }
 
-void MainWindow::on_quit_clicked()
+void MainWindow::clearScene()
 {
-    cont_->envoiCommand((char*)"quit");
-
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
     if(cont_->server.tresureFind){
         scene_->removeItem(treasureItem_);
     }
+}
+
+void MainWindow::on_quit_clicked()
+{
+    cont_->envoiCommand((char*)"quit");
+
+    clearScene();
 
     // Désactivation des boutons
     ui->connect->setEnabled(true);
@@ -197,42 +207,9 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
         msg.exec();
         std::cout << "type down" << std::endl;
 
-        // On vide la scene
-        scene_->removeItem(mapItem_);
-        scene_->removeItem(characterItem_);
-        if(cont_->server.tresureFind){
-            scene_->removeItem(treasureItem_);
-        }
+        clearScene();
+        initialisation(s);
 
-        // Display the map and composant
-        mapItem_->setPixmap(QPixmap(":/Pictures/Pictures/carte.png").scaled(166,166));
-        mapItem_->setPos(0,0);
-        characterItem_->setPixmap(QPixmap(":/Pictures/Pictures/derriere.png").scaled(32,32));
-        characterItem_->setZValue(3);
-        characterItem_->setPos(1,4*33+1);
-        scene_->addItem(mapItem_);
-        scene_->addItem(characterItem_);
-
-        // TODO Add initialisation of sensor sans qu'auncune action soit effectuée
-        ui->treasure->setVisible(s->besideTresure);
-        ui->hole->setVisible(s->besideHole);
-        ui->wumpus->setVisible(s->besideWumpus);
-
-        // Booléean des popup initialisée à false
-        popupWK_ = false;
-        popupWF_ = false;
-        popupTF_ = false;
-        popupH_ = false;
-
-        // Activation des boutons ou non
-        ui->connect->setEnabled(false);
-        ui->turnL->setEnabled(true);
-        ui->turnR->setEnabled(true);
-        ui->move->setEnabled(true);
-        ui->shoot->setEnabled(true);
-        ui->down->setEnabled(false);
-        ui->quit->setEnabled(true);
-        ui->option->setEnabled(false);
     }
     else
     {

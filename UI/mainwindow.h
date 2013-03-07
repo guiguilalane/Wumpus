@@ -47,6 +47,10 @@ private slots:
 
     void on_option_clicked();
 
+    void initialisation(fromServer * s);
+
+    void clearScene();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene * scene_;

@@ -64,7 +64,7 @@ void writeFunction(int socket_descriptor, char* p); // Permet d'envoyer des info
 
 void readFunction(int socket_descriptor); // Permet de lire des informations venant du serveur
 
-void envoiPseudoClient(char *p, int socket_descriptor, fromServer serveur, dispatchStruct dispStruc); // Permet d'envoyer le pseudo au serveur
+void envoiPseudoClient(char *p, int socket_descriptor); // Permet d'envoyer le pseudo au serveur
 
 void envoiCommandClient(int socket_descriptor, char *command); // Permet d'envoyer une commande au serveur
 

@@ -7,9 +7,6 @@ Controleur::Controleur()
     strcpy(host,"127.0.0.1");
     // Initialisation du port
     port = 5000;
-
-    // Initialisation de la structure des datas
-    fromServerInitialisation(&server);
 }
 
 Controleur::~Controleur()
@@ -18,7 +15,7 @@ Controleur::~Controleur()
 
 void Controleur::envoiPseudo(QString *p)
 {
-    envoiPseudoClient((char*)p->toStdString().c_str(), socket_descriptor, server, dispStruc);
+    envoiPseudoClient((char*)p->toStdString().c_str(), socket_descriptor);
 }
 
 void Controleur::envoiCommand(char *command)
@@ -29,14 +26,20 @@ void Controleur::envoiCommand(char *command)
 //        close(socket_descriptor);
 //        deconnexionServeur(socket_descriptor);
         connect_ = false;
+        pthread_cancel(listener);
+        deconnexionServeur(socket_descriptor);
         printf("Connexion avec le serveur fermee, fin du programme. \n");
     }
-//    receptionInfoClient(socket_descriptor, &server, &dispStruc);
-//    emit infoRecu(&server);
+    else if (command == (char*)"down")
+    {
+        emit initMap(&server);
+    }
 }
 
 void Controleur::connexion()
 {
+    // Initialisation de la structure des datas
+    fromServerInitialisation(&server);
     connexionClient(&socket_descriptor, ptr_host, host, adresse_locale, port);
     connect_ = true;
     std::cout << "Sock: " << socket_descriptor << std::endl;
@@ -68,7 +71,7 @@ QString Controleur::getPort()
 void * Controleur::ecouter(void * arg)
 {
     Controleur * cont = ( Controleur * ) arg;
-    while(cont->connect_){
+    while(true){
         receptionInfoClient(cont->socket_descriptor, &(cont->server), &(cont->dispStruc));
         emit cont->infoRecu(&(cont->server), &(cont->dispStruc));
     }

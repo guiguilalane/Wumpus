@@ -192,7 +192,6 @@ void down(player* p, int sock)
     initDownSending(&stc);
     // Récupération de la socket des autres joueurs et envoye de l'information
     player * j = p->game->joueur;
-    int i = 0;
     printf("Socket joueur %d\n", sock);
     while (j != NULL)
     {
@@ -201,18 +200,16 @@ void down(player* p, int sock)
         {
             p->score += 100;
         }
-//        if (j->sock != sock)
-//        {
+        else
+        {
             write(j->sock, &stc, sizeof(sendToClient));
-//        }
+        }
 		reinitPlayer(p);
 		toClient tc;
 		initMovingSending(&tc, p, &stc);
 		write(j->sock, &stc, sizeof(sendToClient));
         j = j->nextPlayer;
-        i++;
     }
-    printf("Il y a %d joueurs\n",i);
     // TODO recréer stair
     printf("Le personnage descend d'un étage.\n");
 }

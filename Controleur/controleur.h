@@ -34,6 +34,7 @@ public:
 
 signals:
     void infoRecu(fromServer * s, dispatchStruct * d);
+    void initMap(fromServer * s);
 
 private:
 
