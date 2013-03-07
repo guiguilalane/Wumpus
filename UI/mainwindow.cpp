@@ -240,16 +240,14 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
             msg.exec();
             popupH_ = true;
-            // TODO : Quitter le nivo ?
-            // Désactiver les boutons et attendre --> si on est pas tout seul
-            //
+            // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->wumpusFind && !popupWF_){
             msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
             msg.exec();
             popupWF_ = true;
-            // TODO : Quitter le nivo ?
+            // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->tresureFind && !popupTF_){
             msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
@@ -274,12 +272,10 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
         ui->hole->setVisible(s->besideHole);
         ui->wumpus->setVisible(s->besideWumpus);
     }
-    // TODO mettre a jour les scores --> Lors du quit dans une popup et tout le tps dans la fenêtre - Son score et celui de l'autre joueur
+    // TODO Afficher les scores de tous les joueurs + PopUp lors du quit ?
 }
 
 // TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué
-// TODO Afficher score lors du quit et dans la case à coté ainsi que celui de tous les joueurs
-// TODO Remettre sensor à 0
 
 
 void MainWindow::on_option_clicked()
@@ -297,5 +293,3 @@ void MainWindow::acceptValeur(QString* ad, QString * p)
     cont_->envoiValeurConnexion(ad->toStdString().c_str(), p->toInt());
     delete optionDialog_;
 }
-
-// TODO Quand un joueur quit est-ce qu'il est bien supprimer du jeu ...
