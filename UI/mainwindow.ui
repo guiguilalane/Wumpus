@@ -63,7 +63,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="score">
+           <widget class="QLabel" name="scoreLabel">
             <property name="text">
              <string>Scores</string>
             </property>
@@ -124,9 +124,9 @@
            <widget class="QWidget" name="widget_2" native="true">
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="score">
                <property name="text">
-                <string>TextLabel</string>
+                <string>0</string>
                </property>
               </widget>
              </item>
