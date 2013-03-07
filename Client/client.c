@@ -171,8 +171,8 @@ void fromServerInitialisation(fromServer *receiv)
     receiv->besideHole = false;
     receiv->besideTresure = false;
     receiv->besideWumpus = false;
-    receiv->score = -1; // TODO Initialisatio à 0 ?
-    // TODO Initialiser la tableau avec des -1 ou 0 ?
+    receiv->score = 0;
+    // TODO Initialiser la tableau avec des 0 ?
     //receiv->scores = (int *) malloc(NBJOUEUR-1xsizeof(int)); // A t'on acces à NB-JOUEUR, il faudrait auusi récupérer leur pseudo ?
     receiv->tresureFind = false;
     receiv->fallInHole = false;
