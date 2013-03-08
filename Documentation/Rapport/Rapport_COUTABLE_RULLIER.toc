@@ -1,0 +1,32 @@
+
+\select@language {french}
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}
+\contentsline {section}{\numberline {2}Les fonctionnalit\IeC {\'e}s}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Fonctionnalit\IeC {\'e}s principales}{3}{subsection.2.1}
+\contentsline {paragraph}{Cr\IeC {\'e}er une liste:}{3}{section*.2}
+\contentsline {paragraph}{Cr\IeC {\'e}er une liste ordonn\IeC {\'e}e:}{3}{section*.3}
+\contentsline {paragraph}{Cr\IeC {\'e}er une t\IeC {\^a}che:}{3}{section*.4}
+\contentsline {paragraph}{Supprimer un \IeC {\'e}l\IeC {\'e}ment:}{3}{section*.5}
+\contentsline {paragraph}{Enregistrer:}{3}{section*.6}
+\contentsline {paragraph}{Enregistrer un template:}{3}{section*.7}
+\contentsline {paragraph}{Ouvrir un template:}{3}{section*.8}
+\contentsline {subsection}{\numberline {2.2}Fonctionnalit\IeC {\'e}s secondaires}{3}{subsection.2.2}
+\contentsline {paragraph}{Param\IeC {\`e}tre:}{3}{section*.9}
+\contentsline {paragraph}{Monter / Descendre:}{3}{section*.10}
+\contentsline {paragraph}{Aper\IeC {\c c}u:}{3}{section*.11}
+\contentsline {paragraph}{G\IeC {\'e}rer ses templates:}{3}{section*.12}
+\contentsline {section}{\numberline {3}Storyboard, \emph {paper prototyping}et Sc\IeC {\'e}narios}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Storyboard}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Paper prototyping}{4}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Les maquettes}{4}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Choix r\IeC {\'e}alis\IeC {\'e}s}{4}{subsubsection.3.2.2}
+\contentsline {subsection}{\numberline {3.3}Sc\IeC {\'e}narios}{4}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Sc\IeC {\'e}nario 1 - Cr\IeC {\'e}ation/Utilisation/Suppression de liste}{4}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Sc\IeC {\'e}nario 2 - Utilisation des templates}{5}{subsubsection.3.3.2}
+\contentsline {section}{\numberline {4}L'IHM}{6}{section.4}
+\contentsline {subsection}{\numberline {4.1}Le menu}{6}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Boite \IeC {\`a} outils}{6}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Zone d'affichage de la liste}{7}{subsection.4.3}
+\contentsline {section}{\numberline {5}Le mod\IeC {\`e}le}{8}{section.5}
+\contentsline {section}{\numberline {6}Limite de l'application}{9}{section.6}
+\contentsline {section}{\numberline {7}Conclusion g\IeC {\'e}n\IeC {\'e}rale}{10}{section.7}
