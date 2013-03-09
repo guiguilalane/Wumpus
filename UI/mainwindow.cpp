@@ -226,8 +226,6 @@ void MainWindow::on_quit_clicked()
 
 void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
 {
-    std::cout << "PopUphole: " << popupH_ << std::endl;
-    std::cout << "PopWumpus: " << popupWF_ << std::endl;
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");
