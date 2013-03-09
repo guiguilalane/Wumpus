@@ -79,3 +79,8 @@ void * Controleur::ecouter(void * arg)
     }
     return NULL;
 }
+
+bool Controleur::getConnect_()
+{
+    return connect_;
+}

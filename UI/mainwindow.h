@@ -52,6 +52,8 @@ private slots:
 
     void clearScene();
 
+    void quitWindow();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene * scene_;

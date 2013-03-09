@@ -85,6 +85,7 @@ void move(player* p, int sock)
     initMovingSending(&tc, p, &stc);
 //    write(sock, &stc, sizeof(sendToClient));
     write(sock, &stc, sizeof(sendToClient));
+	printf("Le nobre de joeur actif: %d\n", nbPlayerActive);
 	if (nbPlayerActive == 0)
 	{
 		sleep(2);
@@ -98,6 +99,7 @@ void move(player* p, int sock)
 		printf("Socket joueur %d\n", sock);
 		while (j != NULL)
 		{
+			printf("on passe ds l'envoi\n");
 			write(j->sock, &stcAllDead, sizeof(sendToClient));
 			toClient tc;
 			usleep(1000);

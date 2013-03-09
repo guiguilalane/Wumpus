@@ -26,6 +26,7 @@ public:
     int connexion();
     void envoiValeurConnexion(const char *ad, int p);
     void getValeur(QString& ad, QString &p);
+    bool getConnect_();
 
     QString getAdresse();
     QString getPort();

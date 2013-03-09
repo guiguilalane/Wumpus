@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(cont_,SIGNAL(infoRecu(fromServer *, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, dispatchStruct *)));
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
     connect(cont_,SIGNAL(clearMap()),this,SLOT(clearScene()));
+    connect(qApp,SIGNAL(lastWindowClosed()),this,SLOT(quitWindow()));
 
     pseudoRenseigne_ = false;
     treasureDisplay_ = false;
@@ -192,6 +193,13 @@ void MainWindow::clearScene()
     if(treasureDisplay_){
         scene_->removeItem(treasureItem_);
         treasureDisplay_ = false;
+    }
+}
+
+void MainWindow::quitWindow()
+{
+    if (cont_->getConnect_()){
+        cont_->envoiCommand((char*)"quit");
     }
 }
 
