@@ -89,7 +89,7 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
     switch(dispStruc->type)
     {
     case STRUCTMESSAGE:
-        printf("%s", dispStruc->structure);
+        printf("%s\n", dispStruc->structure);
         break;
 
     case STRUCTMOVING:
@@ -111,7 +111,7 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         break;
 
     case STRUCTDOWN:
-        printf("Struct du down");
+        printf("%s\n", dispStruc->structure);
         break;
 
     default:

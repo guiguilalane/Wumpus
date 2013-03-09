@@ -52,6 +52,7 @@ void quit(player* p, int sock)
 // Lorsque le personnage avance
 void move(player* p, int sock)
 {
+	int nbPlayerActive;
     switch(p->direction)
     {
         case NORTH :
@@ -78,12 +79,38 @@ void move(player* p, int sock)
             }
             break;
     }
-    checkPosition(p);
+    nbPlayerActive = checkPosition(p);
     toClient tc;
     sendToClient stc;
     initMovingSending(&tc, p, &stc);
 //    write(sock, &stc, sizeof(sendToClient));
     write(sock, &stc, sizeof(sendToClient));
+	if (nbPlayerActive == 0)
+	{
+		sleep(2);
+		printf("Tous les joueurs sont morts\n");
+		sendToClient stcAllDead;
+		initStairSending("allDead",&stcAllDead);
+		sendToClient stcMove;
+		// Récupération de la socket des autres joueurs et envoye de l'information
+		resetGamePlayer(p->game);
+		player * j = p->game->joueur;
+		printf("Socket joueur %d\n", sock);
+		while (j != NULL)
+		{
+			write(j->sock, &stcAllDead, sizeof(sendToClient));
+			toClient tc;
+			usleep(1000);
+			initMovingSending(&tc, j, &stcMove);
+			write(j->sock, &stcMove, sizeof(sendToClient));
+			j = j->nextPlayer;
+		}
+		createNewStair(p->game);
+		p->game->nbPlayerActive = p->game->nbPlayer;
+		printf("Le personnage descend d'un étage.\n");
+
+		// On envoie une nouvelle structure à tous les autres joueurs pour dire on change d'étage et on change d'étage
+	}
     /*    printf("Avancer d'une case dans la direction pointée.\n");*/
 }
 
@@ -181,9 +208,9 @@ void shot(player* p, int sock)
 
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
-{//TODO: faire gros débuggage de cette fonction
+{
     sendToClient stcDown;
-    initDownSending(&stcDown);
+    initStairSending("down",&stcDown);
     sendToClient stcMove;
     // Récupération de la socket des autres joueurs et envoye de l'information
     resetGamePlayer(p->game);
@@ -200,7 +227,6 @@ void down(player* p, int sock)
         {
             write(j->sock, &stcDown, sizeof(sendToClient));
         }
-        //NOTE: seul le premier clienty connecté reçoi la notification de changement de niveau
         toClient tc;
         usleep(1000);
         initMovingSending(&tc, j, &stcMove);
@@ -208,7 +234,7 @@ void down(player* p, int sock)
         j = j->nextPlayer;
     }
     createNewStair(p->game);
-    // TODO recréer stair
+	p->game->nbPlayerActive = p->game->nbPlayer;
     printf("Le personnage descend d'un étage.\n");
 }
 
@@ -479,10 +505,10 @@ void initMessageSending(char* m, sendToClient* stc)
 //    stc->structure = '\0';
 }
 
-void initDownSending(sendToClient* stc)
+void initStairSending(char* why, sendToClient* stc)
 {
     stc->type = STRUCTDOWN;
-//	strcpy(stc->structure, m)
+	strcpy(stc->structure, why);
 }
 
 // Fonction temporaire
@@ -593,7 +619,7 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
     return temp;
 }
 
-void checkPosition(player *p)
+/*void*/int checkPosition(player *p)
 {
     char c = p->game->etage->map[p->posY][p->posX];
     switch(c)
@@ -606,6 +632,7 @@ void checkPosition(player *p)
         printf("T'es mort!! Le Wumpus t'as mangé.\n");
         p->score -= 50;
         p->deadByWumpus = true;
+		p->game->nbPlayerActive--;
         break;
 
     case 'T' :
@@ -619,11 +646,13 @@ void checkPosition(player *p)
         printf("Fait attention ou tu marches, t'as glissé dans un trou!\n");
         p->score -= 30;
         p->fallInHole = true;
+		p->game->nbPlayerActive--;
         break ;
 
     default :
         ;
     }
+	return p->game->nbPlayerActive;
 }
 
 void * jeuNjoueur (void * arguments)

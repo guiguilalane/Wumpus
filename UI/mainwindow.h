@@ -23,6 +23,7 @@ public:
     ~MainWindow();
 
     void loadCharacter(fromServer *s);
+    void enableButtonPlay();
 
 private slots:
     void acceptPseudo(QString *pseudo);

@@ -77,6 +77,7 @@ struct jeu
     stairs *etage; /**< The stair where players move */
     player *joueur; /**<  The first created player*/
     int nbPlayer; /**< The number of player in the game */
+	int nbPlayerActive; /**< The number of player no dead or not fall in the game */
     int numberOfStairs; /**< The number of stairs down */
 
     struct jeu *nextGame; /**< The next game */

@@ -225,28 +225,34 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     ui->score->setText(QString::number(s->score));
     if (d->type == 2)
     {
-        msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
+        if (strcmp(d->structure,(char*)"down")==0){
+            msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
+        }
+        else if(strcmp(d->structure,(char*)"allDead") == 0){
+            msg.setText("<center> Tout le monde est mort ou est tombé dans un trou. <br/> Un changement d'étage va avoir lieu </center>");
+        }
         msg.exec();
 
         clearScene();
         initialisation(s);
-
     }
     else
     {
         loadCharacter(s);
         if (s->fallInHole && !popupH_){
-            msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points </center>");
+            msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points ! <br/> Attender qu'un changement d'étage soit déclenché ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
             msg.exec();
+            enableButtonPlay();
             popupH_ = true;
             // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->wumpusFind && !popupWF_){
-            msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! </center>");
+            msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! <br/> Attender qu'un changement d'étage soit déclenché !  </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
             msg.exec();
             popupWF_ = true;
+            enableButtonPlay();
             // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->tresureFind && !popupTF_){
@@ -277,6 +283,14 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
 
 // TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué
 
+void MainWindow::enableButtonPlay()
+{
+    ui->turnL->setEnabled(false);
+    ui->turnR->setEnabled(false);
+    ui->move->setEnabled(false);
+    ui->shoot->setEnabled(false);
+    ui->down->setEnabled(false);
+}
 
 void MainWindow::on_option_clicked()
 {
