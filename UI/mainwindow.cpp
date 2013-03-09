@@ -245,7 +245,6 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
             msg.exec();
             popupH_ = true;
-            // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->wumpusFind && !popupWF_){
             enableButtonPlay();
@@ -253,7 +252,6 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
             msg.exec();
             popupWF_ = true;
-            // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->tresureFind && !popupTF_){
             msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
