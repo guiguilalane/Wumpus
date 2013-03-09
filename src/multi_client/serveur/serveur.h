@@ -75,4 +75,4 @@ bool sensor(player* p, stairs* s, char o);
 int checkPosition(player* p);
 void initMovingSending(toClient* c, player* p, sendToClient* stc);
 void initDownSending(sendToClient* stc);
-
+void initStairSending(char* why, sendToClient* stc);
