@@ -121,7 +121,10 @@ jeu *removePlayer(player *p)
         }
     }
     j->nbPlayer--;
-	j->nbPlayerActive--;
+	if (!p->deadByWumpus && !p->fallInHole)
+	{
+		j->nbPlayerActive--;
+	}
     free(p);
 
     return j;
