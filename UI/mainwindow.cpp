@@ -226,6 +226,8 @@ void MainWindow::on_quit_clicked()
 
 void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
 {
+    std::cout << "PopUphole: " << popupH_ << std::endl;
+    std::cout << "PopWumpus: " << popupWF_ << std::endl;
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");
@@ -249,17 +251,17 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
         loadCharacter(s);
         if (s->fallInHole && !popupH_){
             enableButtonPlay();
+            popupH_ = true;
             msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points ! <br/> Attender qu'un changement d'étage soit déclenché ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
             msg.exec();
-            popupH_ = true;
         }
         if (s->wumpusFind && !popupWF_){
             enableButtonPlay();
+            popupWF_ = true;
             msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! <br/> Attender qu'un changement d'étage soit déclenché !  </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
             msg.exec();
-            popupWF_ = true;
         }
         if (s->tresureFind && !popupTF_){
             msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
@@ -269,7 +271,6 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
             treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
             treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
             scene_->addItem(treasureItem_);
-
             popupTF_ = true;
         }
         if (s->wumpusKill && !popupWK_){
