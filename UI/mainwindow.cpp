@@ -240,19 +240,19 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     {
         loadCharacter(s);
         if (s->fallInHole && !popupH_){
+            enableButtonPlay();
             msg.setText("<center> Vous venez de tomber dans le trou ! Vous perdez 30 points ! <br/> Attender qu'un changement d'étage soit déclenché ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/hole.jpg").scaled(135,186));
             msg.exec();
-            enableButtonPlay();
             popupH_ = true;
             // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->wumpusFind && !popupWF_){
+            enableButtonPlay();
             msg.setText("<center> Vous venez de rencontrer le Wumpus ! <br/> Vous en êtes pas sortis vivant et vous perdez 50 points ! <br/> Attender qu'un changement d'étage soit déclenché !  </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(135,186));
             msg.exec();
             popupWF_ = true;
-            enableButtonPlay();
             // TODO Désactiver les boutons et attendre --> si on est pas tout seul
         }
         if (s->tresureFind && !popupTF_){
