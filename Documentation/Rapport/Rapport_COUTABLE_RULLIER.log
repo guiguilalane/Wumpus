@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  8 MAR 2013 11:30
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  9 MAR 2013 18:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -629,7 +629,7 @@ Package pdftricks Warning: ****************************************
 (pdftricks)                [psTricks support in PDF (CVR, ACL)]
 (pdftricks)                ****************************************.
 
-runsystem(touch /tmp/w18-test-201338690)...disabled (restricted).
+runsystem(touch /tmp/w18-test-2013391105)...disabled (restricted).
 
 
 Package pdftricks Warning: ****************************************
@@ -1401,57 +1401,90 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.144 \newpage
-               [1] [2] [3]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 205.
-
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-) [4] [5] [6]
-[7] [8] [9] 
+               [1] [2] [3] [4] [5] [6] 
 AED: lastpage setting LastPage
-[10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 384.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 384.
+[7]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 203.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 203.
  (./Rapport_COUTABLE_RULLIER.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 384.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 384.
-Package rerunfilecheck Info: File `Rapport_COUTABLE_RULLIER.out' has not change
-d.
-(rerunfilecheck)             Checksum: 6B6579B450EB1959EB4E2699B8CF0167;1311.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 203.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 203.
 
+
+Package rerunfilecheck Warning: File `Rapport_COUTABLE_RULLIER.out' has changed
+.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Rapport_COUTABLE_RULLIER.out':
+(rerunfilecheck)             Before: 6B6579B450EB1959EB4E2699B8CF0167;1311
+(rerunfilecheck)             After:  FEAAA411D5320A9E8B4857A5F1A14A3B;376.
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 384.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 203.
  ) 
 Here is how much of TeX's memory you used:
- 24411 strings out of 493488
- 425215 string characters out of 3141326
- 592449 words of memory out of 3000000
- 27169 multiletter control sequences out of 15000+200000
- 14478 words of font info for 35 fonts, out of 3000000 for 9000
+ 24356 strings out of 493488
+ 424268 string characters out of 3141326
+ 586449 words of memory out of 3000000
+ 27145 multiletter control sequences out of 15000+200000
+ 13777 words of font info for 34 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 61i,11n,96p,950b,523s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{page.13} has been referenced but does not exist, 
+ 61i,11n,96p,950b,461s stack positions out of 5000i,500n,10000p,200000b,50000s
+pdfTeX warning (dest): name{page.10} has been referenced but does not exist, 
 replaced by a fixed one
+
+pdfTeX warning (dest): name{section.7} has been referenced but does not exist, 
+replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.4.3} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.4.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.3.3.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.3.3.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.3} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.3.2.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.3.2.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.1} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.1} has been referenced but does not ex
+ist, replaced by a fixed one
 
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</
 usr/local/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbi1000.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbi1440.pfb></usr/
-local/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/lo
-cal/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/loca
-l/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/
-texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/te
-xlive/2012/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texl
-ive/2012/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texliv
-e/2012/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/
-2012/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/20
-12/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on Rapport_COUTABLE_RULLIER.pdf (11 pages, 393579 bytes).
+r/local/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/
+local/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/lo
+cal/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/loca
+l/texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/
+texlive/2012/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/te
+xlive/2012/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texl
+ive/2012/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texliv
+e/2012/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb>
+Output written on Rapport_COUTABLE_RULLIER.pdf (8 pages, 307625 bytes).
 PDF statistics:
- 253 PDF objects out of 1000 (max. 8388607)
- 222 compressed objects within 3 object streams
- 56 named destinations out of 1000 (max. 500000)
+ 197 PDF objects out of 1000 (max. 8388607)
+ 172 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
  175 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -179,7 +179,11 @@ présentera  ces étapes  les unes après  les autres.
 Pour qu'un client puisque communiquer avec le serveur, il doit tout d'abord commencer par établir une connexion.
 
 \subsection{Etablir une connexion}
-Afin que cette connexion soit établie, le client doit fournir les bons paramètres. Soit l'adresse de la machine hôte sur laquelle le serveur est lancé ainsi que le port.
+Afin que cette connexion soit établie, le client doit fournir les bons paramètres. Soit l'adresse de la machine hôte sur laquelle le serveur est lancé ainsi que le port. Lorsque la connexion est établie, un thread est lancé. Celui-ci est en fait un listener qui va écouter et recevoir tout ce que le serveur va envoyer au client.
+On demande au joueur d'entrer un pseudo qui sera envoyé dès que la connexion est établie.
+
+Le client va ensuite pouvoir jouer au Wumpus. A chaque action qu'il fera une commande sera envoyée au serveur sous forme de char*. Le serveur va traiter cette commande et envoyer une réponse au client si nécessaire !
+
 
 
 %TODO Annexe: IHM mettre en annexe ainsi que le manuel d'utilisateur --> Règles du jeu
