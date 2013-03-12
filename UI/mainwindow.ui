@@ -21,7 +21,7 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="game" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,0,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -65,7 +65,7 @@
           <item row="0" column="1">
            <widget class="QLabel" name="scoreLabel">
             <property name="text">
-             <string>Scores</string>
+             <string>Mon score</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -121,19 +121,27 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QWidget" name="widgetScore" native="true">
-            <layout class="QGridLayout" name="gridLayout">
-             <item row="0" column="0">
-              <widget class="QLabel" name="score">
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <widget class="QLabel" name="score">
+            <property name="text">
+             <string>0</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widgetScore" native="true">
+         <layout class="QGridLayout" name="gridLayout"/>
         </widget>
        </item>
       </layout>

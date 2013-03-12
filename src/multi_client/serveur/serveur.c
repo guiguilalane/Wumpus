@@ -27,6 +27,7 @@ typedef struct
 
 typedef struct
 {
+	int nbScore;
 	scoreP scores[TAILLEMAX];
 } scoreToClient;
 
@@ -218,17 +219,16 @@ void shot(player* p, int sock)
         p->score += 20;
         p->shotTheWumpus = true;
         sendToClient stcMove;
-        sendToClient killwumpus;
-        scoreToClient sctc;
-        initScoreSending("killwumpus", &sctc, p, &killwumpus);
+//        sendToClient killwumpus;
+//        scoreToClient sctc;
+//        initScoreSending("killwumpus", &sctc, p, &killwumpus);
         player * j = p->game->joueur;
         while (j != NULL)
 		{
-			if(j->sock != sock)
-			{
-				printf("on passe!!\n");
-				write(j->sock, &killwumpus, sizeof(sendToClient));
-			}
+//			if(j->sock != sock)
+//			{
+//				write(j->sock, &killwumpus, sizeof(sendToClient));
+//			}
 			
 			toClient tc;
 			sleep(1);
@@ -244,25 +244,35 @@ void shot(player* p, int sock)
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
 {
+	    // Récupération de la socket des autres joueurs et envoye de l'information
+    resetGamePlayer(p->game);
+    player * j = p->game->joueur;
+	while (j != NULL)
+	{
+		if(j->sock == sock)
+        {
+            p->score += 100;
+        }
+		j = j->nextPlayer;
+	}
 	scoreToClient score;
     sendToClient stcDown;
     initScoreSending("down", &score, p, &stcDown);
     sendToClient stcMove;
-    // Récupération de la socket des autres joueurs et envoye de l'information
-    resetGamePlayer(p->game);
-    player * j = p->game->joueur;
-    printf("Socket joueur %d\n", sock);
+	j = p->game->joueur;
     while (j != NULL)
     {
         printf("Socket autre joueur %d\n", j->sock);
-        if(j->sock == sock)
+        if(j->sock != sock)
         {
-            p->score += 100;
+			initScoreSending("down", &score, p, &stcDown);
+			write(j->sock, &stcDown, sizeof(sendToClient));
         }
-        else
-        {
-            write(j->sock, &stcDown, sizeof(sendToClient));
-        }
+		else
+		{
+			initScoreSending("my", &score, p, &stcDown);
+			write(j->sock, &stcDown, sizeof(sendToClient));
+		}
         toClient tc;
         usleep(1000);
         initMovingSending(&tc, j, &stcMove);
@@ -539,15 +549,13 @@ void initScoreSending(char* why, scoreToClient *sctc, player *p, sendToClient* s
 	int i = 0;
 	while(j != NULL)
 	{
-		if(j != p)
-		{
 			strcpy(s.playerName, j->pseudo);
 			s.score = j->score;
 			sctc->scores[i] = s;
 			++i;
-		}
 		j = j->nextPlayer;
 	}
+	sctc->nbScore = i;
 	stc->type = STRUCTDOWN;
 	strcpy(stc->name, why);
 	memcpy(stc->structure, sctc, TAILLEMAX);

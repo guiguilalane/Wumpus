@@ -114,7 +114,9 @@ void dataProcessing(fromServer* server, scoreToClient *score, dispatchStruct* di
     case STRUCTDOWN:
         tmpS = ((scoreToClient*) dispStruc->structure);
         memcpy(score->scores, tmpS->scores, TAILLEMAX);
+        score->nbScore = tmpS->nbScore;
         printf("%s \t %d\n", score->scores[0].pseudoP, score->scores[0].score);
+        printf("%d\n", tmpS->nbScore);
         break;
 
     default:
