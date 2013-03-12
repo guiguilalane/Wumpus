@@ -183,25 +183,26 @@ void shot(player* p, int sock)
 
     while(i < STAIRSIZE && i >= 0 && !find)
     {
+    	printf("fleche position (%d, %d)\n", y,x);
         char c = p->game->etage->map[y][x];
         if(c != 'W')
         {
             switch(p->direction)
             {
             case NORTH :
-                --y;
+                i = --y;
                 break;
 
             case EAST :
-                ++x;
+                i = ++x;
                 break;
 
             case SOUTH :
-                ++y;
+                i = ++y;
                 break;
 
             case WEST :
-                --x;
+                i = --x;
                 break;
             }
         }
@@ -209,7 +210,7 @@ void shot(player* p, int sock)
         {
             find = true;
         }
-        ++i;
+/*        ++i;*/
     }
     if(find)
     {
@@ -225,12 +226,13 @@ void shot(player* p, int sock)
 		{
 			if(j->sock != sock)
 			{
+				printf("on passe!!\n");
 				write(j->sock, &killwumpus, sizeof(sendToClient));
 			}
 			
 			toClient tc;
+			sleep(1);
 			initMovingSending(&tc, j, &stcMove);
-			usleep(1000);
 			write(j->sock, &stcMove, sizeof(sendToClient));
 		    j = j->nextPlayer;
 		}
