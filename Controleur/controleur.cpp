@@ -74,8 +74,8 @@ void * Controleur::ecouter(void * arg)
 {
     Controleur * cont = ( Controleur * ) arg;
     while(true){
-        receptionInfoClient(cont->socket_descriptor, &(cont->server), &(cont->dispStruc));
-        emit cont->infoRecu(&(cont->server), &(cont->dispStruc));
+        receptionInfoClient(cont->socket_descriptor, &(cont->server), &(cont->scores), &(cont->dispStruc));
+        emit cont->infoRecu(&(cont->server), &(cont->scores), &(cont->dispStruc));
     }
     return NULL;
 }

@@ -2,6 +2,8 @@
 
 #define h_addr h_addr_list[0] //TODO pour eviter : "erreur: ‘hostent’ has no member named ‘h_addr’"
 
+
+
 int vardebug;
 
 //typedef struct
@@ -15,6 +17,20 @@ typedef struct
     player* p;
 //    int gameNumber;
 } arg_struct;
+
+//structure indiquant le score d'un joueur
+typedef struct
+{
+	char playerName[TAILLE_MAX_NOM];
+	int score;
+} scoreP;
+
+typedef struct
+{
+	scoreP scores[TAILLEMAX];
+} scoreToClient;
+
+void initScoreSending(char* why, scoreToClient *sctc, player *player, sendToClient* stc);
 
 //typedef struct{
 
@@ -91,7 +107,8 @@ void move(player* p, int sock)
 		sleep(2);
 		printf("Tous les joueurs sont morts\n");
 		sendToClient stcAllDead;
-		initStairSending("allDead",&stcAllDead);
+		scoreToClient score;
+		initScoreSending("allDead",&score, p, &stcAllDead);
 		sendToClient stcMove;
 		// Récupération de la socket des autres joueurs et envoye de l'information
 		resetGamePlayer(p->game);
@@ -199,10 +216,24 @@ void shot(player* p, int sock)
         p->game->etage->map[y][x] = ' ';
         p->score += 20;
         p->shotTheWumpus = true;
-        toClient tc;
-        sendToClient stc;
-        initMovingSending(&tc, p, &stc);
-        write(sock, &stc, sizeof(sendToClient));
+        sendToClient stcMove;
+        sendToClient killwumpus;
+        scoreToClient sctc;
+        initScoreSending("killwumpus", &sctc, p, &killwumpus);
+        player * j = p->game->joueur;
+        while (j != NULL)
+		{
+			if(j->sock != sock)
+			{
+				write(j->sock, &killwumpus, sizeof(sendToClient));
+			}
+			
+			toClient tc;
+			initMovingSending(&tc, j, &stcMove);
+			usleep(1000);
+			write(j->sock, &stcMove, sizeof(sendToClient));
+		    j = j->nextPlayer;
+		}
         printf("bien joué vous avez tué le wumpus!!\n");
     }
     printf("Le personnage tire une flèche.\n");
@@ -211,8 +242,9 @@ void shot(player* p, int sock)
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
 {
+	scoreToClient score;
     sendToClient stcDown;
-    initStairSending("down",&stcDown);
+    initScoreSending("down", &score, p, &stcDown);
     sendToClient stcMove;
     // Récupération de la socket des autres joueurs et envoye de l'information
     resetGamePlayer(p->game);
@@ -498,6 +530,26 @@ void initMovingSending(toClient* c, player* p, sendToClient* stc)
     *((toClient*)&stc->structure) = *c;
 }
 
+void initScoreSending(char* why, scoreToClient *sctc, player *p, sendToClient* stc)
+{
+	scoreP s;
+	player *j = p->game->joueur;
+	int i = 0;
+	while(j != NULL)
+	{
+		if(j != p)
+		{
+			strcpy(s.playerName, j->pseudo);
+			s.score = j->score;
+			sctc->scores[i] = s;
+			++i;
+		}
+		j = j->nextPlayer;
+	}
+	stc->type = STRUCTDOWN;
+	strcpy(stc->name, why);
+	memcpy(stc->structure, sctc, TAILLEMAX);
+}
 void initMessageSending(char* m, sendToClient* stc)
 {
     stc->type = STRUCTMESSAGE;
@@ -507,11 +559,11 @@ void initMessageSending(char* m, sendToClient* stc)
 //    stc->structure = '\0';
 }
 
-void initStairSending(char* why, sendToClient* stc)
-{
-    stc->type = STRUCTDOWN;
-	strcpy(stc->structure, why);
-}
+/*void initStairSending(char* why, sendToClient* stc)*/
+/*{*/
+/*    stc->type = STRUCTDOWN;*/
+/*	strcpy(stc->structure, why);*/
+/*}*/
 
 // Fonction temporaire
 void getDirection(int d, char* direction)
@@ -678,17 +730,13 @@ void * jeuNjoueur (void * arguments)
     printf("wumpus sensor : %d\n", tc.besideWumpus);
     printf("tresure sensor : %d\n", tc.besideTresure);
     printf("hole sensor : %d\n", tc.besideHole);
+    //TODO : voir si on peut ne pas faire de write dans le main et envoyer se résultat si
     sleep(1);
 //    write(sock, &stc, sizeof(sendToClient));
     write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
 
     //NOTE: pour tester l'envoi de structure de structure
 //    sendToClient test;
-
-    //TODO: valeur à changer quand le joueur trouve le trésor
-//    int tresurPos[2];
-//    tresurPos[0] = -1;//tresurePosX
-//    tresurPos[1] = -1;//tresurePosY
 
     bool sortie = false;
 

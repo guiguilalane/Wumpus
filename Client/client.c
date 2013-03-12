@@ -83,9 +83,10 @@ void readData(int socket_descriptor, dispatchStruct* structure)
         *structure = *((dispatchStruct*)&buffer);
 }
 
-void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
+void dataProcessing(fromServer* server, scoreToClient *score, dispatchStruct* dispStruc)
 {
     fromServer* tmp;
+    scoreToClient* tmpS;
     switch(dispStruc->type)
     {
     case STRUCTMESSAGE:
@@ -111,7 +112,9 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
         break;
 
     case STRUCTDOWN:
-        printf("%s\n", dispStruc->structure);
+        tmpS = ((scoreToClient*) dispStruc->structure);
+        memcpy(score->scores, tmpS->scores, TAILLEMAX);
+        printf("%s \t %d\n", score->scores[0].pseudoP, score->scores[0].score);
         break;
 
     default:
@@ -119,11 +122,11 @@ void dataProcessing(fromServer* server, dispatchStruct* dispStruc)
     }
 }
 
-void receptionInfoClient(int socket_descriptor, fromServer * server, dispatchStruct * dispStruc)
+void receptionInfoClient(int socket_descriptor, fromServer * server, scoreToClient *score, dispatchStruct * dispStruc)
 {
     /* Lecture des informations du jeu en provenance du serveur */
     readData(socket_descriptor, dispStruc);
-    dataProcessing(server, dispStruc);
+    dataProcessing(server, score, dispStruc);
     printf("Fin de la reception.\n");
 }
 

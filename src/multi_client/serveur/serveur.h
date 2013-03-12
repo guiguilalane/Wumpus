@@ -16,7 +16,7 @@
 #define WEST 3
 
 //taille maximum d'une structure d'envoi
-#define TAILLEMAX 999
+#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME - 1)
 
 //définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
@@ -65,6 +65,7 @@ typedef struct
 typedef struct
 {
     int type;
+    char name[15];
     char structure[TAILLEMAX];
 } sendToClient;
 

@@ -32,9 +32,10 @@ public:
     QString getPort();
 
     fromServer server;
+    scoreToClient scores;
 
 signals:
-    void infoRecu(fromServer * s, dispatchStruct * d);
+    void infoRecu(fromServer * s, scoreToClient* scores, dispatchStruct * d);
     void initMap(fromServer * s);
     void clearMap();
 

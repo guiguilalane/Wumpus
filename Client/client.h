@@ -12,7 +12,10 @@
 
 #include <unistd.h>
 
-#define TAILLEMAX 999
+#define NBPLAYERSPERGAME 3
+#define TAILLE_MAX_NOM 256
+
+#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME - 1)
 
 //Définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
@@ -27,6 +30,7 @@ typedef struct servent servent;
 typedef struct
 {
     int type;
+    char name[15];
     char structure[TAILLEMAX];
 } dispatchStruct;
 
@@ -50,6 +54,17 @@ typedef struct
     bool besideTresure; //Flag indiquant que le joueur est à côté du trésor
 } fromServer;
 
+typedef struct
+{
+    char pseudoP[TAILLE_MAX_NOM];
+    int score;
+} scoreP;
+
+typedef struct
+{
+    scoreP scores[TAILLEMAX];
+} scoreToClient;
+
 void initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale); // Permet l'intitialisation du host
 
 void attribuerPort(sockaddr_in * adresse_locale, int port); // Permet d'attribuer le port
@@ -70,9 +85,9 @@ void envoiCommandClient(int socket_descriptor, char *command); // Permet d'envoy
 
 void readData(int socket_descriptor, dispatchStruct* structure);
 
-void dataProcessing(fromServer* server, dispatchStruct* dispStruc);
+void dataProcessing(fromServer* server, scoreToClient *score, dispatchStruct* dispStruc);
 
-void receptionInfoClient(int socket_descriptor, fromServer *server, dispatchStruct *dispStruc);
+void receptionInfoClient(int socket_descriptor, fromServer *server, scoreToClient *score, dispatchStruct *dispStruc);
 
 int connexionClient(int *socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port); // Permet d'établir la connexion avec l'initialisation au serveur
 

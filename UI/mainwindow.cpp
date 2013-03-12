@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     cont_ = new Controleur();
-    connect(cont_,SIGNAL(infoRecu(fromServer *, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, dispatchStruct *)));
+    connect(cont_,SIGNAL(infoRecu(fromServer *, scoreToClient*, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, scoreToClient*, dispatchStruct *)));
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
     connect(cont_,SIGNAL(clearMap()),this,SLOT(clearScene()));
     connect(qApp,SIGNAL(lastWindowClosed()),this,SLOT(quitWindow()));
@@ -190,6 +190,7 @@ void MainWindow::clearScene()
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
+    std::cout << treasureDisplay_ << std::endl;
     if(treasureDisplay_){
         scene_->removeItem(treasureItem_);
         treasureDisplay_ = false;
@@ -224,19 +225,20 @@ void MainWindow::on_quit_clicked()
     ui->widgetScore->setVisible(false);
 }
 
-void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
+void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruct *d)
 {
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
+    msg.setParent(this);
     ui->score->setText(QString::number(s->score));
     if (d->type == 2)
     {
-        if (strcmp(d->structure,(char*)"down")==0){
+        if (strcmp(d->name,"down")==0){
             msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
         }
-        else if(strcmp(d->structure,(char*)"allDead") == 0){
+        else if(strcmp(d->name,"allDead") == 0){
             msg.setText("<center> Tout le monde est mort ou est tombé dans un trou. <br/> Un changement d'étage va avoir lieu </center>");
         }
         msg.exec();
@@ -262,20 +264,20 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
             msg.exec();
         }
         if (s->tresureFind && !popupTF_){
+            treasureDisplay_ = true;
+            popupTF_ = true;
             msg.setText("<center> Vous venez de trouver le trésor ! <br/> Gagnez vos 100 points en accédant le premier à l'echelle ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/treasure.png").scaled(143,130));
             msg.exec();
-            treasureDisplay_ = true;
             treasureItem_->setPixmap(QPixmap(":/Pictures/Pictures/treasureCarte.png").scaled(32,32));
             treasureItem_->setPos(s->tresurePosX*33+1,s->tresurePosY*33+1);
             scene_->addItem(treasureItem_);
-            popupTF_ = true;
         }
         if (s->wumpusKill && !popupWK_){
+            popupWK_ = true;
             msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
-            msg.exec();
-            popupWK_ = true;
+            msg.exec(); 
         }
         // On affiche les senseurs sur l'IHM
         // TODO Récupérer les bonnes valeurs
