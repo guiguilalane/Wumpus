@@ -286,7 +286,7 @@ void MainWindow::updateInfo(fromServer * s, dispatchStruct *d)
     // TODO Afficher les scores de tous les joueurs + PopUp lors du quit ?
 }
 
-// TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué
+// TODO Faire une fonction d'initialisation des sensor sans que la 1ère commande soit effectué (à priori, effectué)
 
 void MainWindow::enableButtonPlay()
 {

@@ -670,6 +670,17 @@ void * jeuNjoueur (void * arguments)
 
     player* p = args->p;
     stairs* s = p->game->etage;
+    
+    checkPosition(p);
+    toClient tc;
+    sendToClient stc;
+    initMovingSending(&tc, p, &stc);
+    printf("wumpus sensor : %d\n", tc.besideWumpus);
+    printf("tresure sensor : %d\n", tc.besideTresure);
+    printf("hole sensor : %d\n", tc.besideHole);
+    sleep(1);
+//    write(sock, &stc, sizeof(sendToClient));
+    write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
 
     //NOTE: pour tester l'envoi de structure de structure
 //    sendToClient test;
