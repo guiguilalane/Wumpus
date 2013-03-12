@@ -16,7 +16,7 @@
 #define WEST 3
 
 //taille maximum d'une structure d'envoi
-#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME - 1)
+#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME)+sizeof(int)
 
 //définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0

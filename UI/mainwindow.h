@@ -52,6 +52,8 @@ private slots:
 
     void clearScene();
 
+    void displayScores(scoreToClient * scores);
+
     void quitWindow();
 
 private:

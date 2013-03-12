@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *, scoreToClient*, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, scoreToClient*, dispatchStruct *)));
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
+    connect(cont_,SIGNAL(afficheScore(scoreToClient*)),this,SLOT(displayScores(scoreToClient*)));
     connect(cont_,SIGNAL(clearMap()),this,SLOT(clearScene()));
     connect(qApp,SIGNAL(lastWindowClosed()),this,SLOT(quitWindow()));
 
@@ -197,6 +198,22 @@ void MainWindow::clearScene()
     }
 }
 
+void MainWindow::displayScores(scoreToClient *scores)
+{
+    QMessageBox msg;
+    msg.setWindowTitle("Information");
+    msg.setStandardButtons(QMessageBox::Ok);
+    // On parcours l'ensemble des scores des autres joueurs
+    QString sc("<center> Il est temps de faire un point sur les scores: <br/>");
+    for (int i = 0; i<scores->nbScore; ++i)
+    {
+        sc += QString(scores->scores[i].pseudoP) + QString(": ") + QString::number(scores->scores[i].score) + QString("<br/>");
+    }
+    sc += QString("</center>");
+    msg.setText(sc);
+    msg.exec();
+}
+
 void MainWindow::quitWindow()
 {
     if (cont_->getConnect_()){
@@ -231,20 +248,42 @@ void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruc
     QMessageBox msg;
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
-    msg.setParent(this);
     ui->score->setText(QString::number(s->score));
     if (d->type == 2)
     {
         if (strcmp(d->name,"down")==0){
-            msg.setText("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur </center>");
+            // On parcours l'ensemble des scores des autres joueurs
+            QString sc("<center> Un autre joueur a trouvé le trésor et à changer d'étage. <br/> Vous allez vous aussi passer à l'étage inférieur <br/> Il est temps de faire un point sur les scores: <br/>");
+            std::cout << "Taille nb joueur " << scores->nbScore << std::endl;
+            for (int i = 0; i<scores->nbScore; ++i)
+            {
+                sc += QString(scores->scores[i].pseudoP) + QString(": ") + QString::number(scores->scores[i].score) + QString("<br/>");
+            }
+            sc += QString("</center>");
+            msg.setText(sc);
+            msg.exec();
+            clearScene();
+            initialisation(s);
         }
-        else if(strcmp(d->name,"allDead") == 0){
+        else if(strcmp(d->name,"allDead") == 0)
+        {
             msg.setText("<center> Tout le monde est mort ou est tombé dans un trou. <br/> Un changement d'étage va avoir lieu </center>");
+            msg.exec();
+            clearScene();
+            initialisation(s);
         }
-        msg.exec();
-
-        clearScene();
-        initialisation(s);
+        else if (strcmp(d->name,"my") == 0)
+        {
+            // On parcours l'ensemble des scores des autres joueurs
+            QString sc("<center> Il est temps de faire un point sur les scores: <br/>");
+            for (int i = 0; i<scores->nbScore; ++i)
+            {
+                sc += QString(scores->scores[i].pseudoP) + QString(": ") + QString::number(scores->scores[i].score) + QString("<br/>");
+            }
+            sc += QString("</center>");
+            msg.setText(sc);
+            msg.exec();
+        }
     }
     else
     {
@@ -277,7 +316,7 @@ void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruc
             popupWK_ = true;
             msg.setText("<center> Vous venez de tuer le Wumpus ! <br/> Félicitation, vous gagnez 20 points ! </center>");
             msg.setIconPixmap(QPixmap(":/Pictures/Pictures/wumpusColor.png").scaled(143,130));
-            msg.exec(); 
+            msg.exec();
         }
         // On affiche les senseurs sur l'IHM
         // TODO Récupérer les bonnes valeurs

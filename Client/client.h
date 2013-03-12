@@ -15,7 +15,7 @@
 #define NBPLAYERSPERGAME 3
 #define TAILLE_MAX_NOM 256
 
-#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME - 1)
+#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME)+sizeof(int)
 
 //Définition des types de structures qui peuvent être envoyées
 #define STRUCTMESSAGE 0
@@ -62,6 +62,7 @@ typedef struct
 
 typedef struct
 {
+    int nbScore;
     scoreP scores[TAILLEMAX];
 } scoreToClient;
 
