@@ -38,7 +38,6 @@ signals:
     void infoRecu(fromServer * s, scoreToClient* scores, dispatchStruct * d);
     void initMap(fromServer * s);
     void clearMap();
-    void afficheScore(scoreToClient * scores);
 
 private:
 

@@ -30,7 +30,6 @@ void Controleur::envoiCommand(char *command)
     }
     else if (command == (char*)"down")
     {
-//        emit afficheScore(&scores);
         emit clearMap();
         emit initMap(&server);
     }

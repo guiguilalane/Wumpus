@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     cont_ = new Controleur();
     connect(cont_,SIGNAL(infoRecu(fromServer *, scoreToClient*, dispatchStruct *)),this,SLOT(updateInfo(fromServer *, scoreToClient*, dispatchStruct *)));
     connect(cont_,SIGNAL(initMap(fromServer *)),this,SLOT(initialisation(fromServer*)));
-    connect(cont_,SIGNAL(afficheScore(scoreToClient*)),this,SLOT(displayScores(scoreToClient*)));
     connect(cont_,SIGNAL(clearMap()),this,SLOT(clearScene()));
     connect(qApp,SIGNAL(lastWindowClosed()),this,SLOT(quitWindow()));
 
@@ -196,22 +195,6 @@ void MainWindow::clearScene()
         scene_->removeItem(treasureItem_);
         treasureDisplay_ = false;
     }
-}
-
-void MainWindow::displayScores(scoreToClient *scores)
-{
-    QMessageBox msg;
-    msg.setWindowTitle("Information");
-    msg.setStandardButtons(QMessageBox::Ok);
-    // On parcours l'ensemble des scores des autres joueurs
-    QString sc("<center> Il est temps de faire un point sur les scores: <br/>");
-    for (int i = 0; i<scores->nbScore; ++i)
-    {
-        sc += QString(scores->scores[i].pseudoP) + QString(": ") + QString::number(scores->scores[i].score) + QString("<br/>");
-    }
-    sc += QString("</center>");
-    msg.setText(sc);
-    msg.exec();
 }
 
 void MainWindow::quitWindow()
