@@ -268,7 +268,7 @@ void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruc
             msg.exec();
         }
     }
-    else
+    else if (!popupWF_)
     {
         loadCharacter(s);
         if (s->fallInHole && !popupH_){
