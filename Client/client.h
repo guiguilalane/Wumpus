@@ -66,7 +66,7 @@ typedef struct
     scoreP scores[TAILLEMAX];
 } scoreToClient;
 
-void initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale); // Permet l'intitialisation du host
+int initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale); // Permet l'intitialisation du host
 
 void attribuerPort(sockaddr_in * adresse_locale, int port); // Permet d'attribuer le port
 

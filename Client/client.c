@@ -1,15 +1,18 @@
 #include "client.h"
 
-void initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale)
+int initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale)
 {
+    int res = 0;
     /* Connexion au serveur */
     if ((ptr_host = gethostbyname(host)) == NULL){
-        perror("Erreur : impossible de trouver le serveur à partir de son adresse.");
-        exit(1);
+        res = -1;
     }
-    /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
-    bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale->sin_addr, ptr_host->h_length);
-    adresse_locale->sin_family = AF_INET; /* ou ptr_host->h_addrtype */
+    else{
+        /* Copie caractère par caractère des infos de ptr_host vers adresse_locale */
+        bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale->sin_addr, ptr_host->h_length);
+        adresse_locale->sin_family = AF_INET; /* ou ptr_host->h_addrtype */
+    }
+    return res;
 }
 
 void attribuerPort(sockaddr_in * adresse_locale, int port)
@@ -134,10 +137,19 @@ void receptionInfoClient(int socket_descriptor, fromServer * server, scoreToClie
 
 int connexionClient(int * socket_descriptor, hostent * ptr_host, char * host, sockaddr_in adresse_locale, int port)
 {
-    initialisationHost(ptr_host, host, &adresse_locale);
+    int add;
+    int con;
+    add = initialisationHost(ptr_host, host, &adresse_locale);
     attribuerPort(&adresse_locale, port);
     *socket_descriptor = createSocket();
-    return connectionServeur(*socket_descriptor, adresse_locale);
+    con = connectionServeur(*socket_descriptor, adresse_locale);
+    if (con == -1 || add == -1)
+    {
+        return -1;
+    }
+    else {
+        return 0;
+    }
     printf("Connexion établie avec le serveur \n");
     printf("Numéro de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
 }
