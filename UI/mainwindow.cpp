@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->widgetInd->setVisible(false);
     ui->widgetScore->setVisible(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -48,25 +49,25 @@ void MainWindow::loadCharacter(fromServer * s)
     // On change l'image du personnage selon la direction dans laquelle il regarde
     bool boutonMoveActif = true;
     QString dir = ":/Pictures/Pictures/derriere.png";
-    if (s->dir == 0){
+    if (s->dir == NORTH){
         dir = ":/Pictures/Pictures/derriere.png";
         if (s->playerPosY == 0){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 2){
+    else if (s->dir == SOUTH){
         dir = ":/Pictures/Pictures/face.png";
         if (s->playerPosY == 4){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 1){
+    else if (s->dir == EAST){
         dir = ":/Pictures/Pictures/right.png";
         if (s->playerPosX == 4){
             boutonMoveActif = false;
         }
     }
-    else if (s->dir == 3){
+    else if (s->dir == WEST){
         dir = ":/Pictures/Pictures/left.png";
         if (s->playerPosX == 0){
             boutonMoveActif = false;
@@ -190,7 +191,7 @@ void MainWindow::clearScene()
     // On vide la scene
     scene_->removeItem(mapItem_);
     scene_->removeItem(characterItem_);
-    std::cout << treasureDisplay_ << std::endl;
+    std::cout << "trésor affiché?" << treasureDisplay_ << std::endl;
     if(treasureDisplay_){
         scene_->removeItem(treasureItem_);
         treasureDisplay_ = false;
@@ -232,7 +233,7 @@ void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruc
     msg.setWindowTitle("Information");
     msg.setStandardButtons(QMessageBox::Ok);
     ui->score->setText(QString::number(s->score));
-    if (d->type == 2)
+    if (d->type == STRUCTDOWN)
     {
         if (strcmp(d->name,"down")==0){
             // On parcours l'ensemble des scores des autres joueurs
@@ -266,6 +267,8 @@ void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruc
             sc += QString("</center>");
             msg.setText(sc);
             msg.exec();
+            clearScene();
+            initialisation(s);
         }
     }
     else if (!popupWF_)
