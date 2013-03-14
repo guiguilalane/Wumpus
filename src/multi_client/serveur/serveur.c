@@ -128,7 +128,7 @@ void move(player* p, int sock)
     write(sock, &stc, sizeof(sendToClient));
     aquitementWrite(sock);
 
-    printf("Le nobre de joeur actif: %d\n", nbPlayerActive);
+    printf("Le nombre de joueur actif: %d\n", nbPlayerActive);
     if (nbPlayerActive == 0)
     {
 /*		sleep(2);*/
@@ -140,20 +140,33 @@ void move(player* p, int sock)
         // Récupération de la socket des autres joueurs et envoye de l'information
         resetGamePlayer(p->game);
         player * j = p->game->joueur;
+        createNewStair(p->game);
         printf("Socket joueur %d\n", sock);
         while (j != NULL)
         {
-            printf("on passe ds l'envoi\n");
-            write(j->sock, &stcAllDead, sizeof(sendToClient));
-            aquitementWrite(j->sock);
-            toClient tc;
-/*			usleep(1000);*/
-            initMovingSending(&tc, j, &stcMove);
-            write(j->sock, &stcMove, sizeof(sendToClient));
-            aquitementWrite(j->sock);
+        	printf("on passe ds l'envoi\n");
+        	if(j->sock != sock)
+        	{
+        		pthread_mutex_lock(&(j->game->acquitMutex));
+		    	write(j->sock, &stcAllDead, sizeof(sendToClient));
+		        toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        pthread_mutex_lock(&(j->game->acquitMutex));
+		        write(j->sock, &stcMove, sizeof(sendToClient));
+        	}
+        	else
+        	{
+		    	write(sock, &stcAllDead, sizeof(sendToClient));
+		        aquitementWrite(sock);
+		        toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        write(sock, &stcMove, sizeof(sendToClient));
+		        aquitementWrite(sock);
+        	}
+            
+            
             j = j->nextPlayer;
         }
-        createNewStair(p->game);
         p->game->nbPlayerActive = p->game->nbPlayer;
         printf("Le personnage descend d'un étage.\n");
 
@@ -297,6 +310,7 @@ void down(player* p, int sock)
     initScoreSending("down", &score, p, &stcDown);
     sendToClient stcMove;
     j = p->game->joueur;
+    createNewStair(p->game);
     while (j != NULL)
     {
         printf("Socket autre joueur %d\n", j->sock);
@@ -322,7 +336,7 @@ void down(player* p, int sock)
         }
         j = j->nextPlayer;
     }
-    createNewStair(p->game);
+/*    createNewStair(p->game);*/
     p->game->nbPlayerActive = p->game->nbPlayer;
     printf("Le personnage descend d'un étage.\n");
 }
