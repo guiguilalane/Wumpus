@@ -1,5 +1,11 @@
 #include "client.h"
 
+void aquitementRead(int socket_descriptor)
+{
+    char * aquit = "Acquitement";
+    write(socket_descriptor, aquit, strlen(aquit));
+}
+
 int initialisationHost(hostent * ptr_host, char * host, sockaddr_in * adresse_locale)
 {
     int res = 0;
@@ -48,15 +54,7 @@ void writeFunction(int socket_descriptor, char* p)
         perror("Erreur : impossible d'envoyer au serveur.");
         exit(1);
     }
-}
-
-void readFunction(int socket_descriptor)
-{
-    char buffer[256];
-    int longueur;
-    if ((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-        write(1,buffer,longueur);
-    }
+//    aquitementWrite(socket_descriptor);
 }
 
 void envoiPseudoClient(char *p, int socket_descriptor)
@@ -122,6 +120,10 @@ void dataProcessing(fromServer* server, scoreToClient *score, dispatchStruct* di
         printf("%d\n", tmpS->nbScore);
         break;
 
+    case STRUCTACQUITEMENT:
+        printf("%s\n", dispStruc->structure);
+        break;
+
     default:
         printf("type de structure inconnue");
     }
@@ -131,7 +133,12 @@ void receptionInfoClient(int socket_descriptor, fromServer * server, scoreToClie
 {
     /* Lecture des informations du jeu en provenance du serveur */
     readData(socket_descriptor, dispStruc);
+    if(dispStruc->type > STRUCTACQUITEMENT)
+    {
+        aquitementRead(socket_descriptor);
+    }
     dataProcessing(server, score, dispStruc);
+    //aquitement d'un read
     printf("Fin de la reception.\n");
 }
 

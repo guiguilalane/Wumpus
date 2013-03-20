@@ -160,13 +160,13 @@
         <widget class="QWidget" name="widgetButton" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QToolButton" name="turnR">
+           <widget class="QToolButton" name="turnL">
             <property name="text">
              <string>...</string>
             </property>
             <property name="icon">
              <iconset resource="../Resource.qrc">
-              <normaloff>:/Pictures/Pictures/arrow_redo.png</normaloff>:/Pictures/Pictures/arrow_redo.png</iconset>
+              <normaloff>:/Pictures/Pictures/arrow_undo.png</normaloff>:/Pictures/Pictures/arrow_undo.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -177,13 +177,13 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="turnL">
+           <widget class="QToolButton" name="turnR">
             <property name="text">
              <string>...</string>
             </property>
             <property name="icon">
              <iconset resource="../Resource.qrc">
-              <normaloff>:/Pictures/Pictures/arrow_undo.png</normaloff>:/Pictures/Pictures/arrow_undo.png</iconset>
+              <normaloff>:/Pictures/Pictures/arrow_redo.png</normaloff>:/Pictures/Pictures/arrow_redo.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -324,7 +324,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>view</tabstop>
-  <tabstop>turnR</tabstop>
   <tabstop>turnL</tabstop>
   <tabstop>move</tabstop>
   <tabstop>shoot</tabstop>

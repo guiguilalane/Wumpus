@@ -9,18 +9,9 @@
 #include <netdb.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include <pthread.h>
 #include <unistd.h>
-
-#define NBPLAYERSPERGAME 3
-#define TAILLE_MAX_NOM 256
-
-#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME)+sizeof(int)
-
-//Définition des types de structures qui peuvent être envoyées
-#define STRUCTMESSAGE 0
-#define STRUCTMOVING 1
-#define STRUCTDOWN 2
+#include "../src/multi_client/global.h"
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -77,8 +68,6 @@ int connectionServeur(int socket_descriptor, sockaddr_in adresse_locale); // Per
 void deconnexionServeur(int socket_descriptor); // Permet de se déconnecter du serveur
 
 void writeFunction(int socket_descriptor, char* p); // Permet d'envoyer des informations au serveur
-
-void readFunction(int socket_descriptor); // Permet de lire des informations venant du serveur
 
 void envoiPseudoClient(char *p, int socket_descriptor); // Permet d'envoyer le pseudo au serveur
 

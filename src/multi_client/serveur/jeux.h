@@ -9,11 +9,7 @@
 #include <netdb.h>
 #include <pthread.h>
 
-#define TAILLE_MAX_NOM 256
-#define NBPLAYERSPERGAME 3
-
-//taille de l'étage
-#define STAIRSIZE 5
+#include "../global.h"
 
 /*Le point d'origine se trouve en haut à gauche de la map*/
 /**
@@ -74,10 +70,11 @@ struct jeu
     struct jeu *previousGame; /**< The previous game */
 
     pthread_mutex_t playerMutex;
+    pthread_mutex_t acquitMutex;
     stairs *etage; /**< The stair where players move */
     player *joueur; /**<  The first created player*/
     int nbPlayer; /**< The number of player in the game */
-	int nbPlayerActive; /**< The number of player no dead or not fall in the game */
+    int nbPlayerActive; /**< The number of player no dead or not fall in the game */
     int numberOfStairs; /**< The number of stairs down */
 
     struct jeu *nextGame; /**< The next game */

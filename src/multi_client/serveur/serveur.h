@@ -9,21 +9,6 @@
 #define	A_TIRER 4
 #define A_DESCENDRE 5
 
-//définition des directions;
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
-
-//taille maximum d'une structure d'envoi
-#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME)+sizeof(int)
-
-//définition des types de structures qui peuvent être envoyées
-#define STRUCTMESSAGE 0
-#define STRUCTMOVING 1
-#define STRUCTDOWN 2
-
-
 char arrows[4] = {'8', '6', '2', '4'};
 
 /*déclaration du type T_FONC_ACTION*/
@@ -77,3 +62,4 @@ int checkPosition(player* p);
 void initMovingSending(toClient* c, player* p, sendToClient* stc);
 void initDownSending(sendToClient* stc);
 void initStairSending(char* why, sendToClient* stc);
+void initAcquitementSending(sendToClient* stc);

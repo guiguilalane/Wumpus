@@ -21,14 +21,14 @@ typedef struct
 //structure indiquant le score d'un joueur
 typedef struct
 {
-	char playerName[TAILLE_MAX_NOM];
-	int score;
+    char playerName[TAILLE_MAX_NOM];
+    int score;
 } scoreP;
 
 typedef struct
 {
-	int nbScore;
-	scoreP scores[TAILLEMAX];
+    int nbScore;
+    scoreP scores[TAILLEMAX];
 } scoreToClient;
 
 void initScoreSending(char* why, scoreToClient *sctc, player *player, sendToClient* stc);
@@ -66,10 +66,34 @@ void quit(player* p, int sock)
     printf("Terminer la partie et afficher le score\n");
 }
 
+void aquitementWrite(int socket_descriptor)
+{
+
+    int len = 0;
+    while(!len && ioctl(socket_descriptor, FIONREAD, &len) >= 0)
+    {
+        usleep(500);
+    }
+    char buffer[len];
+    int longueur;
+    while((longueur = read(socket_descriptor, buffer, len)) <= 0)
+    {
+        exit(1);
+    }
+    printf("aquitement : %s\n", buffer);
+}
+
+void aquitementRead(int socket_descriptor)
+{
+    sendToClient stc;
+    initAcquitementSending(&stc);
+    write(socket_descriptor, &stc, sizeof(sendToClient));
+}
+
 // Lorsque le personnage avance
 void move(player* p, int sock)
 {
-	int nbPlayerActive;
+    int nbPlayerActive;
     switch(p->direction)
     {
         case NORTH :
@@ -100,37 +124,68 @@ void move(player* p, int sock)
     toClient tc;
     sendToClient stc;
     initMovingSending(&tc, p, &stc);
-//    write(sock, &stc, sizeof(sendToClient));
     write(sock, &stc, sizeof(sendToClient));
-	printf("Le nobre de joeur actif: %d\n", nbPlayerActive);
-	if (nbPlayerActive == 0)
-	{
-		sleep(2);
-		printf("Tous les joueurs sont morts\n");
-		sendToClient stcAllDead;
-		scoreToClient score;
-		initScoreSending("allDead",&score, p, &stcAllDead);
-		sendToClient stcMove;
-		// Récupération de la socket des autres joueurs et envoye de l'information
-		resetGamePlayer(p->game);
-		player * j = p->game->joueur;
-		printf("Socket joueur %d\n", sock);
-		while (j != NULL)
-		{
-			printf("on passe ds l'envoi\n");
-			write(j->sock, &stcAllDead, sizeof(sendToClient));
-			toClient tc;
-			usleep(1000);
-			initMovingSending(&tc, j, &stcMove);
-			write(j->sock, &stcMove, sizeof(sendToClient));
-			j = j->nextPlayer;
-		}
-		createNewStair(p->game);
-		p->game->nbPlayerActive = p->game->nbPlayer;
-		printf("Le personnage descend d'un étage.\n");
+    aquitementWrite(sock);
 
-		// On envoie une nouvelle structure à tous les autres joueurs pour dire on change d'étage et on change d'étage
-	}
+    printf("Le nombre de joueur actif: %d\n", nbPlayerActive);
+    if (nbPlayerActive == 0)
+    {
+/*		sleep(2);*/
+        printf("Tous les joueurs sont morts\n");
+        sendToClient stcAllDead;
+        scoreToClient score;
+        initScoreSending("allDead",&score, p, &stcAllDead);
+        sendToClient stcMove;
+        // Récupération de la socket des autres joueurs et envoye de l'information
+        resetGamePlayer(p->game);
+        player * j = p->game->joueur;
+        printf("Socket joueur %d\n", sock);
+        while (j != NULL)
+        {
+        	printf("on passe ds l'envoi\n");
+        	if(j->sock != sock)
+        	{
+        		pthread_mutex_lock(&(j->game->acquitMutex));
+		    	write(j->sock, &stcAllDead, sizeof(sendToClient));
+        	}
+        	else
+        	{
+        		toClient tc;
+				sendToClient stc;
+				initMovingSending(&tc, p, &stc);
+				write(sock, &stc, sizeof(sendToClient));
+				aquitementWrite(sock);
+		    	write(sock, &stcAllDead, sizeof(sendToClient));
+		        aquitementWrite(sock);
+        	}
+            j = j->nextPlayer;
+        }
+        j = p->game->joueur;
+        createNewStair(p->game);
+        while (j != NULL)
+        {
+        	printf("on passe ds l'envoi\n");
+        	if(j->sock != sock)
+        	{
+		        toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        pthread_mutex_lock(&(j->game->acquitMutex));
+		        write(j->sock, &stcMove, sizeof(sendToClient));
+        	}
+        	else
+        	{
+		        toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        write(sock, &stcMove, sizeof(sendToClient));
+		        aquitementWrite(sock);
+        	}
+            j = j->nextPlayer;
+        }
+        p->game->nbPlayerActive = p->game->nbPlayer;
+        printf("Le personnage descend d'un étage.\n");
+
+        // On envoie une nouvelle structure à tous les autres joueurs pour dire on change d'étage et on change d'étage
+    }
     /*    printf("Avancer d'une case dans la direction pointée.\n");*/
 }
 
@@ -142,6 +197,7 @@ void turn_right(player* p, int sock)
     sendToClient stc;
     initMovingSending(&tc, p, &stc);
     write(sock, &stc, sizeof(sendToClient));
+    aquitementWrite(sock);
     printf("Le personnage change de direction dans le sens horaire.\n");
 }
 
@@ -153,6 +209,7 @@ void turn_left(player* p, int sock)
     sendToClient stc;
     initMovingSending(&tc, p, &stc);
     write(sock, &stc, sizeof(sendToClient));
+    aquitementWrite(sock);
     printf("Le personnage change de direction dans le sens anti-horaire.\n");
 }
 
@@ -184,7 +241,7 @@ void shot(player* p, int sock)
 
     while(i < STAIRSIZE && i >= 0 && !find)
     {
-    	printf("fleche position (%d, %d)\n", y,x);
+        printf("fleche position (%d, %d)\n", y,x);
         char c = p->game->etage->map[y][x];
         if(c != 'W')
         {
@@ -224,18 +281,25 @@ void shot(player* p, int sock)
 //        initScoreSending("killwumpus", &sctc, p, &killwumpus);
         player * j = p->game->joueur;
         while (j != NULL)
-		{
-//			if(j->sock != sock)
-//			{
-//				write(j->sock, &killwumpus, sizeof(sendToClient));
-//			}
-			
-			toClient tc;
-			sleep(1);
-			initMovingSending(&tc, j, &stcMove);
-			write(j->sock, &stcMove, sizeof(sendToClient));
-		    j = j->nextPlayer;
-		}
+        {
+			if(j->sock != sock)
+			{
+				toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        pthread_mutex_lock(&(j->game->acquitMutex));
+		        write(j->sock, &stcMove, sizeof(sendToClient));
+			}
+			else
+			{
+				toClient tc;
+		        initMovingSending(&tc, j, &stcMove);
+		        write(sock, &stcMove, sizeof(sendToClient));
+		        aquitementWrite(sock);
+			}
+
+            
+            j = j->nextPlayer;
+        }
         printf("bien joué vous avez tué le wumpus!!\n");
     }
     printf("Le personnage tire une flèche.\n");
@@ -244,43 +308,62 @@ void shot(player* p, int sock)
 // Lorsque le personnage descend l'échelle
 void down(player* p, int sock)
 {
-	    // Récupération de la socket des autres joueurs et envoye de l'information
+        // Récupération de la socket des autres joueurs et envoye de l'information
     resetGamePlayer(p->game);
     player * j = p->game->joueur;
-	while (j != NULL)
-	{
-		if(j->sock == sock)
+    while (j != NULL)
+    {
+        if(j->sock == sock)
         {
             p->score += 100;
         }
-		j = j->nextPlayer;
-	}
-	scoreToClient score;
+        j = j->nextPlayer;
+    }
+    scoreToClient score;
     sendToClient stcDown;
     initScoreSending("down", &score, p, &stcDown);
     sendToClient stcMove;
-	j = p->game->joueur;
+    j = p->game->joueur;
     while (j != NULL)
     {
         printf("Socket autre joueur %d\n", j->sock);
         if(j->sock != sock)
         {
-			initScoreSending("down", &score, p, &stcDown);
-			write(j->sock, &stcDown, sizeof(sendToClient));
+            initScoreSending("down", &score, p, &stcDown);
+            pthread_mutex_lock(&(j->game->acquitMutex));
+            write(j->sock, &stcDown, sizeof(sendToClient));
         }
-		else
-		{
-			initScoreSending("my", &score, p, &stcDown);
-			write(j->sock, &stcDown, sizeof(sendToClient));
-		}
-        toClient tc;
-        usleep(1000);
-        initMovingSending(&tc, j, &stcMove);
-        write(j->sock, &stcMove, sizeof(sendToClient));
+        else
+        {
+            initScoreSending("my", &score, p, &stcDown);
+            write(sock, &stcDown, sizeof(sendToClient));
+            aquitementWrite(sock);
+        }
         j = j->nextPlayer;
+        
     }
-    createNewStair(p->game);
-	p->game->nbPlayerActive = p->game->nbPlayer;
+    j = p->game->joueur;
+	createNewStair(p->game);
+    while (j != NULL)
+	{
+	    if(j->sock != sock)
+	    {
+	        toClient tc;
+	        initMovingSending(&tc, j, &stcMove);
+	        pthread_mutex_lock(&(j->game->acquitMutex));
+	        write(j->sock, &stcMove, sizeof(sendToClient));
+	    }
+	    else
+	    {
+	        toClient tc;
+	        initMovingSending(&tc, j, &stcMove);
+	        write(sock, &stcMove, sizeof(sendToClient));
+	        aquitementWrite(sock);
+	    }
+    	j = j->nextPlayer;
+    }
+/*    createNewStair(p->game);*/
+    p->game->nbPlayerActive = p->game->nbPlayer;
     printf("Le personnage descend d'un étage.\n");
 }
 
@@ -544,21 +627,21 @@ void initMovingSending(toClient* c, player* p, sendToClient* stc)
 
 void initScoreSending(char* why, scoreToClient *sctc, player *p, sendToClient* stc)
 {
-	scoreP s;
-	player *j = p->game->joueur;
-	int i = 0;
-	while(j != NULL)
-	{
-			strcpy(s.playerName, j->pseudo);
-			s.score = j->score;
-			sctc->scores[i] = s;
-			++i;
-		j = j->nextPlayer;
-	}
-	sctc->nbScore = i;
-	stc->type = STRUCTDOWN;
-	strcpy(stc->name, why);
-	memcpy(stc->structure, sctc, TAILLEMAX);
+    scoreP s;
+    player *j = p->game->joueur;
+    int i = 0;
+    while(j != NULL)
+    {
+            strcpy(s.playerName, j->pseudo);
+            s.score = j->score;
+            sctc->scores[i] = s;
+            ++i;
+        j = j->nextPlayer;
+    }
+    sctc->nbScore = i;
+    stc->type = STRUCTDOWN;
+    strcpy(stc->name, why);
+    memcpy(stc->structure, sctc, TAILLEMAX);
 }
 void initMessageSending(char* m, sendToClient* stc)
 {
@@ -568,6 +651,17 @@ void initMessageSending(char* m, sendToClient* stc)
     printf("%s\n", stc->structure);
 //    stc->structure = '\0';
 }
+
+void initAcquitementSending(sendToClient* stc)
+{
+    stc->type = STRUCTACQUITEMENT;
+    strcpy(stc->structure, "Acquitement");
+    stc->structure[strlen(stc->structure)] = '\0';
+    //TODO: asup
+    printf("%s\n", stc->structure);
+//    stc->structure = '\0';
+}
+
 
 /*void initStairSending(char* why, sendToClient* stc)*/
 /*{*/
@@ -696,7 +790,7 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
         printf("T'es mort!! Le Wumpus t'as mangé.\n");
         p->score -= 50;
         p->deadByWumpus = true;
-		p->game->nbPlayerActive--;
+        p->game->nbPlayerActive--;
         break;
 
     case 'T' :
@@ -710,13 +804,13 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
         printf("Fait attention ou tu marches, t'as glissé dans un trou!\n");
         p->score -= 30;
         p->fallInHole = true;
-		p->game->nbPlayerActive--;
+        p->game->nbPlayerActive--;
         break ;
 
     default :
         ;
     }
-	return p->game->nbPlayerActive;
+    return p->game->nbPlayerActive;
 }
 
 void * jeuNjoueur (void * arguments)
@@ -732,7 +826,7 @@ void * jeuNjoueur (void * arguments)
 
     player* p = args->p;
     stairs* s = p->game->etage;
-    
+
     checkPosition(p);
     toClient tc;
     sendToClient stc;
@@ -741,9 +835,10 @@ void * jeuNjoueur (void * arguments)
     printf("tresure sensor : %d\n", tc.besideTresure);
     printf("hole sensor : %d\n", tc.besideHole);
     //TODO : voir si on peut ne pas faire de write dans le main et envoyer se résultat si
-    sleep(1);
+/*    sleep(1);*/
 //    write(sock, &stc, sizeof(sendToClient));
     write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
+    aquitementWrite(nouv_socket_descriptor);
 
     //NOTE: pour tester l'envoi de structure de structure
 //    sendToClient test;
@@ -782,48 +877,56 @@ void * jeuNjoueur (void * arguments)
         char realCommand[len];
         strncpy(realCommand, command, len);
         realCommand[len] = '\0';
-
-        // Récupère la commande envoyé par l'utilisateur
-        printf("Commande lue : %s\n", realCommand);
-
-        // Faire le traitement en fonction de la commande
-        Action* theAction = findActionFromCommand(playerActions, realCommand);
-        if(theAction == NULL)
-        {
-            result = (char*) realloc(result, strlen("La commande : , n'existe pas\n") + strlen(realCommand) + 1);
-            sprintf(result, "La commande : %s, n'existe pas\n", realCommand);
+        if(strcmp(realCommand, "Acquitement") == 0)
+        {   //si on reçoi une trame d'acquitement on donne la possibilité au client affecté par acquitMutex de continuer
+            pthread_mutex_unlock(&(p->game->acquitMutex));
         }
         else
         {
-            pthread_mutex_lock(&(p->game->playerMutex));
-            theAction->action(p, nouv_socket_descriptor);
-            if(strcmp(realCommand, "quit")==0)
+            aquitementRead(nouv_socket_descriptor);
+
+            // Récupère la commande envoyé par l'utilisateur
+            printf("Commande lue : %s\n", realCommand);
+
+            // Faire le traitement en fonction de la commande
+            Action* theAction = findActionFromCommand(playerActions, realCommand);
+            if(theAction == NULL)
             {
-                sortie = true;
+                result = (char*) realloc(result, strlen("La commande : , n'existe pas\n") + strlen(realCommand) + 1);
+                sprintf(result, "La commande : %s, n'existe pas\n", realCommand);
             }
             else
             {
-                char temp[277] = "\0";
-                s = p->game->etage;
-                clientPrintStairs(p, s, temp);
-                printPlayerStatus(p, s, temp);
-                result = (char*) realloc(result, strlen(temp));
-                sprintf(result, "%s", temp);
-                serveurPrintStairs(p, s);
-//                printf("taille structure : %d\n", sizeof(*test));
-//                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
-//                initSending(&toSend, p, s, &test, tresurPos);
-//                printf("youhou %d\n", test.type);
+                pthread_mutex_lock(&(p->game->playerMutex));
+                theAction->action(p, nouv_socket_descriptor);
+                if(strcmp(realCommand, "quit")==0)
+                {
+                    sortie = true;
+                }
+                else
+                {
+                    char temp[277] = "\0";
+                    s = p->game->etage;
+                    clientPrintStairs(p, s, temp);
+                    printPlayerStatus(p, s, temp);
+                    result = (char*) realloc(result, strlen(temp));
+                    sprintf(result, "%s", temp);
+                    serveurPrintStairs(p, s);
+    //                printf("taille structure : %d\n", sizeof(*test));
+    //                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
+    //                initSending(&toSend, p, s, &test, tresurPos);
+    //                printf("youhou %d\n", test.type);
 
+                }
+                pthread_mutex_unlock(&(p->game->playerMutex));
             }
-            pthread_mutex_unlock(&(p->game->playerMutex));
-        }
-        // Ecrit le nouvel état de l'étage
-//        write(nouv_socket_descriptor, result, strlen(result)+1);
-//        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
-//        write(nouv_socket_descriptor, &toSend, sizeof(toClient));
+            // Ecrit le nouvel état de l'étage
+    //        write(nouv_socket_descriptor, result, strlen(result)+1);
+    //        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
+    //        write(nouv_socket_descriptor, &toSend, sizeof(toClient));
 
-        printf("Message envoye. \n");
+            printf("Message envoye. \n");
+        }
     }
 //    free(toSend);
     close(nouv_socket_descriptor);
@@ -956,6 +1059,7 @@ int main(int argc, char* argv[])
         {
             return;
         }
+/*        aquitementRead(nouv_socket_descriptor);*/
         /*
          Il arrive que malgrès la connaissance de la longueur de la commande retournée par la socket il y ai des soucis de longueur.
          Pour palier à ce probleme on créer une nouvelle variable qui ne contient que les 'len' premiers caractères.
@@ -981,6 +1085,7 @@ int main(int argc, char* argv[])
         sendToClient stc;
         initMessageSending(temp, &stc);
         write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
+        aquitementWrite(nouv_socket_descriptor);
 //        write(nouv_socket_descriptor, temp, strlen(temp));
         if(pthread_create(&nouveau_client, NULL,
                                 jeuNjoueur,

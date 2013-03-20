@@ -9,11 +9,12 @@ jeu *createGame(player* p)
         return NULL;
     }
     pthread_mutex_init(&(j->playerMutex), NULL);
+    pthread_mutex_init(&(j->acquitMutex), NULL);
     j->etage = stairInitialisation();
     j->joueur = p;
     p->game = j;
     j->nbPlayer = 1;
-	j->nbPlayerActive = 1;
+    j->nbPlayerActive = 1;
     j->numberOfStairs = 1;
     if(NULL == manager->firstCreatedGame)
     {//aucun jeu n'est créé
@@ -80,7 +81,7 @@ jeu *addPlayer(player *p)
                 p->previousPlayer = lastPlayer;
                 p->game = j;
                 j->nbPlayer++;
-				j->nbPlayerActive++;
+                j->nbPlayerActive++;
             }
             else
             {
@@ -121,10 +122,10 @@ jeu *removePlayer(player *p)
         }
     }
     j->nbPlayer--;
-	if (!p->deadByWumpus && !p->fallInHole)
-	{
-		j->nbPlayerActive--;
-	}
+    if (!p->deadByWumpus && !p->fallInHole)
+    {
+        j->nbPlayerActive--;
+    }
     free(p);
 
     return j;
