@@ -647,9 +647,6 @@ void initMessageSending(char* m, sendToClient* stc)
 {
     stc->type = STRUCTMESSAGE;
     strcpy(stc->structure, m);
-    //TODO: asup
-    printf("%s\n", stc->structure);
-//    stc->structure = '\0';
 }
 
 void initAcquitementSending(sendToClient* stc)
@@ -657,17 +654,7 @@ void initAcquitementSending(sendToClient* stc)
     stc->type = STRUCTACQUITEMENT;
     strcpy(stc->structure, "Acquitement");
     stc->structure[strlen(stc->structure)] = '\0';
-    //TODO: asup
-    printf("%s\n", stc->structure);
-//    stc->structure = '\0';
 }
-
-
-/*void initStairSending(char* why, sendToClient* stc)*/
-/*{*/
-/*    stc->type = STRUCTDOWN;*/
-/*	strcpy(stc->structure, why);*/
-/*}*/
 
 // Fonction temporaire
 void getDirection(int d, char* direction)
@@ -737,7 +724,7 @@ void serveurPrintStairs(player* p, stairs *s)
         j = 0;
         printf("|");
         for(; j < STAIRSIZE; ++j)
-        {		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
+        {
             printf("%c|", (j == p->posX && i == p->posY) ? arrows[p->direction] : s->map[i][j]);
         }
         printf("\n");
@@ -749,15 +736,13 @@ void serveurPrintStairs(player* p, stairs *s)
 char* clientPrintStairs(player* p, stairs *s, char* temp)
 {
     strcat(temp, "___________\n");
-/*	printf("___________\n");*/
     int i = 0, j = 0;
     for(; i < STAIRSIZE ; ++i)
     {
         j = 0;
         strcat(temp, "|");
-/*		printf("|");*/
         for(; j < STAIRSIZE; ++j)
-        {		//TODO : changer l'affichage et mettre les fleche selon la direction regardée par le joueur
+        {
             if((j == p->posX && i == p->posY))
             {
                 strcat(temp, "P|");
@@ -766,14 +751,10 @@ char* clientPrintStairs(player* p, stairs *s, char* temp)
             {
                 strcat(temp, s->map[i][j]=='E' ? "E|" : " |");
             }
-/*			printf("%c|", (j == p->posX && i == p->posY) ? 'P' : ' ');*/
         }
         strcat(temp, "\n");
-/*		printf("\n");*/
     }
     strcat(temp, "___________\n");
-/*	printf("___________\n");*/
-/*	printf("%s", temp);*/
     return temp;
 }
 
@@ -819,11 +800,8 @@ void * jeuNjoueur (void * arguments)
     int *tmp = args->sock;
     int nouv_socket_descriptor = tmp;
     printf("socket 1 : %d\n", nouv_socket_descriptor);
-//	int gameNum = args->gameNumber;
 
     //initilalisation de la structur
-//    toClient toSend;
-
     player* p = args->p;
     stairs* s = p->game->etage;
 
@@ -834,14 +812,9 @@ void * jeuNjoueur (void * arguments)
     printf("wumpus sensor : %d\n", tc.besideWumpus);
     printf("tresure sensor : %d\n", tc.besideTresure);
     printf("hole sensor : %d\n", tc.besideHole);
-    //TODO : voir si on peut ne pas faire de write dans le main et envoyer se résultat si
-/*    sleep(1);*/
-//    write(sock, &stc, sizeof(sendToClient));
     write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
     aquitementWrite(nouv_socket_descriptor);
 
-    //NOTE: pour tester l'envoi de structure de structure
-//    sendToClient test;
 
     bool sortie = false;
 
@@ -861,7 +834,6 @@ void * jeuNjoueur (void * arguments)
         char command[len];
 
         // Pour le moment notifie le client que ça commande à bien été reçue
-        /*TODO: retourner le traitement de la nouvelle position*/
         char* result = (char*) malloc(strlen("Commande reçue"));
         sprintf(result, "Commande reçue\n");
 
@@ -912,30 +884,18 @@ void * jeuNjoueur (void * arguments)
                     result = (char*) realloc(result, strlen(temp));
                     sprintf(result, "%s", temp);
                     serveurPrintStairs(p, s);
-    //                printf("taille structure : %d\n", sizeof(*test));
-    //                printf("taille structure toClient : %d\n", sizeof(*(test->structure)));
-    //                initSending(&toSend, p, s, &test, tresurPos);
-    //                printf("youhou %d\n", test.type);
-
                 }
                 pthread_mutex_unlock(&(p->game->playerMutex));
             }
-            // Ecrit le nouvel état de l'étage
-    //        write(nouv_socket_descriptor, result, strlen(result)+1);
-    //        write(nouv_socket_descriptor, &test, sizeof(sendToClient));
-    //        write(nouv_socket_descriptor, &toSend, sizeof(toClient));
-
             printf("Message envoye. \n");
         }
     }
-//    free(toSend);
     close(nouv_socket_descriptor);
     return;
 }
 
 int main(int argc, char* argv[])
 {
-//	vardebug = 0;
     int port = 5000;
     if(argc == 2)
     {
@@ -1059,7 +1019,6 @@ int main(int argc, char* argv[])
         {
             return;
         }
-/*        aquitementRead(nouv_socket_descriptor);*/
         /*
          Il arrive que malgrès la connaissance de la longueur de la commande retournée par la socket il y ai des soucis de longueur.
          Pour palier à ce probleme on créer une nouvelle variable qui ne contient que les 'len' premiers caractères.
@@ -1070,23 +1029,12 @@ int main(int argc, char* argv[])
         strcpy(p->pseudo, realCommand);
 
         char* temp = "Vous venez d'entrer dans le temple de la mort. Vous n'en ressortirez pas vivant!!!!\n";
-//		clientPrintStairs(p, jeux[lastGame].s, temp);
-//		printPlayerStatus(p, jeux[lastGame].s, temp);
-//		serveurPrintStairs(p, jeux[lastGame].s);
 
-//        toClient tc;
-//        toClientInitialisation(&tc);
-//        int tresurPos[2];
-//        tresurPos[0] = -1;
-//        tresurPos[1] = -1;
-
-        //TODO: changer l'envoi
 
         sendToClient stc;
         initMessageSending(temp, &stc);
         write(nouv_socket_descriptor, &stc, sizeof(sendToClient));
         aquitementWrite(nouv_socket_descriptor);
-//        write(nouv_socket_descriptor, temp, strlen(temp));
         if(pthread_create(&nouveau_client, NULL,
                                 jeuNjoueur,
                               (void*) &args) < 0)
@@ -1094,10 +1042,6 @@ int main(int argc, char* argv[])
                 perror("erreur : impossible de creer un nouveau thread.");
                 exit(1);
             }
-        /* Traitement du message */
-/*		jeuNjoueur(nouv_socket_descriptor, p);*/
-
-
     }
     close(socket_descriptor);
     return EXIT_SUCCESS;

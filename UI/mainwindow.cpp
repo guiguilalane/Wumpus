@@ -228,6 +228,7 @@ void MainWindow::on_quit_clicked()
 
 void MainWindow::updateInfo(fromServer * s, scoreToClient* scores, dispatchStruct *d)
 {
+    std::cout << "update info" << std::endl;
     // Fenêtre message
     QMessageBox msg;
     msg.setWindowTitle("Information");
