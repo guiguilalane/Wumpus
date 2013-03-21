@@ -9,7 +9,7 @@
 #include "pseudo.h"
 #include "option.h"
 #include "../Controleur/controleur.h"
-#include "../src/multi_client/global.h"
+#include "../src/global.h"
 
 namespace Ui {
 class MainWindow;

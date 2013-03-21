@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
+#include "jeux.h"
 
 #define NBACTION 6
 
@@ -13,42 +9,14 @@
 #define	A_TIRER 4
 #define A_DESCENDRE 5
 
-//taille de l'étage
-#define STAIRSIZE 5
-
-//définition des directions;
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
-
 char arrows[4] = {'8', '6', '2', '4'};
-
-/*le point d'origine se trouve en haut à gauche de la map*/
-typedef struct 
-{
-	char map[STAIRSIZE][STAIRSIZE];
-	bool wumpusAlive;
-	bool tresureFounded;
-} stairs;
-
-//Définition du joueur
-typedef struct
-{
-	char* pseudo;
-	int score;
-	int posX;
-	int posY;
-	int direction;
-	bool arrow;
-} player;
 
 /*déclaration du type T_FONC_ACTION*/
 typedef void T_FONC_ACTION();
 
 
 typedef struct {
-	char* command;
+    char* command;
     T_FONC_ACTION* action;
 } Action;
 
@@ -60,7 +28,38 @@ T_FONC_ACTION turn_left;
 T_FONC_ACTION shot;
 T_FONC_ACTION down;
 
+typedef struct
+{
+    bool coherent;//indique si les données (reçues/envoyées) sont coherentes
+    int direction;
+    int playerPosX;
+    int playerPosY;
+    int tresurePosX;
+    int tresurePosY;
+    bool tresureFinf;
+    bool fallInHole;
+    bool wumpusFind;
+    bool wumpusKill;
+    int score;
+    bool besideWumpus;
+    bool besideHole;
+    bool besideTresure;
+
+} toClient;
+
+typedef struct
+{
+    int type;
+    char name[15];
+    char structure[TAILLEMAX];
+} sendToClient;
+
 Action* findActionFromCommand(Action* action, char* command);
 Action* initialisationActions();
-void playerInitialisation(player* p);
-void stairInitialisation(stairs *s);
+player *playerInitialisation();
+bool sensor(player* p, stairs* s, char o);
+int checkPosition(player* p);
+void initMovingSending(toClient* c, player* p, sendToClient* stc);
+void initDownSending(sendToClient* stc);
+void initStairSending(char* why, sendToClient* stc);
+void initAcquitementSending(sendToClient* stc);

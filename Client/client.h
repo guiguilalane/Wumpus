@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "../src/multi_client/global.h"
+#include "../src/global.h"
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
