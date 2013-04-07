@@ -162,7 +162,7 @@ L'objectif de ce projet fût de développer une application avec échange de don
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
 	\section{Présentation de l'application}
-	Notre application est basé sur un jeu : le \gameName.
+	Notre application est basée sur un jeu : le \gameName.
 
 	Le \gameName est un jeu ou un personnage, ici le client, devra parcourir une tour souterraine d'étages en étages à la recherche de trésors. % et tuer le
 	%\gameName pour rester en vie.
@@ -179,7 +179,7 @@ L'objectif de ce projet fût de développer une application avec échange de don
 			Le joueur possède une unique flèche qui lui est donnée à chaque nouvel étage. Cette flèche permet au joueur de tuer le \gameName.
 
 			Au cours de ces précédentes aventures le personnage à acquis un certain nombre de senseurs.
-			Ces senseurs donne la capacité au personne de ressentir son environnement proche :
+			Ces senseurs donnent la capacité au personnage de ressentir son environnement proche :
 			\begin{description}
 			\item[WIND :] Ce senseur est activé lorsque le personnage se situe sur une case adjacente au trou.
 			\item[TWINKLE (scintiller) :] Ce senseur s'active lorsque le joueur détecte la présence du trésor.
@@ -187,21 +187,21 @@ L'objectif de ce projet fût de développer une application avec échange de don
 			\end{description}
 
 			Une partie est terminée, si le joueur est tué par le \gameName, s'il tombe dans un trou, ou si le joueur décide qu'il est temps de remonter à la
-	surface. Lorsque la partie est terminée, le joueur se voit attribuer un score en fonction du nombre d'étage parcourus, du nombre de trésor trouvés et du
+	surface. Lorsque la partie est terminée, le joueur se voit attribuer un score en fonction du nombre d'étages parcourus, du nombre de trésors trouvés et du
 nombre	de \gameName tués.
 
 		\subsubsection{Version multi-client}
 			Au passage de la version mono-client à la version multi-client, certaines règles ont évolué pour instaurer de la compétitivité entre les joueurs :
 			\begin{itemize}
-				\item Les joueur se déplacent toujours dans le même environnement, mais ne connaissent pas la position des autres joueurs.
+				\item Les joueurs se déplacent toujours dans le même environnement, mais ne connaissent pas la position des autres joueurs.
 				\item Lorsque un des joueurs de la partie change d'étage, les autres joueurs de la même partie passent automatiquement à l'étage
 suivant.
-				\item Les points acquis à la découverte du trésor ne sont plus attribués au moment ou le joueur trouve le trésor, mais au moment ou il passe à
-l'étage suivant. De cette manière si deux joueurs trouvent le trésors, seul le plus rapide des deux est récompensé.
+				\item Les points acquis à la découverte du trésor ne sont plus attribués au moment où le joueur trouve le trésor, mais au moment où il passe à
+l'étage suivant. De cette manière si deux joueurs trouvent le trésor, seul le plus rapide des deux est récompensé.
 				\item Si un des joueurs meurt, il perd des points en fonction de ce qui l'a tué.
 				\item Si l'un des joueurs d'une partie meurt, il n'a plus la possibilité d'effectuer d'actions. À moins que l'un des joueurs change d'étage
 , auquel cas la partie continue, ou que tous les autres joueurs de la même partie meurent. Dans se dernier cas on considère que la partie est terminée et
-que le joueur ayant le plus de points à gagné.
+que le joueur ayant le plus de points a gagné.
 			\end{itemize}
 
 
@@ -213,8 +213,8 @@ que le joueur ayant le plus de points à gagné.
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
 	\section{Coté serveur}
-	%IMPORTANT : justifier chaque choix effectués
-	Dans cette partie nous verrons comment sont traitées les commandes, comment est faite la communication client/serveur et comment est effectuées la gestion
+	%IMPORTANT : justifier chaque choix effectué
+	Dans cette partie nous verrons comment sont traitées les commandes, comment est faite la communication client/serveur et comment est effectuée la gestion
 des clients connectés.
 
 	\subsection{Commandes clients}
@@ -225,20 +225,20 @@ des clients connectés.
 	À chaque commande coïncide une fonction. Voici une brève explication de chacune de ces fonctions.
 
 	\begin{description}
-		\item[Commande quit : ] La commande \emph{quit}, quand elle est reçu, supprime le joueur qui l'a envoyé de la partie.
-		\item[Commande move : ] La commande \emph{move} met à jour la position du joueur en fonction de la direction pointé par celui-ci (NORD, SUD, EST, OUEST).
+		\item[Commande quit : ] La commande \emph{quit}, quand elle est reçue, supprime le joueur qui l'a envoyé de la partie.
+		\item[Commande move : ] La commande \emph{move} met à jour la position du joueur en fonction de la direction pointée par celui-ci (NORD, SUD, EST, OUEST).
 Avec la nouvelle position du joueur, la commande vérifie si le joueur est sur une case à événement, c'est à dire soit sur une case trésor, soit sur une case
-trou, soit sur une case \gameName. Puis met à jour les senseurs du joueur et envoi les nouvelles informations au client.
-		\item[Commande turnright : ] La commande \emph{turnright} met a jour la direction du joueur. La direction évolue dans le sens des aiguilles d'une
-montre. Puis envoi les nouvelles informations au client.
-		\item[Commande turnleft : ] La commande \emph{turnleft} à le même comportement que la commande \emph{turnright}, à la différence que la direction
+trou, soit sur une case \gameName. Puis met à jour les senseurs du joueur et envoie les nouvelles informations au client.
+		\item[Commande turnright : ] La commande \emph{turnright} met à jour la direction du joueur. La direction évolue dans le sens des aiguilles d'une
+montre. Puis envoie les nouvelles informations au client.
+		\item[Commande turnleft : ] La commande \emph{turnleft} a le même comportement que la commande \emph{turnright}, à la différence que la direction
 évolue dans le sens inverse des aiguilles d'une montre.
-		\item[Commande shot : ] La commande \emph{shot} correspond à l'utilisation de la flèche par le joueur. Cette commande parcours les cases de la position
-du joueur jusqu'au bord de la carte dans la direction regarder par le joueur. Si le \gameName est rencontré, cela signifie que la flèche à tuer le \gameName,
-auquel cas la carte du jeu ainsi que les données du joueur(score) sont mis à jour. Les nouvelles données sont ensuite envoyé au client.
-		\item[Commande down : ] La commande \emph{down} ne pourra être envoyé par le client que si ce client à trouvé le trésor. Si cette commande est reçu par
-le serveur, un nouvel étage est généré, le score du joueur qui à envoyé la commande \emph{down} est mis à jour puis la position et la direction de tout les
-joueurs est remise à zéro. Ainsi les joueurs évoluerons sur une nouvelle carte.
+		\item[Commande shot : ] La commande \emph{shot} correspond à l'utilisation de la flèche par le joueur. Cette commande parcourt les cases de la position
+du joueur jusqu'au bord de la carte dans la direction regarder par le joueur. Si le \gameName est rencontré, cela signifie que la flèche a tué le \gameName,
+auquel cas la carte du jeu ainsi que les données du joueur(score) sont mis à jour. Les nouvelles données sont ensuite envoyées au client.
+		\item[Commande down : ] La commande \emph{down} ne pourra être envoyée par le client que si ce client a trouvé le trésor. Si cette commande est reçue par
+le serveur, un nouvel étage est généré, le score du joueur qui a envoyé la commande \emph{down} est mis à jour puis la position et la direction de tout les
+joueurs est remise à zéro. Ainsi les joueurs évolueront sur une nouvelle carte.
 	\end{description}
 
 	Après cette brève présentation des commandes clients, voyons comment sont traitées ces commandes.
@@ -260,7 +260,7 @@ T_FONC_ACTION down;
 
 	\end{lstlisting}
 
-	Un type \emph{Action} est définie pour faire le lien entre la commande reçu par le serveur et la fonction qui correspond à la commande :
+	Un type \emph{Action} est définie pour faire le lien entre la commande reçue par le serveur et la fonction qui correspond à la commande :
 \begin{lstlisting}
 typedef struct {
     char* command;
@@ -295,25 +295,25 @@ Action* initialisationActions()
  }
 \end{lstlisting}
 
-	Après que la commande ai été reçue, on récupère le pointeur de fonction correspondant à la commande à l'aide de la fonction \emph{findActionFromCommand} :
+	Après que la commande ait été reçue, on récupère le pointeur de fonction correspondant à la commande à l'aide de la fonction \emph{findActionFromCommand} :
 \begin{lstlisting}
 Action* findActionFromCommand(Action* action, char* command);
 \end{lstlisting}
 
-	Cette fonction parcours le tableau contenant toutes les actions disponibles, test la chaîne de caractères donnée en entrée et retourne l'\emph{Action}
+	Cette fonction parcourt le tableau contenant toutes les actions disponibles, test la chaîne de caractères donnée en entrée et retourne l'\emph{Action}
 correspondante et permet ainsi l'exécution de la fonction adéquat.
 
 	\subsection{Communication client/serveur}
 	%initialisation du serveur, protocole utilisé, threads,...
-	Lors de la première connexion d'un client, le serveur envoi une requête de pseudonyme au client. Une fois ce pseudonyme reçu le serveur instancie un
+	Lors de la première connexion d'un client, le serveur envoie une requête de pseudonyme au client. Une fois ce pseudonyme reçu le serveur instancie un
 nouveau joueur ainsi qu'un thread. Le serveur affecte alors le joueur au thread ainsi qu'à un jeu(cf.\ref{subGestionClient}). Au final pour chaque connexion un
 thread sera créé.\\
 	Chaque thread ainsi que le serveur seront en mode "écoute" du réseau. Chaque thread sera en attente d'une commande de son client, et le serveur sera en
 attente de la connexion d'un nouveau client.\\
 
-	Entrons un peu plus dans les détails. Lorsque le client envoi des données, ces données représentent une simple chaîne de caractère qui correspond à une
+	Entrons un peu plus dans les détails. Lorsque le client envoie des données, ces données représentent une simple chaîne de caractères qui correspond à une
 commande. Nous avons vu dans la section "\ref{subsubTraitCommandes} \textbf{Traitement des commandes}" comment le serveur récupérait ces données et ce qu'il
-faisait pour exécuter la bonne fonction. Par contre lorsque le serveur veut envoyer des données, il envoi les données sous la forme d'une structure :
+faisait pour exécuter la bonne fonction. Par contre lorsque le serveur veut envoyer des données, il envoie les données sous la forme d'une structure :
 \begin{lstlisting}
 //Different type of structure which could be send
 #define STRUCTACQUITEMENT 0
@@ -333,7 +333,7 @@ typedef struct
 \end{lstlisting}
 
 	Dans cette structure le paramètre le plus important est le troisième paramètre car il correspond aux données envoyées. Ces données sont encapsulées dans une
-structure qui dépend du type. Au final le serveur peut envoyer quatre type de structures :
+structure qui dépend du type. Au final le serveur peut envoyer quatre types de structures :
 	\begin{itemize}
 		\item Une structure d’acquittement
 		\item Une structure qui contient un message
@@ -341,17 +341,17 @@ structure qui dépend du type. Au final le serveur peut envoyer quatre type de s
 		\item Une structure utilisée à la réception de la commande \emph{down}
 	\end{itemize}
 
-	Il est a noter qu'à chaque envoi de données, que ce soit depuis le serveur ou depuis le client, l’émetteur attend une trame d'acquittement(sauf s'il
+	Il est à noter qu'à chaque envoi de données, que ce soit depuis le serveur ou depuis le client, l’émetteur attend une trame d'acquittement(sauf s'il
 s'agit de la trame d'acquittement elle même).
 
-	%parler des structures transmises et de l’acquittement de chaque envoie
+	%parler des structures transmises et de l’acquittement de chaque envoi
 
 
 	\subsection{Gestion des clients}
 	\label{subGestionClient}
 	%structure de gestion des clients et des jeux
 
-	 Pour une meilleur gestion des clients nous avons mis en place une structure qui réparti les joueurs entre les différentes parties en cours.
+	 Pour une meilleure gestion des clients nous avons mis en place une structure qui réparti les joueurs entre les différentes parties en cours.
 	 Le comportement de cette structure se base sur l'ajout et la suppression de joueur. Nous verrons donc le comportement de la structure mise en place lors
 de la connexion d'un joueur, ou lorsque celui si termine la partie sur lequel il joue.
 
@@ -363,12 +363,12 @@ partie en cours qui respecte les conditions suivantes:
 			\item La partie ne doit pas être complète.
 			\item Pour éviter un déséquilibre au niveau des points, la partie doit être sur le premier étage.
 		\end{itemize}
-		Si une des conditions précédentes n'est pas respectée, la structure créer une nouvelle partie et y ajoute le nouveau joueur.
+		Si une des conditions précédentes n'est pas respectée, la structure crée une nouvelle partie et y ajoute le nouveau joueur.
 
 	\subsubsection{Suppression d'un joueur}
 		La suppression d'un joueur par la structure survient, soit lorsque le joueur se déconnecte, soit lorsque la partie est terminée (tous les joueurs sont
-morts ou on quitter la partie).
-		Maintenant que le joueur a été supprimé, on vérifie qu'il reste des joueurs sur la partie. Si ce n'est pas le cas on supprime la partie. Si c'est la
+morts ou ont quitté la partie).
+		Maintenant que le joueur a été supprimé, on vérifie qu'il reste des joueurs sur la partie. Si ce n'est pas le cas on supprime la partie. Si c'est le
 cas un autre joueur pourra alors remplacer le joueur supprimé. Le remplacement tiendra compte des conditions nécessaire à l'ajout d'un joueur décrit dans la
 partie "\ref{subsubAddPlayer} \textbf{Ajout d'un joueur}".
 
@@ -400,16 +400,200 @@ serveur	va	envoyer au client.
 	\newpage
 	\section{Jeux d'essais}
 	
+		Nous allons dans cette section, montrer un scénario d'exécution. Ce scénario débute à la connexion du joueur, jusqu'au changement d'étage après avoir
+trouvé le trésor et tué le \gameName.\\
+
+Pour ce jeu d'essai nous montrerons le comportement du serveur et du client au même moment au cours de l'exécution.
+
+		\begin{minipage}[t]{0.46\textwidth}
+				\begin{center}
+					\textbf{Client}\\
+					\vspace{2pt}
+				 \includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus1.png}
+				\end{center}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+				\begin{center}
+					\textbf{Serveur}\\
+					\vspace{70pt}
+					\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur1.png}
+				\end{center}
+		\end{minipage}
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le client démarre l'application, cet écran est affiché.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le serveur est démarré, voici l'affichage du terminal.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus2.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{55pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur2.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le client souhaite se connecter, il doit donner un pseudonyme qui l'identifiera tout au long de la partie.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			On peut voir que le serveur est en attente de la réception d'un pseudonyme, cela veut dire qu'un joueur essaye de se connecter.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus3.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{20pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur3.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Après que le client ait renseigné son pseudonyme, il reçoit les premières informations du serveur, à savoir le résultat des senseurs
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Après que le client ait renseigné son pseudonyme, le serveur envoie les résultats des senseurs au client.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{20pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus4.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur4.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Au cours de la partie le joueur est amené à trouver des trésors, voici ce que le joueur peut voir apparaître lorsqu'il trouve un trésor.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			On peut voir que le serveur a reçu une commande de déplacement, il vérifie alors s'il y a interaction entre le joueur et un élément de l'étage(ici
+le trésor).
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus5.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{30pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur5.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Sur cette image on peut voir que le trésor a été trouvé et que le joueur a fait demi-tour.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Ici le serveur à reçu(deux fois) la commande \emph{turnright}.
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus6.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur6.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Ici le joueur a tiré en direction du \gameName. Le joueur obtient alors la confirmation que sa flèche a atteint sa cible.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Le serveur a reçu la commande de tir. Le serveur vérifie alors que le \gameName soit sur la trajectoire de la flèche et envoie le résultat au
+joueur. Le serveur met ensuite les senseurs de tous les joueurs de la partie en cours.
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{50pt}
+			\centering
+			\includegraphics[width=.96\textwidth]{JeuxDEssais/Wumpus7.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur7.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Cette boîte de dialogue s'affiche lorsqu'un joueur change d'étage, c'est à dire lorsqu'il retourne à sa position initiale et envoie la commande
+\emph{down}. Le joueur reçoit alors un récapitulatif du scores de tous les joueurs, puis sa position est réinitialisée.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Le serveur reçoit la commande \emph{down}, il envoie alors le score de tous les joueurs à tout le monde, puis créé un nouvel étage et réinitialise
+la position de tous les joueurs.
+		\end{minipge}\\
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%  Etape 5
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
 	\section{Les problèmes rencontrés}
-	Nous avons rencontrés quelques problèmes lors de la réalisation de ce jeu. La plupart de ces problèmes sont dû à la synchronisation entre la communication du client / serveur. Afin de résoudre ces problème nous avons ajoutés un système d'acquitement permettant d'attendre que le client ou le serveur a bien reçu l'information avant d'en envoyer une autre ou de répondre.
-	
-	Quelques bugs persistent, en effet lorsque tous les joueurs meurent seul un des deux joueurs était réinitialisé. De plus lorsque le trésor était trouvé, l'affichage de celui-ci à la prochaine partie était or de la carte (ce problème est seulement au niveau de l'affichage car le trésor est bien présent au bon endroit sur la carte). Ces différents bugs, ne se réalisaient pas à chaque fois, c'est à force de tester l'application que nous les avons détectés.
-	%lorsque le deuxième joueur mourrait, seul un des deux joueurs était reinitialisé. et aussi si le trésor était trouvé, à la prochaine partie, il s'affichait en (-1, -1)
+	Nous avons rencontré quelques problèmes lors de la réalisation de ce jeu. La plupart de ces problèmes sont dû à la synchronisation entre la communication
+du client / serveur. Afin de résoudre ces problèmes nous avons ajouté un système d'acquitement permettant d'attendre que le client ou le serveur a bien reçu
+l'information avant d'en envoyer une autre ou de répondre.
 
+	Quelques bugs persistent, en effet lorsque tous les joueurs meurent seul un des deux joueurs était réinitialisé. De plus lorsque le trésor était trouvé,
+l'affichage de celui-ci à la prochaine partie était hors de la carte (ce problème est seulement au niveau de l'affichage car le trésor est bien présent au bon
+endroit sur la carte). Ces différents bugs, ne se réalisaient pas à chaque fois, c'est à force de tester l'application que nous les avons détectés.
+	%lorsque le deuxième joueur mourrait, seul un des deux joueurs était réinitialisé. et aussi si le trésor était trouvé, à la prochaine partie, il s'affichait
+%	en (-1, -1)
+		
 	%TODO: Les problèmes rencontrés, se qu'il reste à faire,...
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%  CONCLUSION GENERALE
@@ -418,6 +602,9 @@ serveur	va	envoyer au client.
 	\section{Conclusion}
 	%Evolution du projet, de l'application client/serveur à l'application multi-client/serveur et de l'ajout de l'IHM
 
+	Nous pouvons conclure en disant qu'il n'a pas été très facile de mettre en place une architecture solide à cause du langage utilisé, mais en contre partie,
+cela nous a permis de mieux comprendre comment fonctionne une application utilisant le modèle client/serveur.
+	
 	\end{document}
 
 	\begin{figure}[H]
