@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.11)  7 APR 2013 21:39
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.11)  7 APR 2013 21:43
 entering extended mode
  %&-line parsing enabled.
 **Rapport_COUTABLE_RULLIER.tex
@@ -1104,10 +1104,10 @@ Package caption Info: End \AtBeginDocument code.
 \c@lstlisting=\count166
 
 ABD: EveryShipout initializing macros
-<Images/Wumpus.png, id=74, 235.88126pt x 287.0725pt>
+<Images/Wumpus.png, id=78, 235.88126pt x 287.0725pt>
 File: Images/Wumpus.png Graphic file (type png)
  <use Images/Wumpus.png>
-<Images/universite.png, id=76, 219.4599pt x 101.6598pt>
+<Images/universite.png, id=80, 219.4599pt x 101.6598pt>
 File: Images/universite.png Graphic file (type png)
 
 <use Images/universite.png> [1
@@ -1134,140 +1134,140 @@ been already used, duplicate ignored
                    \relax 
 l.146 	\newpage
                 [1] [2] [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 251.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 250.
 
  (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <7> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 251.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 250.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <7> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 267.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 266.
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 309--314
+Underfull \hbox (badness 10000) in paragraph at lines 308--313
 
  []
 
 [5] [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 404--406
+Underfull \hbox (badness 10000) in paragraph at lines 403--405
 
  []
 
-<JeuxDEssais/Wumpus1.png, id=209, 577.15625pt x 487.8225pt>
+<JeuxDEssais/Wumpus1.png, id=214, 577.15625pt x 487.8225pt>
 File: JeuxDEssais/Wumpus1.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus1.png>
-<JeuxDEssais/Serveur1.png, id=210, 545.03625pt x 112.42pt>
+<JeuxDEssais/Serveur1.png, id=215, 545.03625pt x 112.42pt>
 File: JeuxDEssais/Serveur1.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur1.png>
-Underfull \hbox (badness 10000) in paragraph at lines 425--434
+Underfull \hbox (badness 10000) in paragraph at lines 424--433
 
  []
 
-<JeuxDEssais/Wumpus2.png, id=211, 572.1375pt x 484.81125pt>
+<JeuxDEssais/Wumpus2.png, id=216, 572.1375pt x 484.81125pt>
 File: JeuxDEssais/Wumpus2.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus2.png>
-<JeuxDEssais/Serveur2.png, id=212, 538.01pt x 150.5625pt>
+<JeuxDEssais/Serveur2.png, id=217, 538.01pt x 150.5625pt>
 File: JeuxDEssais/Serveur2.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur2.png>
-Underfull \hbox (badness 10000) in paragraph at lines 449--458
+Underfull \hbox (badness 10000) in paragraph at lines 448--457
 
  []
 
-<JeuxDEssais/Wumpus3.png, id=213, 649.42625pt x 527.9725pt>
+<JeuxDEssais/Wumpus3.png, id=218, 649.42625pt x 527.9725pt>
 File: JeuxDEssais/Wumpus3.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus3.png>
-<JeuxDEssais/Serveur3.png, id=214, 539.01375pt x 108.405pt>
+<JeuxDEssais/Serveur3.png, id=219, 539.01375pt x 108.405pt>
 File: JeuxDEssais/Serveur3.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur3.png>
-Underfull \hbox (badness 10000) in paragraph at lines 473--482
+Underfull \hbox (badness 10000) in paragraph at lines 472--481
 
  []
 
-<JeuxDEssais/Wumpus4.png, id=215, 499.8675pt x 211.79124pt>
+<JeuxDEssais/Wumpus4.png, id=220, 499.8675pt x 211.79124pt>
 File: JeuxDEssais/Wumpus4.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus4.png>
-<JeuxDEssais/Serveur4.png, id=216, 380.42125pt x 235.88126pt>
+<JeuxDEssais/Serveur4.png, id=221, 380.42125pt x 235.88126pt>
 File: JeuxDEssais/Serveur4.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur4.png> [8 <./JeuxDEssais/Wumpus1.png (PNG copy)> <./Jeu
 xDEssais/Serveur1.png (PNG copy)> <./JeuxDEssais/Wumpus2.png (PNG copy)> <./Jeu
 xDEssais/Serveur2.png (PNG copy)> <./JeuxDEssais/Wumpus3.png (PNG copy)> <./Jeu
 xDEssais/Serveur3.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 497--507
+Underfull \hbox (badness 10000) in paragraph at lines 496--506
 
  []
 
-<JeuxDEssais/Wumpus5.png, id=222, 566.115pt x 496.85625pt>
+<JeuxDEssais/Wumpus5.png, id=227, 566.115pt x 496.85625pt>
 File: JeuxDEssais/Wumpus5.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus5.png>
-<JeuxDEssais/Serveur5.png, id=223, 500.87125pt x 254.9525pt>
+<JeuxDEssais/Serveur5.png, id=228, 500.87125pt x 254.9525pt>
 File: JeuxDEssais/Serveur5.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur5.png>
-Underfull \hbox (badness 10000) in paragraph at lines 522--531
+Underfull \hbox (badness 10000) in paragraph at lines 521--530
 
  []
 
-<JeuxDEssais/Wumpus6.png, id=224, 566.115pt x 496.85625pt>
+<JeuxDEssais/Wumpus6.png, id=229, 566.115pt x 496.85625pt>
 File: JeuxDEssais/Wumpus6.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus6.png>
-<JeuxDEssais/Serveur6.png, id=225, 329.23pt x 289.08pt>
+<JeuxDEssais/Serveur6.png, id=230, 329.23pt x 289.08pt>
 File: JeuxDEssais/Serveur6.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur6.png>
-Underfull \hbox (badness 10000) in paragraph at lines 546--556
+Underfull \hbox (badness 10000) in paragraph at lines 545--555
 
  []
 
-<JeuxDEssais/Wumpus7.png, id=226, 335.2525pt x 138.5175pt>
+<JeuxDEssais/Wumpus7.png, id=231, 335.2525pt x 138.5175pt>
 File: JeuxDEssais/Wumpus7.png Graphic file (type png)
 
 <use JeuxDEssais/Wumpus7.png>
-<JeuxDEssais/Serveur7.png, id=227, 300.12125pt x 288.07625pt>
+<JeuxDEssais/Serveur7.png, id=232, 300.12125pt x 288.07625pt>
 File: JeuxDEssais/Serveur7.png Graphic file (type png)
 
 <use JeuxDEssais/Serveur7.png> [9 <./JeuxDEssais/Wumpus4.png (PNG copy)> <./Jeu
 xDEssais/Serveur4.png (PNG copy)> <./JeuxDEssais/Wumpus5.png (PNG copy)> <./Jeu
 xDEssais/Serveur5.png (PNG copy)> <./JeuxDEssais/Wumpus6.png (PNG copy)> <./Jeu
 xDEssais/Serveur6.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 571--582
+Underfull \hbox (badness 10000) in paragraph at lines 570--581
 
  []
 
 [10 <./JeuxDEssais/Wumpus7.png (PNG copy)> <./JeuxDEssais/Serveur7.png (PNG cop
-y)>] AED: lastpage setting LastPage [11] (./Rapport_COUTABLE_RULLIER.aux) ) 
+y)>] [11] AED: lastpage setting LastPage [12] (./Rapport_COUTABLE_RULLIER.aux) 
+) 
 Here is how much of TeX's memory you used:
- 21341 strings out of 495028
- 375084 string characters out of 1181229
+ 21344 strings out of 495028
+ 375111 string characters out of 1181229
  687631 words of memory out of 3000000
- 23969 multiletter control sequences out of 15000+50000
+ 23970 multiletter control sequences out of 15000+50000
  15312 words of font info for 36 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  56i,12n,56p,831b,1888s stack positions out of 5000i,500n,10000p,200000b,50000s
- </h
-ome/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0700.600pk> </home/gui
-llaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0700.600pk> </home/guillaume/
-.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0700.600pk> </home/guillaume/.texmf-
-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/guillaume/.texmf-var/fon
-ts/pk/ljfour/jknappen/ec/eccc1000.600pk> </home/guillaume/.texmf-var/fonts/pk/l
-jfour/jknappen/ec/ecti1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/j
-knappen/ec/ecbx1440.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen
-/ec/ecrm1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecb
-x1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1728.6
-00pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/eccc1200.600pk></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Rapport_COUTABLE_RULLIER.pdf (12 pages, 652860 bytes).
+ </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0700.600pk> </hom
+e/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0700.600pk> </home/guill
+aume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0700.600pk> </home/guillaume/.t
+exmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/guillaume/.texmf-va
+r/fonts/pk/ljfour/jknappen/ec/eccc1000.600pk> </home/guillaume/.texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecti1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljf
+our/jknappen/ec/ecbx1440.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jkn
+appen/ec/ecrm1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/e
+c/ecbx1000.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1
+728.600pk> </home/guillaume/.texmf-var/fonts/pk/ljfour/jknappen/ec/eccc1200.600
+pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+Output written on Rapport_COUTABLE_RULLIER.pdf (13 pages, 656989 bytes).
 PDF statistics:
- 673 PDF objects out of 1000 (max. 8388607)
- 87 named destinations out of 1000 (max. 500000)
- 229 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 689 PDF objects out of 1000 (max. 8388607)
+ 89 named destinations out of 1000 (max. 500000)
+ 237 words of extra memory for PDF output out of 10000 (max. 10000000)
 
