@@ -1,212 +1,418 @@
-%% Classe du document
-\documentclass[a4paper,10pt]{article}
+	%% Classe du document
+	\documentclass[a4paper,10pt]{article}
 
-%% Francisation
-\usepackage[francais]{babel} % Indique que l'on utilise le francais
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc} % Indique que l'on utilise tout le clavier
-%\usepackage[latin1]{inputenc}
-
-%% Réglages généraux
-\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry} % Taille de la feuille
-\usepackage{lastpage}
-
-%% Package pour le texte
-\usepackage{soul} % Souligner
-\usepackage{color} % Utilisation de couleurs
-\usepackage{hyperref} % Créer des liens et des signets
-\usepackage{eurosym}% Pour le symbole euro
-\usepackage{fancyhdr}% Entête et pied de page
-
-%% Package pour les tableaux
-\usepackage{multirow} % Colonnes multiples
-\usepackage{cellspace}
-\usepackage{array}
-
-%% Package pour les dessins
-\usepackage{pstricks}
-\usepackage{graphicx} % Importer des images
-\usepackage{pdftricks} % Pour utiliser avec pdfTex
-\usepackage{pst-pdf} % Pour utiliser avec pdfTex
-\usepackage{pst-node} % Pose de noeuds
-\usepackage{subfig}
-\usepackage{float}
-
-%% Package pour les maths
-\usepackage{amsmath} % Commandes essentielles
-\usepackage{amssymb} % Principaux symboles
-
-%% Package pour le code
-\usepackage{listings} % Utilisation de la couleur syntaxique des langages
-\usepackage{url}
+	%% Francisation
+	\usepackage[francais]{babel} % Indique que l'on utilise le francais
+	\usepackage[T1]{fontenc}
+	\usepackage[utf8]{inputenc} % Indique que l'on utilise tout le clavier
+	%\usepackage[latin1]{inputenc}
 
 
-\usepackage[babel=true]{csquotes} % Permet les quotations (guillemets)
-\usepackage{tocvsec2}
-\usepackage{amsthm}
-\usepackage{amsfonts}
+	%% Réglages généraux
+	\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry} % Taille de la feuille
+	\usepackage{lastpage}
 
-\usepackage{tikz}
-\usepackage{pdfpages}
+	%% Package pour le texte
+	\usepackage{soul} % Souligner
+	\usepackage{color} % Utilisation de couleurs
+	\usepackage{hyperref} % Créer des liens et des signets
+	\usepackage{eurosym}% Pour le symbole euro
+	\usepackage{fancyhdr}% Entête et pied de page
 
-\usetikzlibrary{shapes} % A revoir
+	%% Package pour les tableaux
+	\usepackage{multirow} % Colonnes multiples
+	\usepackage{cellspace}
+	\usepackage{array}
 
-%--------------------- Autres définitions ---------------------%
+	%% Package pour les dessins
+% 	\usepackage{pstricks}
+	\usepackage{graphicx} % Importer des images
+% 	\usepackage{pdftricks} % Pour utiliser avec pdfTex
+% 	\usepackage{pst-pdf} % Pour utiliser avec pdfTex
+% 	\usepackage{pst-node} % Pose de noeuds
+	\usepackage{subfig}
+	\usepackage{float}
 
-% Propriété des liens
-\hypersetup{
-colorlinks = true, % Colorise les liens
-urlcolor = blue, % Couleur des hyperliens
-linkcolor = black, % Couleur des liens internes
-}
+	%% Package pour les maths
+	\usepackage{amsmath} % Commandes essentielles
+	\usepackage{amssymb} % Principaux symboles
 
-\definecolor{grey}{rgb}{0.95,0.95,0.95}
-
-% Language Definitions for Turtle
-%TODO: a revoir avec les couleur de gedit
-\definecolor{olivegreen}{rgb}{0.2,0.8,0.5}
-\definecolor{grey2}{rgb}{0.5,0.5,0.5}
-\lstdefinelanguage{ttl}{
-sensitive=true,
-morecomment=[s][\color{grey2}]{@}{:},
-morecomment=[l][\color{olivegreen}]{\#},
-morecomment=[s][\color{red}]{<}{/>},
-morestring=[s][\color{olivegreen}]{<http://w}{\#>},
-morestring=[b][\color{blue}]{\"},
-}
-
-\lstset{
-frame=single,
-breaklines=true,
-basicstyle=\ttfamily,
-backgroundcolor=\color{grey},
-basicstyle=\scriptsize,
-keywordstyle=\color{blue},
-commentstyle=\color{green},
-stringstyle=\color{red},
-identifierstyle=\color{blue}
-}
-
-%Definition de la commande pour retirer l'espace devant les ':'
-\makeatletter
-\@ifpackageloaded{babel}%
-        {\newcommand{\nospace}[1]{{\NoAutoSpaceBeforeFDP{}#1}}}%  % !! double {{}} pour cantonner l'effet à l'argument #1 !!
-        {\newcommand{\nospace}[1]{#1}}
-\makeatother
-
-\setcounter{tocdepth}{3}
-%\maxsecnumdepth{subsubsection} % Dernière section numérotée
-
-\newcommand{\paperPrototyping}{\emph{paper prototyping}}
-
-% Corps du document :
-\begin{document}
-
-% Définition des entêtes et pieds de page
-\fancyhead[LE,CE,RE,LO,CO,RO]{}
-\fancyfoot[LE,CE,RE,LO,CO,RO]{}
-\fancyhead[LO, LE]{Réseaux et protocoles de l'internet}
-\fancyhead[RO,RE]{2012/2013}
-\fancyfoot[LO,LE]{Université de \scshape{Nantes}}
-\fancyfoot[RO,RE]{Page \thepage \ sur \pageref{LastPage}}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.4pt}
-
-%\maketitle
-\begin{titlepage}
-
-\vspace*{\fill}~
-\begin{center}
-{\large \textsc{Rapport de Projet}} \\
-\vspace{1cm}
-{\LARGE Modèle Client/Serveur, TCP/IP, Sockets Unix} \\
-\vspace{1cm}
-\textbf{Wumpus} \\
-\includegraphics[height=1cm]{Images/Wumpus.png} \\
-\vspace{1cm}
-COUTABLE Guillaume, RULLIER Noémie \\
-\today
-\end{center}
-\vspace*{\fill}
-
-\vspace{\stretch{1}}
-\begin{center}
-\noindent 
-\includegraphics[height=2.5cm]{Images/universite.png}
-\end{center}
-\pagebreak
-\end{titlepage}
-
-\newpage
-\tableofcontents  
-
-% Introduction
-\newpage
-\pagestyle{fancy}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  Introduction générale
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
-L'objectif de ce projet fut de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du fonctionnement des interfaces systèmes/réseaux et des applications clients/serveur.
-
-Afin de créer cette application que nous avons appelé \textit{Wumpus}, nous avons établit plusieurs étapes dans l'avancement du projet. Ce rapport
-présentera  ces étapes  les unes après  les autres.
-
-%TODO 10 pages sans les annexes
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  Etape 1
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Présentation de l'application}
-% Expliquer ici un peu ce qu'est notre application
+	%% Package pour le code
+	\usepackage{listings} % Utilisation de la couleur syntaxique des langages
+	\usepackage{url}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  Etape 2
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Coté serveur}
+	\usepackage[babel=true]{csquotes} % Permet les quotations (guillemets)
+	\usepackage{tocvsec2}
+	\usepackage{amsthm}
+	\usepackage{amsfonts}
+
+	\usepackage{tikz}
+	\usepackage{pdfpages}
+
+	\usetikzlibrary{shapes} % A revoir
+
+	%--------------------- Autres définitions ---------------------%
+
+	% Propriété des liens
+	\hypersetup{
+	colorlinks = true, % Colorise les liens
+	urlcolor = blue, % Couleur des hyperliens
+	linkcolor = blue, % Couleur des liens internes
+	}
+
+	\definecolor{grey}{rgb}{0.95,0.95,0.95}
+
+	% Language Definitions for Turtle
+	%TODO: a revoir avec les couleur de gedit
+	\definecolor{olivegreen}{rgb}{0.2,0.8,0.5}
+	\definecolor{grey2}{rgb}{0.5,0.5,0.5}
+	\lstdefinelanguage{ttl}{
+	sensitive=true,
+	morecomment=[s][\color{grey2}]{@}{:},
+	morecomment=[l][\color{olivegreen}]{\#},
+	morecomment=[s][\color{red}]{<}{/>},
+	morestring=[s][\color{olivegreen}]{<http://w}{\#>},
+	morestring=[b][\color{blue}]{\"},
+	}
+
+	\lstset{
+	language=C,
+	frame=single,
+	breaklines=true,
+	basicstyle=\ttfamily,
+	backgroundcolor=\color{grey},
+	basicstyle=\scriptsize,
+% 	keywordstyle=\color{blue},
+% 	commentstyle=\color{green},
+% 	stringstyle=\color{red},
+% 	identifierstyle=\color{blue}
+	}
+
+	%Definition de la commande pour retirer l'espace devant les ':'
+	\makeatletter
+	\@ifpackageloaded{babel}%
+			{\newcommand{\nospace}[1]{{\NoAutoSpaceBeforeFDP{}#1}}}%  % !! double {{}} pour cantonner l'effet à l'argument #1 !!
+			{\newcommand{\nospace}[1]{#1}}
+	\makeatother
+
+	\setcounter{tocdepth}{3}
+	%\maxsecnumdepth{subsubsection} % Dernière section numérotée
+
+	\newcommand{\gameName}{\emph{Wumpus }}
+
+	% Corps du document :
+	\begin{document}
+
+	% Définition des entêtes et pieds de page
+	\fancyhead[L,C,R,LO,CO,RO]{}
+	\fancyfoot[L,C,R,LO,CO,RO]{}
+	\fancyhead[LO, L]{Réseaux et protocoles de l'internet}
+	\fancyhead[RO,R]{2012/2013}
+	\fancyfoot[LO,L]{Université de \scshape{Nantes}}
+	\fancyfoot[RO,R]{Page \thepage \ sur \pageref{LastPage}}
+	\renewcommand{\headrulewidth}{0.4pt}
+	\renewcommand{\footrulewidth}{0.4pt}
+
+	%\maketitle
+	\begin{titlepage}
+
+	\vspace*{\fill}~
+	\begin{center}
+	{\large \textsc{Rapport de Projet}} \\
+	\vspace{1cm}
+	{\LARGE Modèle Client/Serveur, TCP/IP, Sockets Unix} \\
+	\vspace{1cm}
+	\textbf{Wumpus} \\
+	\includegraphics[height=10cm]{Images/Wumpus.png} \\
+	\vspace{1cm}
+	COUTABLE Guillaume, RULLIER Noémie \\
+	\today
+	\end{center}
+	\vspace*{\fill}
+
+	\vspace{\stretch{1}}
+	\begin{center}
+	\noindent
+	\includegraphics[height=2.5cm]{Images/universite.png}
+	\end{center}
+	\pagebreak
+	\end{titlepage}
+
+	\newpage
+	\tableofcontents
+
+	% Introduction
+	\newpage
+	\pagestyle{fancy}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  Introduction générale
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\section{Introduction}
+	L'objectif de ce projet fût de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du
+	fonctionnement des interfaces systèmes/réseaux et des applications clients/serveur.
+
+	Afin de créer cette application que nous avons appelé \gameName, nous avons établit plusieurs étapes dans l'avancement du projet. Ce rapport
+	présentera  ces étapes  les unes après  les autres.
+
+	%TODO 10 pages sans les annexes
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  Etape 1
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Présentation de l'application}
+	Notre application est basé sur un jeu : le \gameName.
+
+	Le \gameName est un jeu ou un personnage, ici le client, devra parcourir une tour souterraine d'étages en étages à la recherche de trésors. % et tuer le
+	%\gameName pour rester en vie.
+	Munie de ses flèches il devra tuer le \gameName pour rester en vie.
+	% Il sera amené à éviter des pièges mortels et à rencontrer des monstres impitoyables.
+
+	\subsection{Règles du jeu}
+		\subsubsection{Version mono-client}
+			La tour souterraine est composée d'étages.
+			Chaque étage est représenté par une grille qui inclut une échelle, un trésor, un trou hérissé de lance et du \gameName.
+			L'échelle permet au joueur de descendre à l'étage inférieur lorsque le trésor a été trouvé. Au cours de son exploration, si le joueur tombe sur le
+	\gameName ou tombe dans le trou, la partie est terminée.
+
+			Le joueur possède une unique flèche qui lui est donnée à chaque nouvel étage. Cette flèche permet au joueur de tuer le \gameName.
+
+			Au cours de ces précédentes aventures le personnage à acquis un certain nombre de senseurs.
+			Ces senseurs donne la capacité au personne de ressentir son environnement proche :
+			\begin{description}
+			\item[WIND :] Ce senseur est activé lorsque le personnage se situe sur une case adjacente au trou.
+			\item[TWINKLE(scintiller) :] Ce senseur s'active lorsque le joueur détecte la présence du trésor.
+			\item[STINK(empester) :] Ce senseur est activé lorsque le joueur ressent la présence du \gameName.
+			\end{description}
+
+			Une partie est terminée, si le joueur est tué par le \gameName, s'il tombe dans un trou, ou si le joueur décide qu'il est temps de remonter à la
+	surface. Lorsque la partie est terminée, le joueur se voit attribuer un score en fonction du nombre d'étage parcourus, du nombre de trésor trouvés et du
+nombre	de \gameName tués.
+
+		\subsubsection{Version multi-client}
+			Au passage de la version mono-client à la version multi-client, certaines règles ont évolué pour instaurer de la compétitivité entre les joueurs :
+			\begin{itemize}
+				\item Les joueur se déplacent toujours dans le même environnement, mais ne connaissent pas la position des autres joueurs.
+				\item Lorsque un des joueurs de la partie passe change d'étage, les autres joueurs de la même partie passent automatiquement à l'étage
+suivant.
+				\item Les points acquis à la découverte du trésor ne sont plus attribués au moment ou le joueur trouve le trésor, mais au moment ou il passe à
+l'étage suivant. De cette manière si deux joueurs trouvent le trésors, seul le plus rapide des deux est récompensé.
+				\item Si un des joueurs meurt, il perd des points en fonction de ce qui l'a tué.
+				\item Si l'un des joueurs d'une partie meurt, il n'a plus la possibilité d'effectuer d'actions. À moins que l'un des joueurs change d'étage
+, auquel cas la partie continue, ou que tous les autres joueurs de la même partie meurent aussi. Dans se dernier cas on considère que la partie est terminée et
+que le joueur ayant le plus de points à gagné.
+			\end{itemize}
+
+
+	% Expliquer ici un peu ce qu'est notre application
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  Etape 2
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Coté serveur}
+	%IMPORTANT : justifier chaque choix effectués
+	Dans cette partie nous verrons comment sont traitées les commandes, comment est faite la communication client/serveur et comment est effectuées la gestion
+des clients connectés.
+
+	\subsection{Commandes clients}
+	%comment sont traitées les commandes clients et leur fonction
+	Au démarrage, le serveur est mis en attente de connexion de clients.
+	Une fois le joueur connecté, il a la possibilité d'entrer des commandes. Ces commandes correspondent aux actions possibles du joueur.
+	\subsubsection{Descriptions des commandes}
+	À chaque commande coïncide une fonction. Voici une brève explication de chacune de ces fonctions.
+
+	\begin{description}
+		\item[Commande quit : ] La commande \emph{quit}, quand elle est reçu, supprime le joueur qui l'a envoyé de la partie.
+		\item[Commande move : ] La commande \emph{move} met à jour la position du joueur en fonction de la direction pointé par celui-ci(NORD, SUD, EST, OUEST).
+Avec la nouvelle position du joueur, la commande vérifie si le joueur est sur une case à événement, c'est à dire soit sur une case trésor, soit sur une case
+trou, soit sur une case \gameName. Puis met à jour les senseurs du joueur et envoi les nouvelles informations au client.
+		\item[Commande turnright : ] La commande \emph{turnright} met a jour la direction du joueur. La direction évolue dans le sens des aiguilles d'une
+montre. Puis envoi les nouvelles informations au client.
+		\item[Commande turnleft : ] La commande \emph{turnleft} à le même comportement que la commande \emph{turnright}, à la différence que la direction
+évolue dans le sens inverse des aiguilles d'une montre.
+		\item[Commande shot : ] La commande \emph{shot} correspond à l'utilisation de la flèche par le joueur. Cette commande parcours les cases de la position
+du joueur jusqu'au bord de la carte dans la direction regarder par le joueur. Si le \gameName est rencontré, cela signifie que la flèche à tuer le \gameName,
+auquel cas la carte du jeu ainsi que les données du joueur(score) sont mis à jour. Les nouvelles données sont ensuite envoyé au client.
+		\item[Commande down : ] La commande \emph{down} ne pourra être envoyé par le client que si ce client à trouvé le trésor. Si cette commande est reçu par
+le serveur, un nouvel étage est généré, le score du joueur qui à envoyé la commande \emph{down} est mis à jour puis la position et la direction de tout les
+joueurs est remise à zéro. Ainsi les joueurs évoluerons sur une nouvelle carte.
+	\end{description}
+
+	Après cette brève présentation des commandes clients, voyons comment sont traitées ces commandes.
+	\subsubsection{Traitement des commandes}
+	\label{subsubTraitCommandes}
+
+	Au démarrage du serveur les commandes sont déclarées en tant que pointeur sur fonction :
+	\begin{lstlisting}
+/*Type T_FONC_ACTION*/
+typedef void T_FONC_ACTION();
+
+/*Prototypes fonctions*/
+T_FONC_ACTION quit;
+T_FONC_ACTION move;
+T_FONC_ACTION turn_right;
+T_FONC_ACTION turn_left;
+T_FONC_ACTION shot;
+T_FONC_ACTION down;
+
+	\end{lstlisting}
+
+	Un type \emph{Action} est définie pour faire le lien entre la commande reçu par le serveur et la fonction qui correspond à la commande :
+\begin{lstlisting}
+typedef struct {
+    char* command;
+    T_FONC_ACTION* action;
+} Action;
+\end{lstlisting}
+
+	Chaque \emph{Action} est initialisée et conservée dans un tableau :
+
+\begin{lstlisting}
+//Number of all commands available
+#define NBACTION 6
+
+//Simplify action access
+#define A_QUITTER 0
+#define A_AVANCER 1
+...
+
+//Initialize all available actions
+Action* initialisationActions()
+{
+    Action* actions = (Action*)malloc(NBACTION*sizeof(Action));
+
+    //quit action
+    Action* quitAction = (Action*)malloc(sizeof(Action));
+    quitAction->command = "quit";
+    quitAction->action = quit;
+    actions[A_QUITTER] = *quitAction;
+    ...
+    
+	return actions;
+ }
+\end{lstlisting}
+
+	Après que la commande ai été reçue, on récupère le pointeur de fonction correspondant à la commande à l'aide de la fonction \emph{findActionFromCommand} :
+\begin{lstlisting}
+Action* findActionFromCommand(Action* action, char* command);
+\end{lstlisting}
+
+	Cette fonction parcours le tableau contenant toutes les actions disponibles, test la chaîne de caractères donnée en entrée et retourne l'\emph{Action}
+correspondante et permet ainsi l'exécution de la fonction adéquat.
+
+	\subsection{Communication client/serveur}
+	%initialisation du serveur, protocole utilisé, threads,...
+	Lors de la première connexion d'un client, le serveur envoi une requête de pseudonyme au client. Une fois ce pseudonyme reçu le serveur instancie un
+nouveau joueur ainsi qu'un thread. Le serveur affecte alors le joueur au thread ainsi qu'à un jeu(cf.\ref{subGestionClient}). Au final pour chaque connexion un
+thread sera créé.\\
+	Chaque thread ainsi que le serveur seront en mode "écoute" du réseau. Chaque thread sera en attente d'une commande de son client, et le serveur sera en
+attente de la connexion d'un nouveau client.\\
+
+	Entrons un peu plus dans les détails. Lorsque le client envoi des données, ces données représentent une simple chaîne de caractère qui correspond à une
+commande. Nous avons vu dans la section "\ref{subsubTraitCommandes} \textbf{Traitement des commandes}" comment le serveur récupérait ces données et ce qu'il
+faisait pour exécuter la bonne fonction. Par contre lorsque le serveur veut envoyer des données, il envoi les données sous la forme d'une structure :
+\begin{lstlisting}
+//Different type of structure which could be send
+#define STRUCTACQUITEMENT 0
+#define STRUCTMESSAGE 1
+#define STRUCTMOVING 2
+#define STRUCTDOWN 3
+
+//Maximum size of a sending structure
+#define TAILLEMAX (TAILLE_MAX_NOM+sizeof(int))*(NBPLAYERSPERGAME)+sizeof(int)
+
+typedef struct
+{
+    int type;
+    char name[15];
+    char structure[TAILLEMAX];
+} sendToClient;
+\end{lstlisting}
+
+	Dans cette structure le paramètre le plus important est le troisième paramètre car il correspond aux données envoyées. Ces données sont encapsulées dans une
+structure qui dépend du type. Au final le serveur peut envoyer quatre type de structures :
+	\begin{itemize}
+		\item Une structure d’acquittement
+		\item Une structure qui contient un message
+		\item Une structure contenant des informations relatives au mouvement d'un joueur.
+		\item Une structure utilisée à la réception de la commande \emph{down}
+	\end{itemize}
+
+	Il est a noter qu'à chaque envoi de données, que ce soit depuis le serveur ou depuis le client, l’émetteur attend une trame d'acquittement(sauf s'il
+s'agit de la trame d'acquittement elle même).
+
+	%parler des structures transmises et de l’acquittement de chaque envoie
+
+
+	\subsection{Gestion des clients}
+	\label{subGestionClient}
+	%structure de gestion des clients et des jeux
+
+	 Pour une meilleur gestion des clients nous avons mis en place une structure qui réparti les joueurs entre les différentes parties en cours.
+	 Le comportement de cette structure se base sur l'ajout et la suppression de joueur. Nous verrons donc le comportement de la structure mise en place lors
+de la connexion d'un joueur, ou lorsque celui si termine la partie sur lequel il joue.
+
+	\subsubsection{Ajout d'un joueur}
+	\label{subsubAddPlayer}
+		Un joueur est ajouté dans la structure lorsqu'il demande une connexion au serveur et renseigne son pseudonyme. Dans ce cas la structure cherche une
+partie en cours qui respecte les conditions suivantes:
+		\begin{itemize}
+			\item La partie ne doit pas être complète.
+			\item Pour éviter un déséquilibre au niveau des points, la partie doit être sur le premier étage.
+		\end{itemize}
+		Si une des conditions précédentes n'est pas respectée, la structure créer une nouvelle partie et y ajoute le nouveau joueur.
+
+	\subsubsection{Suppression d'un joueur}
+		La suppression d'un joueur par la structure survient, soit lorsque le joueur se déconnecte, soit lorsque la partie est terminée (tous les joueurs sont
+morts ou on quitter la partie).
+		Maintenant que le joueur a été supprimé, on vérifie qu'il reste des joueurs sur la partie. Si ce n'est pas le cas on supprime la partie. Si c'est la
+cas un autre joueur pourra alors remplacer le joueur supprimé. Le remplacement tiendra compte des conditions nécessaire à l'ajout d'un joueur décrit dans la
+partie "\ref{subsubAddPlayer} \textbf{Ajout d'un joueur}".
+
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  Etape 3
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Coté client}
+	Pour qu'un client puisque communiquer avec le serveur, il doit tout d'abord commencer par établir une connexion.
+
+	\subsection{Etablir une connexion}
+	Afin que cette connexion soit établie, le client doit fournir les bons paramètres. Soit l'adresse de la machine hôte sur laquelle le serveur est lancé
+	ainsi	que le port. Lorsque la connexion est établie, un thread est lancé. Celui-ci est en fait un listener qui va écouter et recevoir tout ce que le
+serveur	va	envoyer au client.
+	On demande au joueur d'entrer un pseudo qui sera envoyé dès que la connexion est établie.
+
+	Le client va ensuite pouvoir jouer au \gameName. A chaque action qu'il fera une commande sera envoyée au serveur sous forme de char*. Le serveur va traiter
+	cette commande et envoyer une réponse au client si nécessaire !
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  Etape 3
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Coté client}
-Pour qu'un client puisque communiquer avec le serveur, il doit tout d'abord commencer par établir une connexion.
-
-\subsection{Etablir une connexion}
-Afin que cette connexion soit établie, le client doit fournir les bons paramètres. Soit l'adresse de la machine hôte sur laquelle le serveur est lancé ainsi que le port. Lorsque la connexion est établie, un thread est lancé. Celui-ci est en fait un listener qui va écouter et recevoir tout ce que le serveur va envoyer au client.
-On demande au joueur d'entrer un pseudo qui sera envoyé dès que la connexion est établie.
-
-Le client va ensuite pouvoir jouer au Wumpus. A chaque action qu'il fera une commande sera envoyée au serveur sous forme de char*. Le serveur va traiter cette commande et envoyer une réponse au client si nécessaire !
+	%TODO Annexe: IHM mettre en annexe ainsi que le manuel d'utilisateur --> Règles du jeu
 
 
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  Etape 4
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Jeux d'essais}
 
-%TODO Annexe: IHM mettre en annexe ainsi que le manuel d'utilisateur --> Règles du jeu
+	%TODO: Les problèmes rencontrés, se qu'il reste à faire,...
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%  CONCLUSION GENERALE
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Conclusion}
+	%Evolution du projet, de l'application client/serveur à l'application multi-client/serveur et de l'ajout de l'IHM
 
+	\end{document}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  Etape 4
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Jeux d'essais}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%  CONCLUSION GENERALE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\section{Conclusion}
-
-
-\end{document}
-
-\begin{figure}[H]
-    \center
-    \includegraphics[width=2cm]{Images/menuFichier.png}
-    \caption{Le menu Fichier}
-\end{figure}
+	\begin{figure}[H]
+		\center
+		\includegraphics[width=2cm]{Images/menuFichier.png}
+		\caption{Le menu Fichier}
+	\end{figure}

@@ -18,21 +18,6 @@ typedef struct
 //    int gameNumber;
 } arg_struct;
 
-//structure indiquant le score d'un joueur
-typedef struct
-{
-    char playerName[TAILLE_MAX_NOM];
-    int score;
-} scoreP;
-
-typedef struct
-{
-    int nbScore;
-    scoreP scores[TAILLEMAX];
-} scoreToClient;
-
-void initScoreSending(char* why, scoreToClient *sctc, player *player, sendToClient* stc);
-
 //typedef struct{
 
 //	stairs *s;

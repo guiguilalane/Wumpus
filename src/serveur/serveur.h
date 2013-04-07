@@ -47,6 +47,19 @@ typedef struct
 
 } toClient;
 
+//structure indiquant le score d'un joueur
+typedef struct
+{
+    char playerName[TAILLE_MAX_NOM];
+    int score;
+} scoreP;
+
+typedef struct
+{
+    int nbScore;
+    scoreP scores[TAILLEMAX];
+} scoreToClient;
+
 typedef struct
 {
     int type;
@@ -63,3 +76,4 @@ void initMovingSending(toClient* c, player* p, sendToClient* stc);
 void initDownSending(sendToClient* stc);
 void initStairSending(char* why, sendToClient* stc);
 void initAcquitementSending(sendToClient* stc);
+void initScoreSending(char* why, scoreToClient *sctc, player *player, sendToClient* stc);
