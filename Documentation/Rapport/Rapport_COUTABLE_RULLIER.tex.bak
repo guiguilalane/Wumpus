@@ -407,7 +407,7 @@ serveur	va	envoyer au client.
 	\section{Les problèmes rencontrés}
 	Nous avons rencontrés quelques problèmes lors de la réalisation de ce jeu. La plupart de ces problèmes sont dû à la synchronisation entre la communication du client / serveur. Afin de résoudre ces problème nous avons ajoutés un système d'acquitement permettant d'attendre que le client ou le serveur a bien reçu l'information avant d'en envoyer une autre ou de répondre.
 	
-	Quelques bugs persistent, en effet lorsque tous les joueurs meurent 
+	Quelques bugs persistent, en effet lorsque tous les joueurs meurent seul un des deux joueurs était réinitialisé. De plus lorsque le trésor était trouvé, l'affichage de celui-ci à la prochaine partie était or de la carte (ce problème est seulement au niveau de l'affichage car le trésor est bien présent au bon endroit sur la carte). Ces différents bugs, ne se réalisaient pas à chaque fois, c'est à force de tester l'application que nous les avons détectés.
 	%lorsque le deuxième joueur mourrait, seul un des deux joueurs était reinitialisé. et aussi si le trésor était trouvé, à la prochaine partie, il s'affichait en (-1, -1)
 
 	%TODO: Les problèmes rencontrés, se qu'il reste à faire,...
