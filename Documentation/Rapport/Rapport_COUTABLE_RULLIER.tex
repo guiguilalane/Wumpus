@@ -150,8 +150,7 @@
 	%%%%%%%%%%  Introduction générale
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\section{Introduction}
-	L'objectif de ce projet fût de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du
-	fonctionnement des interfaces systèmes/réseaux et des applications clients/serveur.
+L'objectif de ce projet fût de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du fonctionnement des interfaces systèmes / réseaux et des applications clients/serveur.
 
 	Afin de créer cette application que nous avons appelé \gameName, nous avons établit plusieurs étapes dans l'avancement du projet. Ce rapport
 	présentera  ces étapes  les unes après  les autres.
@@ -173,7 +172,7 @@
 	\subsection{Règles du jeu}
 		\subsubsection{Version mono-client}
 			La tour souterraine est composée d'étages.
-			Chaque étage est représenté par une grille qui inclut une échelle, un trésor, un trou hérissé de lance et du \gameName.
+			Chaque étage est représenté par une grille qui inclut une échelle, un trésor, un trou hérissé de lance et le \gameName.
 			L'échelle permet au joueur de descendre à l'étage inférieur lorsque le trésor a été trouvé. Au cours de son exploration, si le joueur tombe sur le
 	\gameName ou tombe dans le trou, la partie est terminée.
 
@@ -183,8 +182,8 @@
 			Ces senseurs donne la capacité au personne de ressentir son environnement proche :
 			\begin{description}
 			\item[WIND :] Ce senseur est activé lorsque le personnage se situe sur une case adjacente au trou.
-			\item[TWINKLE(scintiller) :] Ce senseur s'active lorsque le joueur détecte la présence du trésor.
-			\item[STINK(empester) :] Ce senseur est activé lorsque le joueur ressent la présence du \gameName.
+			\item[TWINKLE (scintiller) :] Ce senseur s'active lorsque le joueur détecte la présence du trésor.
+			\item[STINK (empester) :] Ce senseur est activé lorsque le joueur ressent la présence du \gameName.
 			\end{description}
 
 			Une partie est terminée, si le joueur est tué par le \gameName, s'il tombe dans un trou, ou si le joueur décide qu'il est temps de remonter à la
@@ -195,13 +194,13 @@ nombre	de \gameName tués.
 			Au passage de la version mono-client à la version multi-client, certaines règles ont évolué pour instaurer de la compétitivité entre les joueurs :
 			\begin{itemize}
 				\item Les joueur se déplacent toujours dans le même environnement, mais ne connaissent pas la position des autres joueurs.
-				\item Lorsque un des joueurs de la partie passe change d'étage, les autres joueurs de la même partie passent automatiquement à l'étage
+				\item Lorsque un des joueurs de la partie change d'étage, les autres joueurs de la même partie passent automatiquement à l'étage
 suivant.
 				\item Les points acquis à la découverte du trésor ne sont plus attribués au moment ou le joueur trouve le trésor, mais au moment ou il passe à
 l'étage suivant. De cette manière si deux joueurs trouvent le trésors, seul le plus rapide des deux est récompensé.
 				\item Si un des joueurs meurt, il perd des points en fonction de ce qui l'a tué.
 				\item Si l'un des joueurs d'une partie meurt, il n'a plus la possibilité d'effectuer d'actions. À moins que l'un des joueurs change d'étage
-, auquel cas la partie continue, ou que tous les autres joueurs de la même partie meurent aussi. Dans se dernier cas on considère que la partie est terminée et
+, auquel cas la partie continue, ou que tous les autres joueurs de la même partie meurent. Dans se dernier cas on considère que la partie est terminée et
 que le joueur ayant le plus de points à gagné.
 			\end{itemize}
 
@@ -227,7 +226,7 @@ des clients connectés.
 
 	\begin{description}
 		\item[Commande quit : ] La commande \emph{quit}, quand elle est reçu, supprime le joueur qui l'a envoyé de la partie.
-		\item[Commande move : ] La commande \emph{move} met à jour la position du joueur en fonction de la direction pointé par celui-ci(NORD, SUD, EST, OUEST).
+		\item[Commande move : ] La commande \emph{move} met à jour la position du joueur en fonction de la direction pointé par celui-ci (NORD, SUD, EST, OUEST).
 Avec la nouvelle position du joueur, la commande vérifie si le joueur est sur une case à événement, c'est à dire soit sur une case trésor, soit sur une case
 trou, soit sur une case \gameName. Puis met à jour les senseurs du joueur et envoi les nouvelles informations au client.
 		\item[Commande turnright : ] La commande \emph{turnright} met a jour la direction du joueur. La direction évolue dans le sens des aiguilles d'une
