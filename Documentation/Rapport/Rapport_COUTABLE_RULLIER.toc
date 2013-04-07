@@ -1,4 +1,3 @@
-
 \select@language {french}
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}
 \contentsline {section}{\numberline {2}Pr\IeC {\'e}sentation de l'application}{3}{section.2}
@@ -16,5 +15,5 @@
 \contentsline {section}{\numberline {4}Cot\IeC {\'e} client}{7}{section.4}
 \contentsline {subsection}{\numberline {4.1}Etablir une connexion}{7}{subsection.4.1}
 \contentsline {section}{\numberline {5}Jeux d'essais}{8}{section.5}
-\contentsline {section}{\numberline {6}Les probl\IeC {\`e}mes rencontr\IeC {\'e}s}{9}{section.6}
-\contentsline {section}{\numberline {7}Conclusion}{10}{section.7}
+\contentsline {section}{\numberline {6}Les probl\IeC {\`e}mes rencontr\IeC {\'e}s}{11}{section.6}
+\contentsline {section}{\numberline {7}Conclusion}{12}{section.7}

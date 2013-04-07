@@ -124,7 +124,7 @@
 	{\LARGE Modèle Client/Serveur, TCP/IP, Sockets Unix} \\
 	\vspace{1cm}
 	\textbf{Wumpus} \\
-	\includegraphics[height=1cm]{Images/Wumpus.png} \\
+	\includegraphics[height=10cm]{Images/Wumpus.png} \\
 	\vspace{1cm}
 	COUTABLE Guillaume, RULLIER Noémie \\
 	\today
@@ -150,7 +150,7 @@
 	%%%%%%%%%%  Introduction générale
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\section{Introduction}
-	L'objectif de ce projet fut de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du
+	L'objectif de ce projet fût de développer une application avec échange de données entres machines distantes. Il devait permettre la compréhension du
 	fonctionnement des interfaces systèmes/réseaux et des applications clients/serveur.
 
 	Afin de créer cette application que nous avons appelé \gameName, nous avons établit plusieurs étapes dans l'avancement du projet. Ce rapport
@@ -357,6 +357,7 @@ s'agit de la trame d'acquittement elle même).
 de la connexion d'un joueur, ou lorsque celui si termine la partie sur lequel il joue.
 
 	\subsubsection{Ajout d'un joueur}
+	\label{subsubAddPlayer}
 		Un joueur est ajouté dans la structure lorsqu'il demande une connexion au serveur et renseigne son pseudonyme. Dans ce cas la structure cherche une
 partie en cours qui respecte les conditions suivantes:
 		\begin{itemize}
@@ -368,7 +369,9 @@ partie en cours qui respecte les conditions suivantes:
 	\subsubsection{Suppression d'un joueur}
 		La suppression d'un joueur par la structure survient, soit lorsque le joueur se déconnecte, soit lorsque la partie est terminée (tous les joueurs sont
 morts ou on quitter la partie).
-		
+		Maintenant que le joueur a été supprimé, on vérifie qu'il reste des joueurs sur la partie. Si ce n'est pas le cas on supprime la partie. Si c'est la
+cas un autre joueur pourra alors remplacer le joueur supprimé. Le remplacement tiendra compte des conditions nécessaire à l'ajout d'un joueur décrit dans la
+partie "\ref{subsubAddPlayer} \textbf{Ajout d'un joueur}".
 
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -398,6 +401,185 @@ serveur	va	envoyer au client.
 	\newpage
 	\section{Jeux d'essais}
 
+		Nous allons dans cette section, montrer un scénario d'exécution. Ce scénario débute à la connexion du joueur, jusqu'au changement d'étage après avoir
+trouver le trésor et tuer le \gameName.\\
+
+Pour ce jeu d'essai nous montrerons le comportement du serveur et du client au même moment au cours de l'exécution.
+
+		\begin{minipage}[t]{0.46\textwidth}
+				\begin{center}
+					\textbf{Client}\\
+					\vspace{2pt}
+				 \includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus1.png}
+				\end{center}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+				\begin{center}
+					\textbf{Serveur}\\
+					\vspace{70pt}
+					\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur1.png}
+				\end{center}
+		\end{minipage}
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le client démarre l'application, cet écran est affiché.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le serveur est démarré, voici l'affichage du terminal.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus2.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{55pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur2.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Lorsque le client souhaite se connecter, il doit donner un pseudonyme qui l'identifiera tout au long de la partie.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			On peut voir que le serveur est en attente de la réception d'un pseudonyme, cela veut dire qu'un joueur essai de se connecter.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus3.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{20pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur3.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Après que le client ai renseigné son pseudonyme, il reçoit les première informations du serveur, à savoir le résultat des senseurs
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Après que le client ai renseigné son pseudonyme, le serveur envoi les résultats des senseurs au client.
+		\end{minipage}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{20pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus4.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur4.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Au cours de la partie le joueur est amené à trouver des trésors, voici ce que le joueur peut voir apparaître lorsqu'il trouve un trésor.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			On peut voir que le serveur à reçu une commande de déplacement, il vérifie alors s'il y a interaction entre le joueur et un élément de l'étage(ici
+le trésor).
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus5.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{30pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur5.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Sur cette image on peut voir que le trésor à été trouvé et que le joueur à fait demi-tour.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Ici le serveur à reçu(deux fois) la commande \emph{turnright}.
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Wumpus6.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur6.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Ici le joueur à tiré en direction du \gameName. Le joueur obtient alors la confirmation que sa flèche a atteint sa cible.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Le serveur à reçu la commande de tir. Le serveur vérifie alors que le \gameName soit sur la trajectoire de la flèche et envoi le résultat au
+joueur. Le serveur met ensuite les senseurs de tous les joueurs de la partie en cours.
+		\end{minipage}\\
+
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{50pt}
+			\centering
+			\includegraphics[width=.96\textwidth]{JeuxDEssais/Wumpus7.png}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			\centering
+			\includegraphics[width=0.9\textwidth]{JeuxDEssais/Serveur7.png}
+		\end{minipage}
+
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Cette boîte de dialogue s'affiche lorsqu'un joueur change d'étage, c'est à dire lorsqu'il retourne à sa position initiale et envoi la commande
+\textbf{down}. Le joueur reçoit alors un récapitulatif du scores de tous les joueurs, puis sa position est réinitialisée.
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.46\textwidth}
+			\vspace{2pt}
+			Le serveur à reçu la commande de tir. Le serveur vérifie alors que le \gameName soit sur la trajectoire de la flèche et envoi le résultat au
+joueur. Le serveur met ensuite les senseurs de tous les joueurs de la partie en cours.
+		\end{minipage}\\
+		
 	%TODO: Les problèmes rencontrés, se qu'il reste à faire,...
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%  CONCLUSION GENERALE
@@ -406,6 +588,9 @@ serveur	va	envoyer au client.
 	\section{Conclusion}
 	%Evolution du projet, de l'application client/serveur à l'application multi-client/serveur et de l'ajout de l'IHM
 
+	Nous pouvons conclure en disant qu'il n'a pas été très facile de mettre en place une architecture solide à cause du langage utilisé, mais en contre partie,
+cela nous à permit de mieux comprendre comment fonctionne une application utilisant le modèle client/serveur.
+	
 	\end{document}
 
 	\begin{figure}[H]
