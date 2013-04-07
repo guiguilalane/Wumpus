@@ -1,0 +1,462 @@
+%% Classe du document
+\documentclass[a4paper,10pt]{article}
+
+%% Francisation
+\usepackage[francais]{babel} % Indique que l'on utilise le francais
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % Indique que l'on utilise tout le clavier
+%\usepackage[latin1]{inputenc}
+
+%% Réglages généraux
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry} % Taille de la feuille
+\usepackage{lastpage}
+
+%% Package pour le texte
+\usepackage{soul} % Souligner
+\usepackage{color} % Utilisation de couleurs
+\usepackage{hyperref} % Créer des liens et des signets
+\usepackage{eurosym}% Pour le symbole euro
+\usepackage{fancyhdr}% Entête et pied de page
+
+%% Package pour les tableaux
+\usepackage{multirow} % Colonnes multiples
+\usepackage{cellspace}
+\usepackage{array}
+
+%% Package pour les dessins
+\usepackage{pstricks}
+\usepackage{graphicx} % Importer des images
+\usepackage{pdftricks} % Pour utiliser avec pdfTex
+\usepackage{pst-pdf} % Pour utiliser avec pdfTex
+\usepackage{pst-node} % Pose de noeuds
+\usepackage{subfig}
+\usepackage{float}
+
+%% Package pour les maths
+\usepackage{amsmath} % Commandes essentielles
+\usepackage{amssymb} % Principaux symboles
+
+%% Package pour le code
+\usepackage{listings} % Utilisation de la couleur syntaxique des langages
+\usepackage{url}
+
+
+\usepackage[babel=true]{csquotes} % Permet les quotations (guillemets)
+\usepackage{tocvsec2}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+
+\usepackage{tikz}
+\usepackage{pdfpages}
+
+\usetikzlibrary{shapes} % A revoir
+
+%--------------------- Autres définitions ---------------------%
+
+% Propriété des liens
+\hypersetup{
+colorlinks = true, % Colorise les liens
+urlcolor = blue, % Couleur des hyperliens
+linkcolor = black, % Couleur des liens internes
+}
+
+\definecolor{grey}{rgb}{0.95,0.95,0.95}
+
+% Language Definitions for Turtle
+%TODO: a revoir avec les couleur de gedit
+\definecolor{olivegreen}{rgb}{0.2,0.8,0.5}
+\definecolor{grey2}{rgb}{0.5,0.5,0.5}
+\lstdefinelanguage{ttl}{
+sensitive=true,
+morecomment=[s][\color{grey2}]{@}{:},
+morecomment=[l][\color{olivegreen}]{\#},
+morecomment=[s][\color{red}]{<}{/>},
+morestring=[s][\color{olivegreen}]{<http://w}{\#>},
+morestring=[b][\color{blue}]{\"},
+}
+
+\lstset{%language = sql,
+basicstyle =\footnotesize,
+%numbers = left,
+numberstyle=\normalsize,
+numbersep=10pt,
+framexleftmargin=5mm,
+frame=lines,
+tabsize=4}
+
+%Definition de la commande pour retirer l'espace devant les ':'
+\makeatletter
+\@ifpackageloaded{babel}%
+        {\newcommand{\nospace}[1]{{\NoAutoSpaceBeforeFDP{}#1}}}%  % !! double {{}} pour cantonner l'effet à l'argument #1 !!
+        {\newcommand{\nospace}[1]{#1}}
+\makeatother
+
+\setcounter{tocdepth}{3}
+%\maxsecnumdepth{subsubsection} % Dernière section numérotée
+
+\newcommand{\paperPrototyping}{\emph{paper prototyping}}
+
+% Corps du document :
+\begin{document}
+
+% Définition des entêtes et pieds de page
+\fancyhead[LE,CE,RE,LO,CO,RO]{}
+\fancyfoot[LE,CE,RE,LO,CO,RO]{}
+\fancyhead[LO, LE]{Réseaux et protocoles de l'internet}
+\fancyhead[RO,RE]{2012/2013}
+\fancyfoot[LO,LE]{Université de \scshape{Nantes}}
+\fancyfoot[RO,RE]{Page \thepage \ sur \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%\maketitle
+\begin{titlepage}
+
+\vspace*{\fill}~
+\begin{center}
+{\large \textsc{Rapport de TP}} \\
+\vspace{1cm}
+{\LARGE DNS} \\
+COUTABLE Guillaume, RULLIER Noémie \\
+\today
+\end{center}
+\vspace*{\fill}
+
+\vspace{\stretch{1}}
+\begin{center}
+\noindent 
+\includegraphics[height=2.5cm]{Images/universite.png}
+\end{center}
+\pagebreak
+\end{titlepage}
+
+\newpage
+\tableofcontents  
+
+% Introduction
+\newpage
+\pagestyle{fancy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%  Introduction générale
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+L'objectif de ce TP fut de comprendre le fonctionnement d'un DNS, de configurer un DNS et enfin de faire des tests avec \textit{nslookup}, \textit{host} et \textit{dig}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% DNS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Présentation du DNS}
+DNS (Domain Name System) est un service permettant de traduire un nom de domaine en différentes informations. En particulier en adresses IP de la machine porant ce nom.
+
+\section{Mise en place du DNS}
+\subsection{Présentation du matériel utilisé}
+Afin de réaliser ce TP, nous avons utilisé deux sous-réseaux de machines interconnectées avec des adresses IP de classe C \textit{192.168.1.xxx} et \textit{192.168.2.xxx}. Notre machine possède l'adresse IP \textit{192.168.1.6}.
+
+\subsection{Configurations effectuées}
+Nous avons tout d'abord commencé par choisir un nom de domaine qui est le suivant: \textit{guiguinomyx.univ-nantes.fr}. Afin d'administrer notre domaine, nous avons défini dans un premier temps deux noms pour notre serveur de nom de domaine \textit{nserver.guiguinomyx.univ-nantes.fr} et \textit{our-ns.guiguinomyx.univ-nantes.fr} et un nom pour notre serveur de messagerie \textit{mailadmin.guiguinomyx.univ-nantes.fr}.
+%TODO A revoir histoire des voisins
+
+\subsection{Listing des différents fichiers configurés pour chaque machine}
+\begin{itemize}
+\item Création d'un fichier \textit{guiguinomyx.conf} dans lequel on écrit:
+\begin{lstlisting}
+zone "guiguinomyx.univ-nantes.fr" {
+	type master;
+	file "/etc/bind/guiguinomyx.dns";
+};
+\end{lstlisting}
+\item Création d'un fichier \textit{guiguinomyx.dns} dans lequel on va configurer notre serveur de nom. Il va permettre de retrouver à partir de l'adresse IP le nom de l'hôte. Il contient:
+%TODO Revoir les adresses IP
+\begin{lstlisting}
+$TTL 3D
+@	IN	SOA	nserveur.guiguinomyx.univ-nantes.fr. admin.guiguinomyx.univ-nantes.fr. (
+		2013033000; Serial
+		8H; Refresh
+		2H; Retry
+		4W; Expire
+		1D; Minimum
+	)
+	NS	nserveur.guiguinomyx.univ-nantes.fr.
+	NS	our-ns.guiguinomyx.univ-nantes.fr.		
+	MX	10	mailadmin.guiguinomyx.univ-nantes.fr.
+		
+localhost	A	127.0.0.1
+nserveur	A	192.168.1.6
+
+ftp	CNAME our-ns.guiguinomyx.univ-nantes.fr.
+mail	CNAME our-ns.guiguinomyx.univ-nantes.fr.
+
+nomyx	A	192.168.1.5
+		MX	10	nomyx.guiguinomyx.univ-nantes.fr.
+
+guigui	A	192.168.1.4
+		MX	10	guigui.guiguinomyx.univ-nantes.fr.
+\end{lstlisting}
+\item Création d'un fichier \textit{guiguinomyx.rev} dans lequel on va configurer notre serveur de nom. Il va permettre de retrouver à partir du nom d'un hôte l'adresse IP. Il contient:
+%TODO Revoir les adresses IP
+\begin{lstlisting}
+$TTL 3D
+@	IN	SOA	nserveur.guiguinomyx.univ-nantes.fr. admin.guiguinomyx.univ-nantes.fr. (
+		2013033000;
+		28800;
+		7200;
+		604800;
+		86400;
+	)
+	NS	nserveur.guiguinomyx.univ-nantes.fr.		
+	MX	10 mailadmin.guiguinomyx.univ-nantes.fr.
+
+6	PTR	nserveur.guiguinomyx.univ-nantes.fr.
+
+5	PTR	nomyx.guiguinomyx.univ-nantes.fr.
+4	PTR	guigui.guiguinomyx.univ-nantes.fr.
+\end{lstlisting}
+\item Modification du fichier \textit{named.conf.local}, on ajoute les lignes suivantes:
+\begin{lstlisting}
+zone "1.168.192.in-arp.arpa" {
+	type master;
+	file "/etc/bind/guiguinomyx.rev";
+};
+\end{lstlisting}
+\item Modification du fichier \textit{named.conf}, on ajoute la ligne suivante:
+\begin{lstlisting}
+include "/etc/bind/guiguinomyx.conf";
+\end{lstlisting}
+\item Pour finir on modifiera le fichier \textit{/etc/resolv.conf} sur chaque PC sur le même réseau que le serveur DNS:
+%TODO A revoir adresse IP
+\begin{lstlisting}
+nameserver 127.0.0.1
+nserver 192.168.1.6
+domain guiguinomyx.univ-nantes.fr
+\end{lstlisting}
+\end{itemize}
+
+\subsection{Les difficultées rencontrées, les solutions apportées, les tests}
+Nous avons eu quelques problèmes au tout début car nous n'avions pas fait la distinction entre les configurations à faire sur le serveur DNS et les PC connectés à ce serveur. Par la suite, nous n'avons pas eu d'autres problèmes (les instructions de TP étaient suffisamment claires).
+
+\subsection{Conclusion}
+Pour conclure, nous avons réussi à mettre en place un serveur DNS. Nous avons réussi à pinger les autres machines connectées et configurées du serveur par leur nom ainsi que par leurs adresses IP.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%  Questions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+% A revérifier suand notre TP marchera
+\section{Questionnaire}
+\subsection{Question}
+Supposons que la nouvelle machine que l'on souhaite installer dans le domaine \textit{master.univ-nantes.fr} se nomme \textit{rizikipus}. On regardera à l'aide de la commande \textbf{ifconfig} son adresse IP, supposons que celle-ci soit \textit{192.168.34.4}. On devra alors modifier deux fichiers:
+\begin{itemize}
+\item master.dns :
+\begin{lstlisting}
+rizikipus	IN	A	192.168.34.4
+rizikipus	IN	MX	10	mailrizi.master.univ-nantes.fr.
+\end{lstlisting}
+\item master.rev :
+\begin{lstlisting}
+4	PTR	rizikipus.master.univ-nantes.fr.
+\end{lstlisting}
+\end{itemize}
+
+\subsection{Scénario}
+\begin{enumerate}
+\item Si un courrier est adressé à \textit{eleve@client1.tp-m2cci.univ-nantes.fr}, celui-ci va envoyer une requête DNS de type MX relative au domaine \textit{client1.tp-m2cci.univ-nantes.fr}. Or dans notre cas nous n'avons pas de serveur de courrier défini pour ce domaine, nos deux domaines de courrier sont les suivants: \textit{courrier1.tp-m2cci.univ-nantes.fr} et \textit{courrier2.tp-m2cci.univ-nantes.fr}.
+L'expéditeur reçoit donc un bounce (email de non délivrance).
+\item Si la machine principale est arrêtée, le mail sera quand même délivré à l'elève via le serveur de courrier 2 \textit{courrier2.tp-m2cci.univ-nantes.fr} qui a une priorité MX 9 (le serveur de courrier 1 a une priorité de 10).
+\item La machine courrier2 étant arrêtée le mail sera quand même délivré à l'elève via le serveur de courrier 1\textit{courrier1.tp-m2cci.univ-nantes.fr} (qui remplace le courrier2 quand celui-ci n'est pas disponible).
+\item Lorsqu'un courrier local est adressé à
+\begin{itemize}
+\item \textit{elleve@tp-m2cci.univ-nantes.fr}: le mail ne sera pas délivré, car il y a une erreur dans la cible.
+\item \textit{eleve@tp-m2cci.univ-nantes.fr}: le mail sera bien délivré.
+\item \textit{eleve@machine.univ-nantes.fr}: le mail ne sera pas délivré le domaine \textit{machine.univ-nantes.fr} n'est pas connu.
+\end{itemize}
+\end{enumerate}
+
+\subsection{Nslookup, host et dig}
+\begin{enumerate}
+\item L'enregistrement de type A sert à indiquer à quelle adresse IP correspond la machine.
+\item Afin de trouver l'adresse IP de \textit{berlioz.elysee.fr}, on exécute la commande suivante: \textbf{host berlioz.elysee.fr}. L'exécution de la commande nous retourne le résultat suivant:
+\begin{verbatim}
+$ host berlioz.elysee.fr
+berlioz.elysee.fr has address 84.233.174.57
+berlioz.elysee.fr has address 62.160.71.251
+\end{verbatim}
+\item{Afin de trouver le nom et l'adresse du serveur de noms du domaine \textit{elysee.fr}, on exécute la commande suivante: \textbf{dig ns elysee.fr}. L'exécution de cette commande retourne le résultat suivant:
+\begin{verbatim}
+$ dig ns elysee.fr
+
+; <<>> DiG 9.8.1-P1 <<>> ns elysee.fr
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7338
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;elysee.fr.			IN	NS
+
+;; ANSWER SECTION:
+elysee.fr.		34946	IN	NS	ns0.oleane.net.
+elysee.fr.		34946	IN	NS	berlioz.elysee.fr.
+elysee.fr.		34946	IN	NS	ns1.oleane.net.
+
+;; Query time: 62 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+;; WHEN: Sat Mar 30 12:53:28 2013
+;; MSG SIZE  rcvd: 95
+\end{verbatim}
+On peut voir que le domaine \textit{elysee.fr} possède trois serveurs de noms. Nous pouvons cependant remarquer que nous n'avons pas d'informations ADDITIONAL, nous ne connaissons donc pas l'adresse de ces différents serveurs. Afin de les connnaitre, nous avons exécuté la commande \textbf{host nomserveur} pour chacun d'entre eux afin de récupérer leurs adresses:
+\begin{itemize}
+\item \textit{ns0.oleane.net} d'adresse \textit{194.2.0.30}.
+\item \textit{berlioz.elysee.fr} d'adresse \textit{84.233.174.57} et \textit{62.160.71.251}.
+\item \textit{ns1.oleane.net} d'adresse \textit{194.2.0.60}.
+\end{itemize}
+}
+\item L'enregistrement de type NS (Name Server record) sert à définir le ou les nom(s) du serveur DNS du domaine.
+\item Afin de connaître l'autorité administrative de ce domaine, on exécute la commande suivante \textbf{dig soa elysee.fr} qui retourne le résultat suivant:
+\begin{verbatim}
+$ dig soa elysee.fr
+
+; <<>> DiG 9.8.1-P1 <<>> soa elysee.fr
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 56557
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;elysee.fr.			IN	SOA
+
+;; ANSWER SECTION:
+elysee.fr.		86400	IN	SOA	berlioz.elysee.fr. postmaster.elysee.fr. 2012120301 21600 3600 3600000 86400
+
+;; Query time: 48 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+;; WHEN: Sat Mar 30 13:19:50 2013
+;; MSG SIZE  rcvd: 82
+\end{verbatim}
+L'autorité administrative de ce domaine est \textit{berlioz.elysee.fr} administré par \textit{postmaster.elysee.fr} (adresse courrier). On peut lire ces informations dans la partie ANSWER SECTION de la réponse de la requête.
+\item L'enregistrement de type SOA (Start Of Authority record) permet de donner toutes les informations relatives à la zone:
+\begin{itemize}
+\item serveur principal
+\item courriel de contact
+\item différentes durées dont celle d'expiration
+\item numéro de série de la zone
+\end{itemize}
+\item Afin de connaître l'alias de la machine \textit{rr.wikimedia.org} on peut exécuter trois commandes différentes:\newline
+La première \textbf{host rr.wikimedia.org} retourne le résulat suivant:
+\begin{verbatim}
+$ host rr.wikimedia.org
+rr.wikimedia.org is an alias for rr.esams.wikimedia.org.
+rr.esams.wikimedia.org has address 91.198.174.232
+\end{verbatim}
+La deuxième à l'aide de \textbf{nslookup}:
+\begin{verbatim}
+$ nslookup
+> set type=cname
+> rr.wikimedia.org
+Server:		192.168.1.1
+Address:	192.168.1.1#53
+
+Non-authoritative answer:
+rr.wikimedia.org	canonical name = rr.esams.wikimedia.org.
+\end{verbatim}
+La troisième \textbf{dig cname rr.wikimedia.org} retourne le résultat suivant:
+\begin{verbatim}
+$ dig cname rr.wikimedia.org
+
+; <<>> DiG 9.8.1-P1 <<>> cname rr.wikimedia.org
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 5116
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rr.wikimedia.org.		IN	CNAME
+
+;; ANSWER SECTION:
+rr.wikimedia.org.	381	IN	CNAME	rr.esams.wikimedia.org.
+
+;; Query time: 87 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+;; WHEN: Sat Mar 30 13:38:07 2013
+;; MSG SIZE  rcvd: 57
+\end{verbatim}
+On peut voir sur les trois résultats que l'alias est le suivant: \textit{rr.esams.wikimedia.org}.
+\item L'enregistrement de type CNAME (Canonical NAME record) permet de faire un alias d'un domaine vers un autre domaine. Cet alias hérite de tous les sous-domaines du domaine initial.
+\item Une machine peut avoir plusieurs noms ainsi que plusieurs adresses IP. Nous avons l'exemple des noms multiples dans le serveur DNS que nous avons mis en place, ou même sur l'exemple de \textit{wikimedia.org}, on voit qu'il y a plusieur NS de définis: (\textit{ns0.wikimedia.org}, \textit{ns1.wikimedia.org} et \textit{ns2.wikimedia.org}). Pour les adresses IP multiples, on peut prendre l'exemple de \textbf{berlioz.elysee.fr} qui dispose de deux adresses IP (\textit{84.233.174.57} et \textit{62.160.71.251}).
+\item Afin de connaitre le nom DNS associé à l'adresse \textit{193.51.208.13} on exécute la commande suivante \textbf{host 193.51.208.13} qui retourne le résultat suivant:
+\begin{verbatim}
+$ host 193.51.208.13
+13.208.51.193.in-addr.arpa domain name pointer dns.inria.fr.
+\end{verbatim}
+Le nom DNS associé à l'adresse \textit{193.51.208.13} est alors \textit{dns.inria.fr}.
+\item L'enregistrement PTR (PoinTeR record) sert à indiquer quel nom de domaine correspond l'adresse IP.
+\item Afin de connaître le serveur de courrier du domaine \textit{inria.fr}, on exécute la commande suivante \textbf{host inria.fr} qui retourne le résulat suivant:
+\begin{verbatim}
+$ host inria.fr
+inria.fr mail is handled by 10 mail2-smtp-roc.national.inria.fr.
+inria.fr mail is handled by 10 mail3-smtp-sop.national.inria.fr.
+\end{verbatim}
+Le serveur de courrier du domaine \textit{inria.fr} sont donc \textit{mail2-smtp-roc.national.inria.fr} et \textit{mail3-smtp-sop.national.inria.fr}.
+\item L'enregistrement de type MX sert à définir une priorité à l'accès au serveur de messagerie avec une valeur pouvant aller de 0 à 65535.
+\item Afin de trouver les noms et les adresses des serveurs de noms du domaine \textit{columbia.edu}, on exécute les commandes suivantes \textbf{host columbia.edu}, \textbf{nslookup 128.59.48.24}, qui donnent le résultat suivant:
+\begin{verbatim}
+$ host columbia.edu
+columbia.edu has address 128.59.48.24
+Host columbia.edu.home not found: 4(NOTIMP)
+columbia.edu mail is handled by 10 external-smtp-multi-vif.cc.columbia.edu.
+
+nslookup 128.59.48.24
+;; Truncated, retrying in TCP mode.
+Server:		172.26.4.20
+Address:	172.26.4.20#53
+
+Non-authoritative answer:
+24.48.59.128.in-addr.arpa	name = cuf.columbia.edu.
+24.48.59.128.in-addr.arpa	name = dkv.columbia.edu.
+24.48.59.128.in-addr.arpa	name = vii.org.
+24.48.59.128.in-addr.arpa	name = caho.columbia.edu.
+24.48.59.128.in-addr.arpa	name = sipa.columbia.edu.
+24.48.59.128.in-addr.arpa	name = exeas.org.
+24.48.59.128.in-addr.arpa	name = p-i-r.org.
+24.48.59.128.in-addr.arpa	name = ccnmtl.columbia.edu.
+24.48.59.128.in-addr.arpa	name = fathom.com.
+24.48.59.128.in-addr.arpa	name = giving.gsas.columbia.edu.
+24.48.59.128.in-addr.arpa	name = www-csm.cc.columbia.edu.
+24.48.59.128.in-addr.arpa	name = columbia.edu.
+24.48.59.128.in-addr.arpa	name = creative.columbia.edu.
+24.48.59.128.in-addr.arpa	name = empaforum.org.
+24.48.59.128.in-addr.arpa	name = neighbors.columbia.edu.
+24.48.59.128.in-addr.arpa	name = childpolicy.org.
+24.48.59.128.in-addr.arpa	name = gutenberg-e.org.
+24.48.59.128.in-addr.arpa	name = tiernobokar.columbia.edu.
+24.48.59.128.in-addr.arpa	name = teachtechaward.org.
+24.48.59.128.in-addr.arpa	name = amistadresource.org.
+24.48.59.128.in-addr.arpa	name = blackrockforest.org.
+24.48.59.128.in-addr.arpa	name = childpolicyintl.org.
+24.48.59.128.in-addr.arpa	name = columbiauniversity.us.
+24.48.59.128.in-addr.arpa	name = columbiauniversity.net.
+24.48.59.128.in-addr.arpa	name = columbiauniversity.org.
+24.48.59.128.in-addr.arpa	name = columbiauniversity.info.
+24.48.59.128.in-addr.arpa	name = ci.columbia.edu.
+
+Authoritative answers can be found from:
+59.128.in-addr.arpa	nameserver = dns2.itd.umich.edu.
+59.128.in-addr.arpa	nameserver = adns2.berkeley.edu.
+59.128.in-addr.arpa	nameserver = adns1.berkeley.edu.
+59.128.in-addr.arpa	nameserver = ext-ns1.columbia.edu.
+59.128.in-addr.arpa	nameserver = sns-pb.isc.org.
+dns2.itd.umich.edu	internet address = 141.211.125.15
+adns1.berkeley.edu	internet address = 128.32.136.3
+adns2.berkeley.edu	internet address = 128.32.136.14
+ext-ns1.columbia.edu	internet address = 128.59.1.1
+\end{verbatim}
+L'adresse du serveur de nom du domaine \textit{columbia.edu} est \textit{128.59.1.1} et est nommé \textit{ext-ns1.columbia.edu}.
+\end{enumerate}
+
+\end{document}
+
+\begin{figure}[H]
+    \center
+    \includegraphics[width=2cm]{Images/menuFichier.png}
+    \caption{Le menu Fichier}
+\end{figure}
